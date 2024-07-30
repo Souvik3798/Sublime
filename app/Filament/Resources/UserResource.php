@@ -127,23 +127,23 @@ class UserResource extends Resource
         ];
     }
 
-    // public static function canViewAny(): bool
-    // {
-    //     return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
-    // }
+    public static function canViewAny(): bool
+    {
+        return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
+    }
 
-    // public static function canCreate(): bool
-    // {
-    //     return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
-    // }
+    public static function canCreate(): bool
+    {
+        return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
+    }
 
-    // public static function canEdit(Model $record): bool
-    // {
-    //     return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
-    // }
+    public static function canEdit(Model $record): bool
+    {
+        return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
+    }
 
-    // public static function canDelete(Model $record): bool
-    // {
-    //     return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
-    // }
+    public static function canDelete(Model $record): bool
+    {
+        return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
+    }
 }
