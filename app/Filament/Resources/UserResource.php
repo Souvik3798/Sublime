@@ -8,8 +8,10 @@ use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -58,6 +60,10 @@ class UserResource extends Resource
                             ->image()
                             ->directory('uploads/Logo')
                             ->uploadingMessage('Uploading Images...'),
+                        Textarea::make('address')
+                            ->rows(5),
+                        ColorPicker::make('color')
+                            ->label('Theme Color')
                     ])->columns(2),
                 Section::make('User New password')
                     ->schema([

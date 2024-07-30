@@ -437,6 +437,7 @@
                 <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">{{ $user['name'] }}
                 </h1>
                 <p>{{ $user['website'] }} | +91-{{ $user['phone'] }} | {{ $user['email'] }}</p>
+                <p style="font-size: 20px; margin-top: 20px">{{ $user['address'] }}</p>
             </div>
         </div>
     </header>
