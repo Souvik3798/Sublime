@@ -33,7 +33,9 @@ class AdminPanelProvider extends PanelProvider
                 return Auth::check() ? Auth::user()->name : 'Admin Panel'; // Use Auth facade to check user authentication
             })
             ->colors([
-                'primary' => Color::Green,
+                'primary' => function () {
+                    return Auth::check() ? Auth::user()->color : Color::Green;
+                },
             ])
             ->font('Galada', provider: GoogleFontProvider::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
