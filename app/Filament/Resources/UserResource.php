@@ -56,7 +56,6 @@ class UserResource extends Resource
                             ->prefix('+91'),
                         FileUpload::make('logo')
                             ->image()
-                            ->imageCropAspectRatio('4:4')
                             ->directory('uploads/Logo')
                             ->uploadingMessage('Uploading Images...'),
                     ])->columns(2),

@@ -278,11 +278,11 @@
             }
 
             header {
-                background: none;
-                color: black;
-                border-bottom: none;
-                padding: 0;
-                min-height: auto;
+                background: #35424a;
+                color: #ffffff;
+                padding-top: 30px;
+                min-height: 70px;
+                border-bottom: #e8491d 3px solid;
             }
 
             header .main-header h1,
@@ -419,14 +419,21 @@
 </head>
 
 <body>
+    @php
+        $user = App\Models\User::findorfail(auth()->id());
+        // dd($user);
+    @endphp
     <header>
         <div class="container">
             <div class="main-header">
-                <h1>Andaman Island Tour Package</h1>
-                <p>www.adventureandaman.com | +91 9675904934, +91 7063904363 | contact@adventureandaman.com</p>
+                <img src="{{ asset('storage/' . $user['logo']) }}" alt="Logo"
+                    style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
+                {{-- <h1 style="display: inline;">{{ $user['name'] }}</h1> --}}
+                <p>{{ $user['website'] }} | +91 {{ $user['phone'] }} | {{ $user['email'] }}</p>
             </div>
         </div>
     </header>
+
     <div class="container">
         <div class="package-details">
             <h2>Package Details</h2>
