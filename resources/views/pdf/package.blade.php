@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
+@php
+    $user = App\Models\User::findorfail(auth()->id());
+    // dd($user);
+@endphp
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Andaman Island Tour Package</title>
+    <title>{{ $record->name }} </title>
     <style>
         body {
             font-family: Georgia, 'Times New Roman', Times, serif;
@@ -267,7 +272,7 @@
         @media print {
             body {
                 background-color: #ffffff;
-                font-size: 12pt;
+                font-size: 10pt;
                 color: #000000;
             }
 
@@ -283,13 +288,22 @@
                 padding-top: 30px;
                 min-height: 70px;
                 border-bottom: #e8491d 3px solid;
+
             }
 
-            header .main-header h1,
+            header .main-header h1 {
+                font-size: 25pt
+            }
+
             header .main-header p {
                 text-align: center;
                 margin: 0;
                 padding: 0;
+                font-size: 15pt
+            }
+
+            header .main-header img {
+                width: 50%;
             }
 
             .package-details,
@@ -385,8 +399,27 @@
             }
 
             @page {
-                margin: 2cm;
+                margin: 0.7cm !important;
             }
+
+            @page: first {
+                margin-top: 4cm !important;
+            }
+
+            .container-timeline {
+                /* padding: 10px 40px !important; */
+                position: relative !important;
+                background-color: inherit !important;
+                width: 57% !important;
+                left: -6%;
+                /* Increase width here */
+                box-sizing: border-box !important;
+            }
+
+            .right {
+                left: 49%;
+            }
+
 
             /* Print-specific styles for the timeline
             .timeline::after {
@@ -419,10 +452,6 @@
 </head>
 
 <body>
-    @php
-        $user = App\Models\User::findorfail(auth()->id());
-        // dd($user);
-    @endphp
     <header>
         <div class="container">
             <div class="main-header">
@@ -431,7 +460,7 @@
                         style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
                 @else
                     <img src="{{ asset('storage/' . $user['logo']) }}" alt="Logo"
-                        style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
+                        style="vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
                 @endif
                 <br>
                 <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">{{ $user['name'] }}

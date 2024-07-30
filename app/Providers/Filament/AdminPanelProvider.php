@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\User;
 use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -25,7 +26,6 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
 
-        $primaryColor = Auth::check() ? Auth::user()->color : Color::Green;
         return $panel
             ->default()
             ->id('admin')
@@ -35,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
                 return Auth::check() ? Auth::user()->name : 'Admin Panel'; // Use Auth facade to check user authentication
             })
             ->colors([
-                'primary' => $primaryColor,
+                'primary' => Color::Green
             ])
             ->font('Galada', provider: GoogleFontProvider::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

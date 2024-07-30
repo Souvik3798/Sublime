@@ -62,8 +62,6 @@ class UserResource extends Resource
                             ->uploadingMessage('Uploading Images...'),
                         Textarea::make('address')
                             ->rows(5),
-                        ColorPicker::make('color')
-                            ->label('Theme Color')
                     ])->columns(2),
                 Section::make('User New password')
                     ->schema([
