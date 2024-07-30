@@ -7,7 +7,7 @@
     <title>Andaman Island Tour Package</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Georgia, 'Times New Roman', Times, serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
@@ -426,10 +426,17 @@
     <header>
         <div class="container">
             <div class="main-header">
-                <img src="{{ asset('storage/' . $user['logo']) }}" alt="Logo"
-                    style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
-                {{-- <h1 style="display: inline;">{{ $user['name'] }}</h1> --}}
-                <p>{{ $user['website'] }} | +91 {{ $user['phone'] }} | {{ $user['email'] }}</p>
+                @if ($user['logo'] == '')
+                    <img src="{{ asset('Images/default.webp') }}" alt="Logo"
+                        style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
+                @else
+                    <img src="{{ asset('storage/' . $user['logo']) }}" alt="Logo"
+                        style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
+                @endif
+                <br>
+                <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">{{ $user['name'] }}
+                </h1>
+                <p>{{ $user['website'] }} | +91-{{ $user['phone'] }} | {{ $user['email'] }}</p>
             </div>
         </div>
     </header>
@@ -466,10 +473,41 @@
                 </tr>
             </table>
         </div>
+
+        <div class="vehicles" style="margin-bottom: 20px">
+            <h2>Basic Itenary</h2>
+            <table>
+                <tr>
+                    <th>Day</th>
+                    <th>Date</th>
+                    <th>Itenary</th>
+                    {{-- <th>Specialities</th>
+                    <th>Location Covered</th> --}}
+                </tr>
+                @foreach ($record->itinerary as $itinerary)
+                    <tr>
+                        <td>Day-{{ $itinerary['days'] }}</td>
+                        <td>{{ date('l, F j, Y', strtotime($itinerary['date'])) }}</td>
+                        <td>{{ $itinerary['description'] }}</td>
+                        {{-- <td>
+                            @foreach ($itinerary['specialities'] as $speciality)
+                                {{ $speciality }}
+                            @endforeach
+                        </td>
+                        <td>
+                            @foreach ($itinerary['locations'] as $location)
+                                {{ $location }}
+                            @endforeach
+                        </td> --}}
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+
         <div class="itinerary">
 
             <div class="timeline">
-                <h2>Itinerary</h2>
+                <h2>Detailed Itinerary</h2>
                 @php
                     $j = 1;
                 @endphp
@@ -484,7 +522,7 @@
                         <h3>Day {{ $itinerary['days'] }}</h3>
                         <h4>Title: {{ $itinerary['name'] }}</h4>
                         <p><strong>Description:</strong> {{ $itinerary['description'] }}</p>
-                        <p><strong>Date:</strong> {{ $itinerary['date'] }}</p>
+                        <p><strong>Date:</strong> {{ date('l, F j, Y', strtotime($itinerary['date'])) }}</p>
                         <p><strong>Specialities:</strong>
 
                             @foreach ($itinerary['specialities'] as $speciality)
