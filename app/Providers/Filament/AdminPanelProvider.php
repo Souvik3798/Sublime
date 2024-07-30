@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->profile()
             ->login()
             ->brandName(function () {
                 return Auth::check() ? Auth::user()->name : 'Admin Panel'; // Use Auth facade to check user authentication
