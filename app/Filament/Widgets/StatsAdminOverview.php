@@ -34,7 +34,6 @@ class StatsAdminOverview extends BaseWidget
             Stat::make('Total Hotel Types', HotelCategory::where('user_id', $userId)->count()),
             Stat::make('Total Hotels', Hotel::where('user_id', $userId)->count()),
             Stat::make('Total Room Types', RoomCategory::where('user_id', $userId)->count()),
-            Stat::make('Total Package Template', PackageTemplate::where('user_id', $userId)->count()),
         ];
 
         // Only add the payment stats if the user ID is 1
