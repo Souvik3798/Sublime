@@ -11,6 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -30,11 +31,16 @@ class RefundResource extends Resource
             ->schema([
                 Forms\Components\Textarea::make('point')
                     ->label('Please Enter the Policy Points')
-                    ->helperText('Enter each point on a new line.')
                     ->required()
                     ->columns(1)
                     ->rows(5)
-                    ->default(fn ($record) => $record ? $record->points()->pluck('point')->implode("\n") : null),
+                    ->default(fn ($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
+                    ->visibleOn('create'),
+                TextInput::make('point')
+                    ->label('Refund and Cancellation Policy')
+                    ->required()
+                    ->visibleOn('edit')
+                    ->columns(2),
                 Hidden::make('user_id')
                     ->default(auth()->id())
                     ->required(),

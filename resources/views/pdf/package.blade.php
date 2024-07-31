@@ -299,11 +299,12 @@
                 text-align: center;
                 margin: 0;
                 padding: 0;
-                font-size: 15pt
+                font-size: 10pt
             }
 
             header .main-header img {
                 width: 50%;
+                height: auto;
             }
 
             .package-details,
@@ -466,7 +467,7 @@
                 <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">{{ $user['name'] }}
                 </h1>
                 <p>{{ $user['website'] }} | +91-{{ $user['phone'] }} | {{ $user['email'] }}</p>
-                <p style="font-size: 20px; margin-top: 20px">{{ $user['address'] }}</p>
+                <p style="font-size: 15px; margin-top: 20px">{{ $user['address'] }}</p>
             </div>
         </div>
     </header>
@@ -675,9 +676,12 @@
         @php
             $refunds = App\Models\Refund::where('user_id', auth()->id())->get();
         @endphp
-        @foreach ($refunds as $refund)
-            <p>{{ $refund['point'] }}</p>
-        @endforeach
+        <ol>
+            @foreach ($refunds as $refund)
+                <li style="margin-bottom: 10px">{{ $refund['point'] }}</li>
+            @endforeach
+        </ol>
+
 
 
     </div>
