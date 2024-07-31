@@ -426,7 +426,7 @@ class CustomPackageResource extends Resource
                                                             ->suffix('/-'),
 
                                                         TextInput::make('child_with_mattress_price')
-                                                            ->label('Child Without Matress')
+                                                            ->label('Child With Matress')
                                                             ->required()
                                                             ->default(0)
                                                             ->numeric()

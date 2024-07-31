@@ -60,7 +60,7 @@ class HotelResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('hotel_category.category')
-                    ->label('Hotel Category')
+                    ->label('Hotel Type')
                     ->sortable()
                     ->searchable(),
 
