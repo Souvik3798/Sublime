@@ -41,6 +41,12 @@ class HotelResource extends Resource
                     ->required(),
                 Select::make('destination_id')
                     ->label('Located At')
+                    ->createOptionForm([
+                        TextInput::make('Title')
+                            ->required(),
+                        Hidden::make('user_id')
+                            ->default(auth()->id()),
+                    ])
                     ->relationship('destination', 'Title', function ($query) {
                         $query->where('user_id', auth()->id());
                     })
