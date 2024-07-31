@@ -625,6 +625,7 @@
                             $des = App\Models\destination::findorfail($room['location']);
                             $roomtype = App\Models\RoomCategory::findorfail($room['room_type']);
                             $hotelImages = App\Models\HotelImage::where('hotel_id', $room['hotel_name'])->get();
+                            $hotel = App\Models\Hotel::where('id', $room['Hotel_name'])->get();
                         @endphp
                         <h3>Day {{ $room['days'] }} ({{ Carbon\Carbon::parse($room['date'])->format('d F Y') }})
                             - {{ $des['Title'] }}, hotel details</h3>
@@ -640,7 +641,7 @@
 
                             </div>
                             <div class="hotel-details">
-                                <p><strong>Seashell Coral Cove</strong><br>
+                                <p><strong>{{ $hotel['hotelName'] }}</strong><br>
                                     Date: {{ Carbon\Carbon::parse($room['date'])->format('d F Y') }}<br>
                                     Meal Plan: {{ strtoupper($room['meal_plan']) }}<br>
                                     Room Type: {{ $roomtype['category'] }}</p>
