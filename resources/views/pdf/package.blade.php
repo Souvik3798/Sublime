@@ -505,7 +505,7 @@
         </div>
 
         <div class="vehicles" style="margin-bottom: 20px">
-            <h2>Basic Itenary</h2>
+            <h2>Basic Itienary</h2>
             <table>
                 <tr>
                     <th>Day</th>
@@ -537,7 +537,7 @@
         <div class="itinerary">
 
             <div class="timeline">
-                <h2>Detailed Itinerary</h2>
+                <h2>Itinerary Timeline</h2>
                 @php
                     $j = 1;
                 @endphp
@@ -551,7 +551,7 @@
                     <div class="content">
                         <h3>Day {{ $itinerary['days'] }}</h3>
                         <h4>Title: {{ $itinerary['name'] }}</h4>
-                        <p><strong>Description:</strong> {{ $itinerary['description'] }}</p>
+                        {{-- <p><strong>Description:</strong> {{ $itinerary['description'] }}</p> --}}
                         <p><strong>Date:</strong> {{ date('l, F j, Y', strtotime($itinerary['date'])) }}</p>
                         <p><strong>Specialities:</strong>
 
