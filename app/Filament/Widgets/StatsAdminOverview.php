@@ -60,61 +60,61 @@ class StatsAdminOverview extends BaseWidget
             Stat::make('No. of Custom Packages', CustomPackage::where('user_id', $userId)->count())
                 ->chart($customPackageCounts)
                 ->color(array_sum($customPackageCounts) > 10 ? 'success' : (array_sum($customPackageCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($customPackageCounts) . ' packages created in last 7 days')
+                ->description(array_sum($customPackageCounts) . ' packages in 7 days')
                 ->descriptionIcon(array_sum($customPackageCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($customPackageCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('No. of Customers', Customers::where('user_id', $userId)->count())
                 ->chart($customerCounts)
                 ->color(array_sum($customerCounts) > 10 ? 'success' : (array_sum($customerCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($customerCounts) . ' customers added in last 7 days')
+                ->description(array_sum($customerCounts) . ' customers in 7 days')
                 ->descriptionIcon(array_sum($customerCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($customerCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('Total Categories', Category::where('user_id', $userId)->count())
                 ->chart($categoryCounts)
                 ->color(array_sum($categoryCounts) > 10 ? 'success' : (array_sum($categoryCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($categoryCounts) . ' categories added in last 7 days')
+                ->description(array_sum($categoryCounts) . ' categories ain 7 days')
                 ->descriptionIcon(array_sum($categoryCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($categoryCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('Total Addons', Addon::where('user_id', $userId)->count())
                 ->chart($addonCounts)
                 ->color(array_sum($addonCounts) > 10 ? 'success' : (array_sum($addonCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($addonCounts) . ' addons added in last 7 days')
+                ->description(array_sum($addonCounts) . ' addons in 7 days')
                 ->descriptionIcon(array_sum($addonCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($addonCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('Total Iternity Template', IternityTemplate::where('user_id', $userId)->count())
                 ->chart($iternityTemplateCounts)
                 ->color(array_sum($iternityTemplateCounts) > 10 ? 'success' : (array_sum($iternityTemplateCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($iternityTemplateCounts) . ' templates added in last 7 days')
+                ->description(array_sum($iternityTemplateCounts) . ' templates in 7 days')
                 ->descriptionIcon(array_sum($iternityTemplateCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($iternityTemplateCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('Total Package Template', PackageTemplate::where('user_id', $userId)->count())
                 ->chart($packageTemplateCounts)
                 ->color(array_sum($packageTemplateCounts) > 10 ? 'success' : (array_sum($packageTemplateCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($packageTemplateCounts) . ' templates added in last 7 days')
+                ->description(array_sum($packageTemplateCounts) . ' templates in 7 days')
                 ->descriptionIcon(array_sum($packageTemplateCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($packageTemplateCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('Total Destinations', destination::where('user_id', $userId)->count())
                 ->chart($destinationCounts)
                 ->color(array_sum($destinationCounts) > 10 ? 'success' : (array_sum($destinationCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($destinationCounts) . ' destinations added in last 7 days')
+                ->description(array_sum($destinationCounts) . ' destinations in 7 days')
                 ->descriptionIcon(array_sum($destinationCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($destinationCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('Total Hotel Types', HotelCategory::where('user_id', $userId)->count())
                 ->chart($hotelCategoryCounts)
                 ->color(array_sum($hotelCategoryCounts) > 10 ? 'success' : (array_sum($hotelCategoryCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($hotelCategoryCounts) . ' categories added in last 7 days')
+                ->description(array_sum($hotelCategoryCounts) . ' hotel types in 7 days')
                 ->descriptionIcon(array_sum($hotelCategoryCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($hotelCategoryCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('Total Hotels', Hotel::where('user_id', $userId)->count())
                 ->chart($hotelCounts)
                 ->color(array_sum($hotelCounts) > 10 ? 'success' : (array_sum($hotelCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($hotelCounts) . ' hotels added in last 7 days')
+                ->description(array_sum($hotelCounts) . ' hotels in 7 days')
                 ->descriptionIcon(array_sum($hotelCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($hotelCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
             Stat::make('Total Room Types', RoomCategory::where('user_id', $userId)->count())
                 ->chart($roomCategoryCounts)
                 ->color(array_sum($roomCategoryCounts) > 10 ? 'success' : (array_sum($roomCategoryCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($roomCategoryCounts) . ' room categories added in last 7 days')
+                ->description(array_sum($roomCategoryCounts) . ' room types in 7 days')
                 ->descriptionIcon(array_sum($roomCategoryCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($roomCategoryCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
         ];
 
@@ -127,17 +127,17 @@ class StatsAdminOverview extends BaseWidget
             $stats[] = Stat::make('Total Users', User::count())
                 ->chart($userCounts)
                 ->color(array_sum($userCounts) > 10 ? 'success' : (array_sum($userCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($userCounts) . ' new users added in last 7 days')
+                ->description(array_sum($userCounts) . ' new users in 7 days')
                 ->descriptionIcon(array_sum($userCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($userCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down'));
             $stats[] = Stat::make('No. of Payment Voucher', Payment::where('user_id', $userId)->count())
                 ->chart($paymentCounts)
                 ->color(array_sum($paymentCounts) > 10 ? 'success' : (array_sum($paymentCounts) > 5 ? 'warning' : 'danger'))
-                ->description(array_sum($paymentCounts) . ' payments processed in last 7 days')
+                ->description(array_sum($paymentCounts) . ' payments in 7 days')
                 ->descriptionIcon(array_sum($paymentCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($paymentCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down'));
             $stats[] = Stat::make('Total Revenue', '₹ ' . Payment::where('user_id', $userId)->sum('amount_paid'))
                 ->chart($revenuePerDay)
                 ->color(array_sum($revenuePerDay) > 10000 ? 'success' : (array_sum($revenuePerDay) > 5000 ? 'warning' : 'danger'))
-                ->description('₹ ' . array_sum($revenuePerDay) . ' revenue generated in last 7 days')
+                ->description('₹ ' . array_sum($revenuePerDay) . ' revenue generated in 7 days')
                 ->descriptionIcon(array_sum($revenuePerDay) > 10000 ? 'heroicon-m-arrow-trending-up' : (array_sum($revenuePerDay) > 5000 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down'));
         }
 
