@@ -6,13 +6,15 @@ use App\Filament\Resources\RefundResource\Pages;
 use App\Filament\Resources\RefundResource\RelationManagers;
 use App\Models\Refund;
 use Filament\Forms;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Textarea;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\DB;
 
 class RefundResource extends Resource
 {
@@ -22,21 +24,22 @@ class RefundResource extends Resource
     protected static ?string $navigationGroup = 'Policy';
     protected static ?string $label = 'Refund and Cancellation';
 
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('point')
+                Forms\Components\Textarea::make('point')
+                    ->label('Please Enter the Policy Points')
+                    ->helperText('Enter each point on a new line.')
                     ->required()
-                    ->label('Please Enter the Policy Point')
-                    ->helperText('Enter a Single Point at a time'),
+                    ->columns(1)
+                    ->rows(5)
+                    ->default(fn ($record) => $record ? $record->points()->pluck('point')->implode("\n") : null),
                 Hidden::make('user_id')
-                    ->label('Points')
                     ->default(auth()->id())
                     ->required(),
-
-            ]);
+            ])
+            ->columns(1);
     }
 
     public static function table(Table $table): Table
