@@ -9,6 +9,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <title>{{ $record->name }} </title>
     <style>
         body {
@@ -241,6 +243,235 @@
             color: #333;
         }
 
+        /* Inclusion and exlusions */
+
+        .styled-list {
+            list-style-type: none;
+            /* Remove default bullets */
+            padding: 0;
+            margin: 0;
+        }
+
+        .styled-list li {
+            padding: 10px 0;
+            margin: 5px 0;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            padding-left: 35px;
+        }
+
+        .styled-list li:before {
+            content: "\2717";
+            color: red;
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+            line-height: 1.2em;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+        }
+
+        .exclusions .styled-list li:before {
+            content: "\2717";
+        }
+
+        .inclusions .styled-list li:before {
+            content: "\2713";
+            color: green;
+            border-color: green;
+        }
+
+        .inclusions,
+        .exclusions {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .inclusions h2,
+        .exclusions h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+            color: #e8491d;
+        }
+
+        /* calcelation and refund */
+
+        .styled-policy-list {
+            counter-reset: item;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .styled-policy-list li {
+            counter-increment: item;
+            padding: 10px;
+            margin: 5px 0;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            padding-left: 40px;
+            /* background: #f9f9f9; */
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .styled-policy-list li:before {
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #e8491d;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .cancellation-policy {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cancellation-policy h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+            color: #e8491d;
+        }
+
+        .policy-content {
+            padding: 15px;
+            /* background-color: #f4f4f4; */
+            border-radius: 5px;
+        }
+
+        /* Terms and Conditions */
+        .terms-and-conditions {
+            background: #f0f8ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .terms-and-conditions h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .terms-content {
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+        }
+
+        .styled-terms-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .styled-terms-list li {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: #ffffff;
+            border-left: 5px solid #007bff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .styled-terms-list li i {
+            color: #007bff;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .styled-terms-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .styled-terms-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* why choose us */
+        .why-book-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px
+        }
+
+        .why-book-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #28a745;
+            border-radius: 30px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #28a745;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .feature-item:hover {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+
+        .feature-item:hover i {
+            color: #ffffff;
+        }
+
+        @media screen and (max-width: 768px) {
+            .feature-item {
+                flex-basis: 100%;
+                justify-content: center;
+            }
+        }
+
         @media screen and (max-width: 600px) {
             .timeline::after {
                 left: 31px;
@@ -313,6 +544,8 @@
             .exclusions,
             .cancellation-policy,
             .vehicles,
+            .terms-and-conditions,
+            .why-book-section,
             .itinerary {
                 box-shadow: none;
                 margin: 10px 0;
@@ -422,32 +655,7 @@
             }
 
 
-            /* Print-specific styles for the timeline
-            .timeline::after {
-                display: none;
-            }
 
-            .container-timeline {
-                width: 100%;
-                padding: 10px 0;
-                page-break-inside: avoid;
-            }
-
-            .container-timeline.left,
-            .container-timeline.right {
-                left: 0;
-            }
-
-            .container-timeline::after,
-            .left::before,
-            .right::before {
-                display: none;
-            }
-
-            .content {
-                box-shadow: none;
-                border: 1px solid #000;
-            } */
         }
     </style>
 </head>
@@ -464,7 +672,8 @@
                         style="vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
                 @endif
                 <br>
-                <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">{{ $user['name'] }}
+                <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">
+                    Hello, {{ $record->customers->customer }}
                 </h1>
                 <p>{{ $user['website'] }} | +91-{{ $user['phone'] }} | {{ $user['email'] }}</p>
                 <p style="font-size: 15px; margin-top: 20px">{{ $user['address'] }}</p>
@@ -506,36 +715,34 @@
         </div>
 
         <div class="vehicles" style="margin-bottom: 20px">
-            <h2>Basic Itienary</h2>
+            <h2>Quick Itienary</h2>
             <table>
                 <tr>
                     <th>Day</th>
-                    <th>Date</th>
                     <th>Itenary</th>
-                    {{-- <th>Specialities</th>
-                    <th>Location Covered</th> --}}
+                    <th>Specialities</th>
+                    <th>Location Covered</th>
                 </tr>
                 @foreach ($record->itinerary as $itinerary)
                     <tr>
                         <td>Day-{{ $itinerary['days'] }}</td>
-                        <td>{{ date('l, F j, Y', strtotime($itinerary['date'])) }}</td>
                         <td>{{ $itinerary['description'] }}</td>
-                        {{-- <td>
+                        <td>
                             @foreach ($itinerary['specialities'] as $speciality)
-                                {{ $speciality }}
+                                <span class="badge badge-primary">{{ $speciality }}</span>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($itinerary['locations'] as $location)
-                                {{ $location }}
+                                <span class="badge badge-primary">{{ $location }}</span>
                             @endforeach
-                        </td> --}}
+                        </td>
                     </tr>
                 @endforeach
             </table>
         </div>
 
-        <div class="itinerary">
+        {{-- <div class="itinerary">
 
             <div class="timeline">
                 <h2>Itinerary Timeline</h2>
@@ -552,7 +759,6 @@
                     <div class="content">
                         <h3>Day {{ $itinerary['days'] }}</h3>
                         <h4>Title: {{ $itinerary['name'] }}</h4>
-                        {{-- <p><strong>Description:</strong> {{ $itinerary['description'] }}</p> --}}
                         <p><strong>Date:</strong> {{ date('l, F j, Y', strtotime($itinerary['date'])) }}</p>
                         <p><strong>Specialities:</strong>
 
@@ -610,82 +816,136 @@
 
 
         </table>
-    </div>
+    </div> --}}
 
-    @foreach ($hotelrates as $index => $hotelrates)
-        @php
-            $hoteltype = App\Models\HotelCategory::findorfail($index);
-        @endphp
         <div class="hotels">
-            <h2>{{ $hoteltype['category'] }} - ₹.{{ number_format($hotelrates) }}/-</h2>
+            <h2>Hotel Plan</h2>
 
-            @foreach ($record->rooms as $room)
-                @if ($room['hotel_type'] == $hoteltype['id'])
-                    <div class="hotel-block">
-                        @php
-                            $des = App\Models\destination::findorfail($room['location']);
-                            $roomtype = App\Models\RoomCategory::findorfail($room['room_type']);
-                            $hotelImages = App\Models\HotelImage::where('hotel_id', $room['hotel_name'])->get();
-                            $hotel = App\Models\Hotel::findorfail($room['hotel_name']);
-                        @endphp
-                        <h3>Day {{ $room['days'] }} ({{ Carbon\Carbon::parse($room['date'])->format('d F Y') }})
-                            - {{ $des['Title'] }}, hotel details</h3>
-                        <div class="hotel-info">
-                            <div class="hotel-images">
+            @foreach ($hotelrates as $index => $hotelrates)
+                @php
+                    $hoteltype = App\Models\HotelCategory::findorfail($index);
+                @endphp
+                <div class="hotels">
+                    <h2>{{ $hoteltype['category'] }} -
+                        ₹.{{ number_format($hotelrates) }}/-
+                    </h2>
 
-                                @foreach ($hotelImages as $images)
-                                    @foreach ($images['images'] as $image)
-                                        <img src="{{ asset('storage/' . $image) }}" width="10px"
-                                            alt="Seashell Coral Cove">
-                                    @endforeach
-                                @endforeach
+                    @foreach ($record->rooms as $room)
+                        @if ($room['hotel_type'] == $hoteltype['id'])
+                            <div class="hotel-block">
+                                @php
+                                    $des = App\Models\destination::findorfail($room['location']);
+                                    $roomtype = App\Models\RoomCategory::findorfail($room['room_type']);
+                                    $hotelImages = App\Models\HotelImage::where('hotel_id', $room['hotel_name'])->get();
+                                    $hotel = App\Models\Hotel::findorfail($room['hotel_name']);
+                                @endphp
+                                <h3>Day {{ $room['days'] }}
+                                    {{-- ({{ Carbon\Carbon::parse($room['date'])->format('d F Y') }}) --}}
+                                    - {{ $des['Title'] }}, hotel details</h3>
+                                <div class="hotel-info">
+                                    <div class="hotel-images">
 
+                                        @foreach ($hotelImages as $images)
+                                            @foreach ($images['images'] as $image)
+                                                <img src="{{ asset('storage/' . $image) }}" width="10px"
+                                                    alt="Seashell Coral Cove">
+                                            @endforeach
+                                        @endforeach
+
+                                    </div>
+                                    <div class="hotel-details">
+                                        <br><strong>{{ strtoupper($hotel['hotelName']) }}</strong><br>
+                                        {{-- Date: {{ Carbon\Carbon::parse($room['date'])->format('d F Y') }}<br> --}}
+                                        Room Type: <strong>{{ $roomtype['category'] }}</strong><br>
+                                        Meal Plan: <strong>{{ strtoupper($room['meal_plan']) }}</strong>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="hotel-details">
-                                <p><strong>{{ $hotel['hotelName'] }}</strong><br>
-                                    Date: {{ Carbon\Carbon::parse($room['date'])->format('d F Y') }}<br>
-                                    Meal Plan: {{ strtoupper($room['meal_plan']) }}<br>
-                                    Room Type: {{ $roomtype['category'] }}</p>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                        @endif
+                    @endforeach
+
+                </div>
             @endforeach
-
         </div>
-    @endforeach
 
-    <div class="inclusions">
-        <h2>Package Includes</h2>
-        <ul>
-            @foreach ($record->inclusions as $inclusion)
-                <li>{{ ucwords($inclusion) }}</li>
-            @endforeach
-        </ul>
-    </div>
-    <div class="exclusions">
-        <h2>Package Excludes</h2>
-        <ul>
-            @foreach ($record->exclusions as $exclusion)
-                <li>{{ ucwords($exclusion) }}</li>
-            @endforeach
-        </ul>
-    </div>
-    <div class="cancellation-policy">
-        <h2>Refund and Cancellation Policy</h2>
-        @php
-            $refunds = App\Models\Refund::where('user_id', auth()->id())->get();
-        @endphp
-        <ol>
-            @foreach ($refunds as $refund)
-                <li style="margin-bottom: 10px">{{ $refund['point'] }}</li>
-            @endforeach
-        </ol>
+        <div class="inclusions">
+            <h2>Package Includes</h2>
+            <ul class="styled-list">
+                @foreach ($record->inclusions as $inclusion)
+                    <li>{{ ucwords($inclusion) }}</li>
+                @endforeach
+            </ul>
+        </div>
+
+        <div class="exclusions">
+            <h2>Package Excludes</h2>
+            <ul class="styled-list">
+                @foreach ($record->exclusions as $exclusion)
+                    <li>{{ ucwords($exclusion) }}</li>
+                @endforeach
+            </ul>
+        </div>
+
+        <div class="cancellation-policy">
+            <h2>Refund and Cancellation Policy</h2>
+            @php
+                $refunds = App\Models\Refund::where('user_id', auth()->id())->get();
+            @endphp
+            <div class="policy-content">
+                <ol class="styled-policy-list">
+                    @foreach ($refunds as $refund)
+                        <li>{{ $refund['point'] }}</li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+
+        <div class="terms-and-conditions">
+            <h2>Terms and Conditions</h2>
+            @php
+                $terms = App\Models\Termsandconditions::where('user_id', auth()->id())->get();
+            @endphp
+            <div class="terms-content">
+                <ol class="styled-terms-list">
+                    @foreach ($terms as $term)
+                        <li>{{ $term['point'] }}</li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
 
 
+        <div class="why-book-section">
+            <h3>Why Book with {{ $user['name'] }} ?</h3>
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>8+ Years of Experience</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-star"></i>
+                    <span>750+ 5* Reviews on Google</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Govt. Approved and Registered</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-ban"></i>
+                    <span>No Hidden Fees</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Easy Refunds & Rescheduling</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-hotel"></i>
+                    <span>Vetted Hotels & Resorts</span>
+                </div>
+            </div>
+        </div>
 
-    </div>
-    </div>
+
 </body>
 
 </html>

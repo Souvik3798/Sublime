@@ -7,6 +7,9 @@ use App\Filament\Resources\CabResource\RelationManagers;
 use App\Models\Cab;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,16 +32,35 @@ class CabResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('Title')
+                    ->label('Cab Service Title')
                     ->required(),
-                Forms\Components\TextInput::make('price')
-                    ->label('Price')
-                    ->required()
-                    ->prefix('₹')
-                    ->suffix('/-'),
+
+                Repeater::make('price')
+                    ->label('Vehicle Pricing')
+                    ->schema([
+                        Select::make('vehicle_type')
+                            ->label('Vehicle Type')
+                            ->options([
+                                '7' => '7 Seater',
+                                '13' => '13 Seater',
+                                '17' => '17 Seater',
+                                '26' => '26 Seater',
+                            ])
+                            ->required(),
+                        TextInput::make('price')
+                            ->label('Price')
+                            ->numeric()
+                            ->prefix('₹')
+                            ->suffix('/-')
+                            ->required(),
+                    ])
+                    ->columns(2),
+
                 Hidden::make('user_id')
-                    ->default(auth()->id())
+                    ->default(auth()->id()),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
@@ -47,12 +69,7 @@ class CabResource extends Resource
                 Tables\Columns\TextColumn::make('Title')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('price')
-                    ->label('Price')
-                    ->prefix('₹.')
-                    ->suffix('/-')
-                    ->sortable()
-                    ->searchable(),
+
             ])->defaultSort('updated_at', 'desc')
             ->filters([
                 //

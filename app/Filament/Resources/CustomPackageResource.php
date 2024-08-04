@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomPackageResource\Pages;
@@ -10,12 +11,14 @@ use App\Models\Category;
 use App\Models\Customers;
 use App\Models\CustomPackage;
 use App\Models\destination;
+use App\Models\Entryfees;
 use App\Models\Ferry;
 use App\Models\Hotel;
 use App\Models\HotelCategory;
 use App\Models\IternityTemplate;
 use App\Models\PackageTemplate;
 use App\Models\RoomCategory;
+use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -31,6 +34,8 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -43,6 +48,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Log;
 
 class CustomPackageResource extends Resource
 {
@@ -54,12 +60,15 @@ class CustomPackageResource extends Resource
 
     protected static ?int $navigationSort = 12;
 
+
+
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
 
-                $tab = Tabs::make('General Package')
+                Tabs::make('General Package')
                     ->tabs([
                         Tab::make('Personal Info')
                             ->schema([
@@ -73,39 +82,17 @@ class CustomPackageResource extends Resource
                                     ->default(auth()->id()),
                                 Select::make('cid')
                                     ->options(Customers::where('user_id', auth()->id())->pluck('customer', 'cid'))
-                                    // ->autocomplete(false)
                                     ->searchable()
                                     ->live()
-                                    ->label('Cutomer Name')
+                                    ->label('Customer Name')
                                     ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
                                         if ($operation !== 'create' && $operation !== 'edit') {
                                             return;
                                         }
-
-                                        $customers = Customers::where('cid', $state)->get();
-
-                                        foreach ($customers as $customer) {
-                                            $custid = $customer->id;
-                                            $cid = $customer->cid;
-                                            $cust_name = $customer->customer;
-                                            $number = $customer->number;
-                                            $adults = $customer->adults;
-                                            $childgreaterthan5 = $customer->childgreaterthan5;
-                                            $childlessthan5 = $customer->childlessthan5;
-                                            $dateofarrival = $customer->dateofarrival;
-                                            $dateofdeparture = $customer->dateofdeparture;
-                                        }
-
-                                        if ($customers->count() > 0) {
-                                            $set('customers_id', $custid);
-                                            $set('customer', $cid);
-                                            $set('number', $number);
-                                            $set('adults', $adults);
-                                            $set('childgreaterthan5', $childgreaterthan5);
-                                            $set('childlessthan5', $childlessthan5);
-                                            $set('dateofarrival', date('F d, Y', strtotime($dateofarrival)));
-                                            $set('dateofdeparture', date('F d, Y', strtotime($dateofdeparture)));
-                                        }
+                                        self::populateCustomerData($state, $set);
+                                    })
+                                    ->afterStateHydrated(function ($state, Forms\Set $set) {
+                                        self::populateCustomerData($state, $set);
                                     }),
                                 TextInput::make('customer')
                                     ->label('Customer ID')
@@ -115,36 +102,41 @@ class CustomPackageResource extends Resource
                                 TextInput::make('number')
                                     ->label('Mobile Number')
                                     ->prefix('+91')
-                                    ->disabled()
-                                    ->visibleOn('create'),
+                                    ->disabled(),
                                 TextInput::make('adults')
                                     ->label('Number of Adults')
-                                    ->disabled()
                                     ->numeric()
-                                    ->visibleOn('create'),
+                                    ->disabled()
+                                    ->default(0)
+                                    ->afterStateUpdated(function ($state) {
+                                        session(['adults' => $state]);
+                                    })
+                                    ->afterStateHydrated(function ($state) {
+                                        session(['adults' => $state]);
+                                    })
+                                    ->live()
+                                    ->reactive(),
                                 TextInput::make('childgreaterthan5')
-                                    ->label('Number of childrens (5-12 yrs)')
+                                    ->label('Number of children (5-12 yrs)')
                                     ->disabled()
-                                    ->placeholder('if not then please type 0')
+                                    ->placeholder('If none, please type 0')
                                     ->default(0)
-                                    ->numeric()
-                                    ->visibleOn('create'),
+                                    ->numeric(),
                                 TextInput::make('childlessthan5')
-                                    ->label('Number of childrens (Upto 5 yrs)')
+                                    ->label('Number of children (Upto 2-5 yrs)')
                                     ->disabled()
-                                    ->placeholder('if not then please type 0')
+                                    ->placeholder('If none, please type 0')
                                     ->default(0)
-                                    ->numeric()
-                                    ->visibleOn('create'),
+                                    ->numeric(),
                                 TextInput::make('dateofarrival')
                                     ->label('Date of Arrival')
-                                    ->disabled()
-                                    ->visibleOn('create'),
+                                    ->disabled(),
                                 TextInput::make('dateofdeparture')
                                     ->label('Date of Departure')
-                                    ->disabled()
-                                    ->visibleOn('create'),
+                                    ->disabled(),
                             ])->columns(3),
+
+
                         Tab::make('Add Package')
                             ->schema([
                                 Select::make('category_id')
@@ -259,8 +251,8 @@ class CustomPackageResource extends Resource
                                             ->required(),
                                         TagsInput::make('locations')
                                             ->required(),
-                                        DatePicker::make('date')
-                                            ->label('Date')
+                                        // DatePicker::make('date')
+                                        //     ->label('Date')
                                     ])->columns(3)->addActionLabel('Add itinerary')
                             ]),
                         Tab::make('Add Rooms')
@@ -408,9 +400,8 @@ class CustomPackageResource extends Resource
                                                             ->prefix('₹')
                                                             ->suffix('/-')
                                                             ->required(),
-                                                        DatePicker::make('date')
-                                                            ->label('Date')
-                                                            ->required(),
+                                                        // DatePicker::make('date')
+                                                        //     ->label('Date'),
                                                     ])->columns(3),
                                             ]),
                                         Section::make('Extras')
@@ -447,14 +438,59 @@ class CustomPackageResource extends Resource
                             ]),
                         Tab::make('Add Logistics')
                             ->schema([
-                                Section::make('Enter Cruz Details')
+                                Section::make('Enter Entry Fee Details')
+                                    ->schema([
+                                        Fieldset::make('entry_fee')
+                                            ->label('Entry Fee Details')
+                                            ->schema([
+                                                Select::make('place')
+                                                    ->label('Choose the Place')
+                                                    ->required()
+                                                    ->options(Entryfees::where('user_id', auth()->id())->pluck('place', 'id'))
+                                                    ->multiple()
+                                                    ->live()
+                                                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                                                        if ($operation !== 'create' && $operation !== 'edit') {
+                                                            return;
+                                                        }
+                                                        // dd($state);
+                                                        if (empty($state)) {
+                                                            $set('fee', null);
+                                                            return;
+                                                        }
+
+                                                        $totalPrice = 0;
+                                                        foreach ($state as $place) {
+                                                            $entryfees = Entryfees::where('id', $place)->get();
+
+                                                            foreach ($entryfees as $entryfee) {
+                                                                $totalPrice += $entryfee->fee;
+                                                            }
+                                                        }
+
+                                                        // Check if totalPrice is greater than zero before setting the fee
+                                                        if ($totalPrice > 0) {
+                                                            $set('fee', $totalPrice);
+                                                        }
+                                                    }),
+                                                TextInput::make('fee')
+                                                    ->label('Price')
+                                                    ->numeric()
+                                                    ->prefix('₹')
+                                                    ->suffix('/-')
+                                                    ->required(),
+                                            ]),
+                                    ])->columnSpan(4),
+                                Section::make('Enter Cruise Details')
                                     ->schema([
                                         Repeater::make('cruz')
+                                            ->label('Cruise Details')
                                             ->schema([
                                                 Select::make('days')
                                                     ->label('Day')
                                                     ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10', '11' => '11', '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17', '18' => '18', '19' => '19', '20' => '20']),
                                                 Select::make('cruz')
+                                                    ->label('Cruise')
                                                     ->options(Ferry::where('user_id', auth()->id())->pluck('Title', 'id'))
                                                     ->live()
                                                     ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
@@ -498,39 +534,76 @@ class CustomPackageResource extends Resource
                                 Section::make('Enter Vehicle Details')
                                     ->schema([
                                         Repeater::make('vehicle')
+                                            ->label('Vehicle Details')
                                             ->schema([
+                                                Checkbox::make('include_luggage')
+                                                    ->label('Include Luggage Vehicle')
+                                                    ->reactive() // Ensure it updates the form when toggled
+                                                    ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
+                                                        // Re-trigger vehicle selection update
+                                                        $set('vehicle', $get('vehicle'));
+                                                        self::updatePrice($set, $get);
+                                                    }),
+
                                                 Select::make('days')
                                                     ->label('Day')
-                                                    ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10', '11' => '11', '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17', '18' => '18', '19' => '19', '20' => '20']),
+                                                    ->options([
+                                                        '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5',
+                                                        '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10',
+                                                        '11' => '11', '12' => '12', '13' => '13', '14' => '14', '15' => '15',
+                                                        '16' => '16', '17' => '17', '18' => '18', '19' => '19', '20' => '20'
+                                                    ]),
+
                                                 Select::make('vehicle')
-                                                    ->options(Cab::where('user_id', auth()->id())->pluck('Title', 'id'))
+                                                    ->label('Vehicle Type')
+                                                    ->options(function (Forms\Get $get) {
+                                                        $adults = session('adults');
+                                                        $includeLuggage = $get('include_luggage'); // Get the value of the luggage checkbox
+
+                                                        if (is_null($adults)) {
+                                                            return ['Error: Adults value is missing'];
+                                                        }
+
+                                                        $vehicles = [];
+                                                        // Fetch all cabs with their price data
+                                                        $cabs = Cab::where('user_id', auth()->id())->get();
+
+                                                        foreach ($cabs as $cab) {
+                                                            $prices = $cab->price; // Directly use the array
+
+                                                            foreach ($prices as $price) {
+                                                                if ($adults <= 4 && $price['vehicle_type'] == '7') {
+                                                                    $vehicles[$cab->id] = $cab->Title . ' - 7 Seater';
+                                                                } elseif ($adults > 4 && $adults <= 9 && $price['vehicle_type'] == '7') {
+                                                                    $vehicles[$cab->id] = $cab->Title . ($includeLuggage ? ' - 2 x 7 Seater' : ' - 7 Seater');
+                                                                } elseif ($adults > 9 && $adults <= 14 && $price['vehicle_type'] == '17') {
+                                                                    $vehicles[$cab->id] = $cab->Title . ' - 17 Seater';
+                                                                } elseif ($adults > 14 && $adults <= 17 && in_array($price['vehicle_type'], ['17', '7'])) {
+                                                                    $vehicles[$cab->id] = $cab->Title . ($includeLuggage ? ' - 17 Seater + 7 Seater' : ' - 17 Seater');
+                                                                } elseif ($adults > 17 && $adults <= 25 && in_array($price['vehicle_type'], ['26', '7'])) {
+                                                                    $vehicles[$cab->id] = $cab->Title . ($includeLuggage ? ' - 26 Seater + 7 Seater' : ' - 26 Seater');
+                                                                }
+                                                            }
+                                                        }
+
+                                                        return $vehicles;
+                                                    })
                                                     ->live()
-                                                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                                                        if ($operation !== 'create' && $operation !== 'edit') {
-                                                            return;
-                                                        }
-
-
-                                                        $vehicles = Cab::where('id', $state)->get();
-
-
-                                                        foreach ($vehicles as $vehicle) {
-                                                            $price = $vehicle->price;
-                                                        }
-
-                                                        if ($vehicles->count() > 0) {
-                                                            $set('price', $price);
-                                                        }
+                                                    ->reactive()
+                                                    ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
+                                                        // Get the selected vehicle's price
+                                                        self::updatePrice($set, $get);
                                                     }),
-                                                Select::make('source')
-                                                    ->label('location')
-                                                    ->options(destination::where('user_id', auth()->id())->pluck('Title', 'Title')),
+
                                                 TextInput::make('price')
                                                     ->label('Price')
                                                     ->numeric()
+                                                    ->live()
+                                                    ->reactive()
                                                     ->prefix('₹')
                                                     ->suffix('/-')
-                                            ]),
+                                                    ->required(),
+                                            ]), // Adjust column layout if needed
                                     ])->columnSpan(2),
                             ])->columns(4),
                         Tab::make('Add Extras')
@@ -663,5 +736,58 @@ class CustomPackageResource extends Resource
             'create' => Pages\CreateCustomPackage::route('/create'),
             'edit' => Pages\EditCustomPackage::route('/{record}/edit'),
         ];
+    }
+
+    public static function populateCustomerData($cid, Set $set)
+    {
+        $customer = Customers::where('cid', $cid)->first();
+
+        if ($customer) {
+            $set('customers_id', $customer->id);
+            $set('customer', $customer->cid);
+            $set('number', $customer->number);
+            $set('adults', $customer->adults);
+            session(['adults' => $customer->adults]);
+            $set('childgreaterthan5', $customer->childgreaterthan5);
+            $set('childlessthan5', $customer->childlessthan5);
+            $set('dateofarrival', date('F d, Y', strtotime($customer->dateofarrival)));
+            $set('dateofdeparture', date('F d, Y', strtotime($customer->dateofdeparture)));
+        }
+    }
+    protected static function updatePrice(Forms\Set $set, Forms\Get $get)
+    {
+        $adults = session('adults');
+        $includeLuggage = $get('include_luggage');
+        $vehicle = Cab::find($get('vehicle'));
+
+        if ($vehicle) {
+            $prices = $vehicle->price;
+            $price = 0;
+
+            // Find the price of the 7-seater vehicle
+            $sevenSeaterPrice = 0;
+            foreach ($prices as $p) {
+                if ($p['vehicle_type'] == '7') {
+                    $sevenSeaterPrice = $p['price'];
+                    break;  // Assuming there's only one 7-seater option
+                }
+            }
+
+            foreach ($prices as $p) {
+                if ($adults <= 4 && $p['vehicle_type'] == '7') {
+                    $price = $p['price'];
+                } elseif ($adults > 4 && $adults <= 9 && $p['vehicle_type'] == '7') {
+                    $price = $includeLuggage ? $p['price'] + $sevenSeaterPrice : $p['price'];
+                } elseif ($adults > 9 && $adults <= 14 && $p['vehicle_type'] == '17') {
+                    $price = $p['price'];
+                } elseif ($adults > 14 && $adults <= 17 && in_array($p['vehicle_type'], ['17', '7'])) {
+                    $price = $includeLuggage ? $p['price'] + $sevenSeaterPrice : $p['price'];
+                } elseif ($adults > 17 && $adults <= 25 && in_array($p['vehicle_type'], ['26', '7'])) {
+                    $price = $includeLuggage ? $p['price'] + $sevenSeaterPrice : $p['price'];
+                }
+            }
+
+            $set('price', $price);
+        }
     }
 }

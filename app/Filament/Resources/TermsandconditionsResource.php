@@ -2,28 +2,26 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RefundResource\Pages;
-use App\Filament\Resources\RefundResource\RelationManagers;
-use App\Models\Refund;
+use App\Filament\Resources\TermsandconditionsResource\Pages;
+use App\Filament\Resources\TermsandconditionsResource\RelationManagers;
+use App\Models\Termsandconditions;
 use Filament\Forms;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\DB;
 
-class RefundResource extends Resource
+class TermsandconditionsResource extends Resource
 {
-    protected static ?string $model = Refund::class;
+    protected static ?string $model = Termsandconditions::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Policy';
-    protected static ?string $label = 'Refund and Cancellation';
+    protected static ?string $label = 'Terms and Conditions';
 
     public static function form(Form $form): Form
     {
@@ -87,9 +85,9 @@ class RefundResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRefunds::route('/'),
-            'create' => Pages\CreateRefund::route('/create'),
-            'edit' => Pages\EditRefund::route('/{record}/edit'),
+            'index' => Pages\ListTermsandconditions::route('/'),
+            'create' => Pages\CreateTermsandconditions::route('/create'),
+            'edit' => Pages\EditTermsandconditions::route('/{record}/edit'),
         ];
     }
 }

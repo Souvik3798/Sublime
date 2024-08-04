@@ -119,6 +119,7 @@ class CustomerpdfController extends Controller
         $totalvehicle = 0;
         $totaladdon = 0;
         $grandtotal = 0;
+        $fee = 0;
 
         // Calculate total customers and extra customers
         $totalcustomers = $record->customers->adults;
@@ -139,6 +140,10 @@ class CustomerpdfController extends Controller
         foreach ($record->vehicle as $vehicle) {
             $totalvehicle += $vehicle['price'];
         }
+
+        //calculate Total fee
+
+        $fee = $record->fee * ($record->customers->adults + $record->customers->childgreaterthan5 + $record->customers->childlessthan5);
 
         // Calculate total addon costs
         foreach ($record->addons as $addon) {
@@ -163,7 +168,7 @@ class CustomerpdfController extends Controller
             }
         }
 
-        $extras = $adultcruz + $childcruz + $totalvehicle + $totaladdon;
+        $extras = $adultcruz + $childcruz + $totalvehicle + $totaladdon + $fee;
 
         // Add other rates to hotel rates
         foreach ($hotelrates as $type => $rate) {
@@ -172,8 +177,10 @@ class CustomerpdfController extends Controller
 
         // dd($hotelrates);
 
+        $margin = $record->margin * ($record->customers->adults + $record->customers->childgreaterthan5);
 
 
-        return view('pdf.package', compact(['record', 'hotelrates']));
+
+        return view('pdf.package', compact(['record', 'hotelrates', 'margin']));
     }
 }

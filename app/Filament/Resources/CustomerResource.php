@@ -56,7 +56,7 @@ class CustomerResource extends Resource
                     ->default(0)
                     ->numeric(),
                 TextInput::make('childlessthan5')
-                    ->label('Enter Number of childrens (Upto 5 yrs)')
+                    ->label('Enter Number of childrens (Upto 2-5 yrs)')
                     ->required()
                     ->placeholder('if not then please type 0')
                     ->default(0)

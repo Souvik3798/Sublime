@@ -26,6 +26,8 @@ class CustomPackage extends Model
         'rooms',
         'cruz',
         'vehicle',
+        'place',
+        'fee',
         'addons',
         'voucher',
         'margin',
@@ -39,7 +41,8 @@ class CustomPackage extends Model
         'rooms' => 'array',
         'cruz' => 'array',
         'vehicle' => 'array',
-        'addons' => 'array'
+        'addons' => 'array',
+        'place' => 'array'
     ];
 
     public function category(): BelongsTo

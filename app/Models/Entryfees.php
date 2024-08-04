@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Cab extends Model
+class Entryfees extends Model
 {
     use HasFactory;
-    protected $fillable = ['Title', 'price', 'user_id'];
-
-    protected $casts = [
-        'price' => 'array',
+    protected $fillable = [
+        'place',
+        'fee',
+        'user_id'
     ];
 
     public function user(): BelongsTo
