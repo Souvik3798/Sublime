@@ -161,7 +161,7 @@ class CustomerpdfController extends Controller
                 if (!isset($hotelrates[$hotelTypeId])) {
                     $hotelrates[$hotelTypeId] = 0;
                 }
-                $hotelrates[$hotelTypeId] += ($room['price'] / 2) * $room['no_of_room'];
+                $hotelrates[$hotelTypeId] += ($room['price']) * $room['no_of_room'];
                 $hotelrates[$hotelTypeId] += $room['adult_mattress_price'] * $room['no_of_room'];
                 $hotelrates[$hotelTypeId] += $room['extra_person_mattress'];
                 $hotelrates[$hotelTypeId] += $room['child_with_mattress_price'] * $childwithbed;
