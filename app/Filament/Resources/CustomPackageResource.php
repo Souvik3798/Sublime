@@ -502,11 +502,13 @@ class CustomPackageResource extends Resource
                                                         }
                                                     }),
                                                 Select::make('source')
-                                                    ->label('Select Source')
-                                                    ->options(destination::where('user_id', auth()->id())->pluck('Title', 'Title')),
-                                                Select::make('destination')
-                                                    ->label('Select Destinations')
-                                                    ->options(destination::where('user_id', auth()->id())->pluck('Title', 'Title')),
+                                                    ->label('Select Route')
+                                                    ->options([
+                                                        'PB-HL' => 'PB-HL',
+                                                        'HL-NL' => 'HL-NL',
+                                                        'NL-PB' => 'NL-PB',
+                                                        'HL-PB' => 'HL-PB'
+                                                    ]),
                                                 TextInput::make('price_adult')
                                                     ->label('Price for Adult')
                                                     ->numeric()
