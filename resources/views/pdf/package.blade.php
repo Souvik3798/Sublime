@@ -827,7 +827,7 @@
                 @endphp
                 <div class="hotels">
                     <h2>{{ $hoteltype['category'] }} -
-                        ₹.{{ number_format($hotelrates) }}/-
+                        ₹.{{ number_format($hotelrates + $margin) }}/-
                     </h2>
 
                     @foreach ($record->rooms as $room)
