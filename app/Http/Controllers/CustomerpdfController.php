@@ -170,7 +170,7 @@ class CustomerpdfController extends Controller
 
         $extras = $adultcruz + $childcruz + $totalvehicle + $totaladdon + $fee;
 
-        dd($hotelrates);
+        // dd($hotelrates);
 
         // Add other rates to hotel rates
         foreach ($hotelrates as $type => $rate) {
