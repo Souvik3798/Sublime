@@ -164,7 +164,6 @@ class CustomPackageResource extends Resource
 
 
                                         foreach ($packs as $pack) {
-                                            $description = $pack->description;
                                             $day = $pack->days;
                                             $night = $pack->nights;
                                             $inclusions = $pack->inclusions;
@@ -173,7 +172,6 @@ class CustomPackageResource extends Resource
                                         }
 
                                         if ($packs->count() > 0) {
-                                            $set('description', $description);
                                             $set('inclusions', $inclusions);
                                             $set('exclusions', $exclusions);
                                             $set('days', $day);
@@ -191,9 +189,6 @@ class CustomPackageResource extends Resource
                                     ->required()
                                     ->label('Number of Nights')
                                     ->numeric(),
-                                Textarea::make('description')
-                                    ->required(),
-
                                 TagsInput::make('inclusions')
                                     ->required(),
                                 TagsInput::make('exclusions')
@@ -233,21 +228,17 @@ class CustomPackageResource extends Resource
 
                                                 foreach ($packs as $pack) {
                                                     $description = $pack->Description;
-                                                    $specialities = $pack->Specialties;
                                                     $locations = $pack->locationCovered;
                                                 }
 
                                                 $s = ["<p>", "</p>", "<i>", "</i>"];
                                                 if ($packs->count() > 0) {
                                                     $set('description', str_replace($s, "", $description));
-                                                    $set('specialities', $specialities);
                                                     $set('locations', $locations);
                                                 }
                                             })
                                             ->required(),
                                         Textarea::make('description')
-                                            ->required(),
-                                        TagsInput::make('specialities')
                                             ->required(),
                                         TagsInput::make('locations')
                                             ->required(),
@@ -619,7 +610,6 @@ class CustomPackageResource extends Resource
                                             ->schema([
                                                 Select::make('days')
                                                     ->label('Day')
-                                                    ->required()
                                                     ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10', '11' => '11', '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17', '18' => '18', '19' => '19', '20' => '20']),
                                                 Select::make('addon')
                                                     ->options(Addon::where('user_id', auth()->id())->pluck('name', 'id'))
@@ -632,19 +622,16 @@ class CustomPackageResource extends Resource
                                                         foreach ($p as $p) {
                                                             $set('price', $p->price);
                                                         }
-                                                    })
-                                                    ->required(),
+                                                    }),
                                                 TextInput::make('price')
                                                     ->label('Price')
                                                     ->prefix('₹')
                                                     ->suffix('/-')
                                                     ->live()
-                                                    ->numeric()
-                                                    ->required(),
+                                                    ->numeric(),
                                                 Select::make('source')
                                                     ->label('Location')
-                                                    ->options(destination::where('user_id', auth()->id())->pluck('Title', 'Title'))
-                                                    ->required(),
+                                                    ->options(destination::where('user_id', auth()->id())->pluck('Title', 'Title')),
 
                                                 Textarea::make('notes')
                                                     ->label('Notes (if any)')

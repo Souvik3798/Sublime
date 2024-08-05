@@ -44,9 +44,6 @@ class IternityTemplateResource extends Resource
                     ->required(),
                 Textarea::make('Description')
                     ->required(),
-                TagsInput::make('Specialties')
-                    ->placeholder('Type Specialty and press Enter')
-                    ->required(),
                 TagsInput::make('locationCovered')
                     ->label('Locations Covered')
                     ->placeholder('Type Location Name and press Enter')
@@ -78,7 +75,6 @@ class IternityTemplateResource extends Resource
                         // Only render the tooltip if the column content exceeds the length limit.
                         return $state;
                     }),
-                TagsColumn::make('Specialties'),
                 TagsColumn::make('locationCovered')
             ])->defaultSort('updated_at', 'desc')
             ->filters([

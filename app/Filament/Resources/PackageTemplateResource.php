@@ -59,8 +59,6 @@ class PackageTemplateResource extends Resource
                     ->live()
                     ->required()
                     ->autocomplete('off'),
-                Textarea::make('description')
-                    ->required(),
                 TagsInput::make('inclusions')
                     ->required()
                     ->placeholder('Type Inclusion then press Enter'),
