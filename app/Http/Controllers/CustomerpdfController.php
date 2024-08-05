@@ -181,7 +181,7 @@ class CustomerpdfController extends Controller
 
         $margin = $record->margin * ($record->customers->adults + $record->customers->childgreaterthan5 + $record->customers->childlessthan5);
 
-        // dd($margin, $record->customers->adults, $record->customers->childgreaterthan5, $record->customers->childlessthan5, $hotelrates);
+        dd($margin, $record->customers->adults, $record->customers->childgreaterthan5, $record->customers->childlessthan5, $hotelrates);
 
 
 
