@@ -472,6 +472,58 @@
             }
         }
 
+        /* kindly notes */
+        .kindly-notes {
+            background-color: #ffffff;
+            border-left: 5px solid #28a745;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .kindly-notes h2 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            font-size: 26px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 10px;
+        }
+
+        .kindly-content {
+            padding-left: 10px;
+        }
+
+        .styled-kindly-list {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .styled-kindly-list li {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #555;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .styled-kindly-list li::before {
+            content: "\1F4DD";
+            font-size: 22px;
+            color: #007bff;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
         @media screen and (max-width: 600px) {
             .timeline::after {
                 left: 31px;
@@ -540,8 +592,36 @@
                 height: auto;
             }
 
+            .kindly-notes {
+                background-color: #ffffff !important;
+                border-left: 5px solid #28a745 !important;
+                /* Ensure border is visible in print */
+                padding: 20px 30px;
+                margin-bottom: 20px;
+                border-radius: 10px !important;
+                /* Ensure border radius is applied */
+                box-shadow: none !important;
+                /* Remove shadow in print */
+            }
+
+            .kindly-notes h2 {
+                color: #333 !important;
+                font-size: 22px;
+                /* Slightly reduce font size for print */
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ddd;
+                /* Lighter border for print */
+                padding-bottom: 5px;
+            }
+
+            .styled-kindly-list li {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
             .package-details,
             .hotels,
+            .kindly-notes,
             .inclusions,
             .exclusions,
             .cancellation-policy,
@@ -910,6 +990,20 @@
                 <ol class="styled-terms-list">
                     @foreach ($terms as $term)
                         <li>{{ $term['point'] }}</li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+
+        <div class="kindly-notes">
+            <h2>Kindly Note</h2>
+            @php
+                $kns = App\Models\Kindlynote::where('user_id', auth()->id())->get();
+            @endphp
+            <div class="kindly-content">
+                <ol class="styled-kindly-list">
+                    @foreach ($kns as $kn)
+                        <li>{{ $kn['point'] }}</li>
                     @endforeach
                 </ol>
             </div>
