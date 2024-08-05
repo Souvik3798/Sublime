@@ -130,11 +130,11 @@ class CustomerpdfController extends Controller
         // Calculate total cruz costs
         $adultcruz = 0;
         $childcruz = 0;
-        $totalcruzpassenger = $totalcustomers + $extracustomer;
+        $totalcruzpassenger = $totalcustomers + $childwithbed;
 
         foreach ($record->cruz as $cruz) {
             $adultcruz += $cruz['price_adult'] * $totalcruzpassenger;
-            $childcruz += $cruz['price_infant'] * $childwithbed;
+            $childcruz += $cruz['price_infant'] * $childwithoutbed;
         }
 
         foreach ($record->vehicle as $vehicle) {
@@ -164,13 +164,13 @@ class CustomerpdfController extends Controller
                 $hotelrates[$hotelTypeId] += ($room['price']) * $room['no_of_room'];
                 $hotelrates[$hotelTypeId] += $room['adult_mattress_price'] * $room['no_of_room'];
                 $hotelrates[$hotelTypeId] += $room['extra_person_mattress'];
-                $hotelrates[$hotelTypeId] += $room['child_with_mattress_price'] * $childwithbed;
+                $hotelrates[$hotelTypeId] += $room['child_with_mattress_price'];
             }
         }
 
         $extras = $adultcruz + $childcruz + $totalvehicle + $totaladdon + $fee;
 
-
+        dd($hotelrates);
 
         // Add other rates to hotel rates
         foreach ($hotelrates as $type => $rate) {
