@@ -548,7 +548,9 @@ class CustomPackageResource extends Resource
                                                 Select::make('vehicle')
                                                     ->label('Vehicle Type')
                                                     ->options(function (Forms\Get $get, $state, Set $set) {
-                                                        $adults = session('adults');
+                                                        $adults = session('adults') + session('child');
+
+                                                        Log::info('Adults' . $adults);
                                                         $includeLuggage = $get('include_luggage'); // Get the value of the luggage checkbox
 
                                                         if (is_null($adults)) {
@@ -741,6 +743,7 @@ class CustomPackageResource extends Resource
             $set('adults', $customer->adults);
             session(['adults' => $customer->adults]);
             $set('childgreaterthan5', $customer->childgreaterthan5);
+            session(['child' => $customer->childgreaterthan5]);
             $set('childlessthan5', $customer->childlessthan5);
             $set('dateofarrival', date('F d, Y', strtotime($customer->dateofarrival)));
             $set('dateofdeparture', date('F d, Y', strtotime($customer->dateofdeparture)));
