@@ -19,29 +19,24 @@ class EditCustomPackage extends EditRecord
         return [
             Actions\DeleteAction::make(),
             Action::make('Save as New')
-            ->action(fn() => $this->saveAsNew($this->record))
-            ->successNotificationTitle('New Data Stored Succesfully')
+                ->action(fn () => $this->saveAsNew($this->record))
+                ->successNotificationTitle('New Data Stored Succesfully')
         ];
     }
 
-    public function saveAsNew($record){
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    public function saveAsNew($record)
+    {
         $model = $this->getModel();
         $inputValues = $this->form->getState();
         $newModel = $record->replicate();
-        // $inputValues =  Request::all();
-        // $inputValues = [];
-        // foreach ($this->form->getComponents() as $tabs) {
-        //     foreach ($tabs->getFields() as $component) {
-        //         $name = $component->getName();
-        //         if($name){
-        //             $inputValues[$name] = $component->getValue();
-        //         }
-        //     }
-        // }
         unset($inputValues['id']);
         $newModel->fill($inputValues);
         $newModel->save();
         $this->redirect(route('filament.admin.resources.custom-packages.index'));
     }
-
 }
