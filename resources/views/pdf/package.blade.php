@@ -514,8 +514,8 @@
             }
 
             header {
-                background: #35424a;
-                color: #ffffff;
+                background: #ffffff;
+                color: #000000;
                 padding-top: 30px;
                 min-height: 70px;
                 border-bottom: #e8491d 3px solid;
@@ -523,14 +523,16 @@
             }
 
             header .main-header h1 {
-                font-size: 25pt
+                font-size: 25pt;
+                color: #000;
             }
 
             header .main-header p {
                 text-align: center;
                 margin: 0;
                 padding: 0;
-                font-size: 10pt
+                font-size: 10pt;
+                color: #000000;
             }
 
             header .main-header img {
@@ -720,7 +722,6 @@
                 <tr>
                     <th>Day</th>
                     <th>Itenary</th>
-                    <th>Specialities</th>
                     <th>Location Covered</th>
                 </tr>
                 @foreach ($record->itinerary as $itinerary)
