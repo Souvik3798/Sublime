@@ -45,12 +45,13 @@ class RoomCategoryResource extends Resource
                 Forms\Components\TextInput::make('cp')
                     ->label('CP (Price)')
                     ->required(),
-                Forms\Components\TextInput::make('ap')
-                    ->label('AP (Price)')
-                    ->required(),
                 Forms\Components\TextInput::make('map')
                     ->label('MAP (Price)')
                     ->required(),
+                Forms\Components\TextInput::make('ap')
+                    ->label('AP (Price)')
+                    ->required(),
+
                 Hidden::make('user_id')
                     ->default(auth()->id())
             ]);
