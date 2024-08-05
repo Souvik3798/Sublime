@@ -6,6 +6,7 @@ use App\Models\CustomPackage;
 use App\Models\HotelCategory;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CustomerpdfController extends Controller
 {
@@ -172,14 +173,18 @@ class CustomerpdfController extends Controller
 
         // dd($hotelrates);
 
+        $margin = $record->margin * ($record->customers->adults + $record->customers->childgreaterthan5 + $record->customers->childlessthan5);
         // Add other rates to hotel rates
         foreach ($hotelrates as $type => $rate) {
-            $hotelrates[$type] += $extras;
+            $hotelrates[$type] += $extras + $margin;
+            // Log::info($hotelrates[$type]);
+            $hotelrates[$type] /= ($record->customers->adults + $record->customers->childgreaterthan5);
+            // Log::info($hotelrates[$type] . ',' . $record->customers->adults . ',' . $record->customers->childgreaterthan5);
         }
 
         // dd($hotelrates);
 
-        $margin = $record->margin * ($record->customers->adults + $record->customers->childgreaterthan5 + $record->customers->childlessthan5);
+
 
         // dd($margin, $record->customers->adults, $record->customers->childgreaterthan5, $record->customers->childlessthan5, $hotelrates);
 

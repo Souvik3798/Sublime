@@ -717,16 +717,16 @@
         </div>
 
         <div class="vehicles" style="margin-bottom: 20px">
-            <h2>Quick Itienary</h2>
+            <h2>Short Itinerary</h2>
             <table>
                 <tr>
                     <th>Day</th>
-                    <th>Itenary</th>
+                    <th>Itinerary</th>
                     <th>Location Covered</th>
                 </tr>
                 @foreach ($record->itinerary as $itinerary)
                     <tr>
-                        <td>Day-{{ $itinerary['days'] }}</td>
+                        <td><strong>{{ $itinerary['days'] }}</strong></td>
                         <td>{{ $itinerary['description'] }}</td>
                         {{-- <td>
                             @foreach ($itinerary['specialities'] as $speciality)
@@ -828,7 +828,7 @@
                 @endphp
                 <div class="hotels">
                     <h2>{{ $hoteltype['category'] }} -
-                        ₹.{{ number_format($hotelrates + $margin) }}/-
+                        <mark>₹.{{ number_format($hotelrates) }}/-</mark> Per Person
                     </h2>
 
                     @foreach ($record->rooms as $room)
