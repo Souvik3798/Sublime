@@ -514,7 +514,7 @@ class CustomPackageResource extends Resource
                                                     ->suffix('/-')
                                                     ->required(),
                                                 TextInput::make('price_infant')
-                                                    ->label('Price for Childern 5-12 years')
+                                                    ->label('Price for infant')
                                                     ->numeric()
                                                     ->default(0)
                                                     ->prefix('₹')
