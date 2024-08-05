@@ -22,6 +22,7 @@ class KindlynoteResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Policy';
     protected static ?string $label = 'Kindly Note';
+    protected static ?string $pluralLabel = 'Kindly Note';
 
     public static function form(Form $form): Form
     {
