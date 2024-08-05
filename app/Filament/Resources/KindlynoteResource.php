@@ -50,7 +50,7 @@ class KindlynoteResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('point')
-                    ->label('Terms And Conditions'),
+                    ->label('Kindly Note'),
             ])->defaultSort('updated_at', 'desc')
             ->filters([
                 //
