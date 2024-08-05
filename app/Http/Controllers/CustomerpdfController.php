@@ -162,7 +162,7 @@ class CustomerpdfController extends Controller
                     $hotelrates[$hotelTypeId] = 0;
                 }
                 $hotelrates[$hotelTypeId] += ($room['price']) * $room['no_of_room'];
-                $hotelrates[$hotelTypeId] += $room['adult_mattress_price'] * $room['no_of_room'];
+                $hotelrates[$hotelTypeId] += $room['adult_mattress_price'];
                 $hotelrates[$hotelTypeId] += $room['extra_person_mattress'];
                 $hotelrates[$hotelTypeId] += $room['child_with_mattress_price'];
             }
