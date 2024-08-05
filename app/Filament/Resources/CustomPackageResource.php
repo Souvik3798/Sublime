@@ -556,7 +556,7 @@ class CustomPackageResource extends Resource
 
                                                 Select::make('vehicle')
                                                     ->label('Vehicle Type')
-                                                    ->options(function (Forms\Get $get) {
+                                                    ->options(function (Forms\Get $get, $state, Set $set) {
                                                         $adults = session('adults');
                                                         $includeLuggage = $get('include_luggage'); // Get the value of the luggage checkbox
 
@@ -592,7 +592,12 @@ class CustomPackageResource extends Resource
                                                     ->reactive()
                                                     ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
                                                         // Get the selected vehicle's price
-                                                        self::updatePrice($set, $get);
+                                                        if (empty($state)) {
+                                                            $set('price', 0);
+                                                        } else {
+                                                            // Update price after vehicle type is selected
+                                                            self::updatePrice($set, $get);
+                                                        }
                                                     }),
 
                                                 TextInput::make('price')

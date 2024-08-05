@@ -51,7 +51,7 @@ class TermsandconditionsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('point')
-                    ->label('Policy'),
+                    ->label('Terms And Conditions'),
             ])->defaultSort('updated_at', 'desc')
             ->filters([
                 //
