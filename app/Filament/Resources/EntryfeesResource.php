@@ -66,7 +66,10 @@ class EntryfeesResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->modifyQueryUsing(function ($query) {
+                return $query->where('user_id', auth()->id());
+            });
     }
 
     public static function getRelations(): array
