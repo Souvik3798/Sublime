@@ -727,11 +727,11 @@
                     <tr>
                         <td>Day-{{ $itinerary['days'] }}</td>
                         <td>{{ $itinerary['description'] }}</td>
-                        <td>
+                        {{-- <td>
                             @foreach ($itinerary['specialities'] as $speciality)
                                 <span class="badge badge-primary">{{ $speciality }}</span>
                             @endforeach
-                        </td>
+                        </td> --}}
                         <td>
                             @foreach ($itinerary['locations'] as $location)
                                 <span class="badge badge-primary">{{ $location }}</span>
