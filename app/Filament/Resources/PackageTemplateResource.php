@@ -86,7 +86,7 @@ class PackageTemplateResource extends Resource
                 TagsColumn::make('exclusions')
                     ->searchable()
                     ->sortable(),
-            ])->defaultSort('updated_at', 'desc')
+            ])
             ->filters([
                 //
             ])

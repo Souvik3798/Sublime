@@ -79,7 +79,7 @@ class IternityTemplateResource extends Resource
                         return $state;
                     }),
                 TagsColumn::make('locationCovered')
-            ])->defaultSort('updated_at', 'desc')
+            ])
             ->filters([
                 //
             ])
