@@ -9,6 +9,7 @@ use App\Models\preset;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -48,6 +49,8 @@ class IternityTemplateResource extends Resource
                     ->label('Locations Covered')
                     ->placeholder('Type Location Name and press Enter')
                     ->required(),
+                RichEditor::make('Longdescription')
+                    ->label('Detailed Description'),
                 Hidden::make('user_id')
                     ->default(auth()->id())
             ]);

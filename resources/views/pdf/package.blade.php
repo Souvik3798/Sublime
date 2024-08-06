@@ -823,6 +823,15 @@
             </table>
         </div>
 
+        <div class="itinerary">
+            <h2>Detailed Itinerary</h2>
+            @foreach ($record->itinerary as $itinerary)
+                <h3 style="color: red"><strong> Day {{ $itinerary['days'] }} </strong></h3>
+                {!! $itinerary['longdescription'] !!} <br /><br />
+            @endforeach
+
+        </div>
+
         {{-- <div class="itinerary">
 
             <div class="timeline">

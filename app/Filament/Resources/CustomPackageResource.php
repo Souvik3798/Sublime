@@ -26,6 +26,7 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
@@ -228,6 +229,7 @@ class CustomPackageResource extends Resource
 
                                                 foreach ($packs as $pack) {
                                                     $description = $pack->Description;
+                                                    $longdescription = $pack->Longdescription;
                                                     $locations = $pack->locationCovered;
                                                 }
 
@@ -235,16 +237,21 @@ class CustomPackageResource extends Resource
                                                 if ($packs->count() > 0) {
                                                     $set('description', str_replace($s, "", $description));
                                                     $set('locations', $locations);
+                                                    $set('longdescription', $longdescription);
                                                 }
                                             })
                                             ->required(),
                                         Textarea::make('description')
+                                            ->label('Short description')
                                             ->required(),
                                         TagsInput::make('locations')
                                             ->required(),
+                                        RichEditor::make('longdescription')
+                                            ->label('Detailed Description')
+                                            ->required(),
                                         // DatePicker::make('date')
                                         //     ->label('Date')
-                                    ])->columns(3)->addActionLabel('Add itinerary')
+                                    ])->columns(2)->addActionLabel('Add itinerary')
                             ]),
                         Tab::make('Add Rooms')
                             ->schema([

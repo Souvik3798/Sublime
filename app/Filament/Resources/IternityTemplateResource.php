@@ -8,7 +8,9 @@ use App\Models\IternityTemplate;
 use App\Models\preset;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -43,11 +45,14 @@ class IternityTemplateResource extends Resource
                     ->label('Title')
                     ->required(),
                 Textarea::make('Description')
+                    ->label('Short Description')
                     ->required(),
                 TagsInput::make('locationCovered')
                     ->label('Locations Covered')
                     ->placeholder('Type Location Name and press Enter')
                     ->required(),
+                RichEditor::make('Longdescription')
+                    ->label('Detailed Description'),
                 Hidden::make('user_id')
                     ->default(auth()->id())
             ]);

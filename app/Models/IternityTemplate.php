@@ -14,12 +14,15 @@ class IternityTemplate extends Model
         'Title',
         'Description',
         'Specialties',
-        'locationCovered', 'user_id'
+        'locationCovered',
+        'user_id',
+        'Longdescription'
     ];
 
     protected $casts = [
         'Specialties' => 'array',
-        'locationCovered' => 'array'
+        'locationCovered' => 'array',
+        'Longdescription' => 'array'
     ];
 
     public function user(): BelongsTo
