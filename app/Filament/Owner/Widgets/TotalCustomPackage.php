@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Owner\Widgets;
 
 use App\Models\CustomPackage;
 use Filament\Widgets\ChartWidget;
@@ -14,15 +14,11 @@ class TotalCustomPackage extends ChartWidget
     protected function getData(): array
     {
         $activeFilter = $this->filter;
-        $userId = auth()->id(); // Get the currently authenticated user's ID
-
-        // Apply the user filter first
-        $query = CustomPackage::where('user_id', $userId);
 
         switch ($activeFilter) {
             case 'today':
                 $start = now()->startOfDay();
-                $data = Trend::query($query)
+                $data = Trend::model(CustomPackage::class)
                     ->between(
                         start: $start,
                         end: now(),
@@ -35,7 +31,7 @@ class TotalCustomPackage extends ChartWidget
             case 'week':
             case 'month':
                 $start = $activeFilter === 'week' ? now()->subWeek()->startOfDay() : now()->subMonth()->startOfDay();
-                $data = Trend::query($query)
+                $data = Trend::model(CustomPackage::class)
                     ->between(
                         start: $start,
                         end: now(),
@@ -48,7 +44,7 @@ class TotalCustomPackage extends ChartWidget
             case 'year':
             default:
                 $start = now()->subYear()->startOfDay();
-                $data = Trend::query($query)
+                $data = Trend::model(CustomPackage::class)
                     ->between(
                         start: $start,
                         end: now(),
