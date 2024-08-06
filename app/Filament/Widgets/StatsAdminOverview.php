@@ -81,7 +81,7 @@ class StatsAdminOverview extends BaseWidget
                 ->description(array_sum($addonCounts) . ' addons in 7 days')
                 ->descriptionIcon(array_sum($addonCounts) > 10 ? 'heroicon-m-arrow-trending-up' : (array_sum($addonCounts) > 5 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')),
 
-            Stat::make('Total Iternity Template', IternityTemplate::where('user_id', $userId)->count())
+            Stat::make('Total Itinerary Template', IternityTemplate::where('user_id', $userId)->count())
                 ->chart($iternityTemplateCounts)
                 ->color(array_sum($iternityTemplateCounts) > 10 ? 'success' : (array_sum($iternityTemplateCounts) > 5 ? 'warning' : 'danger'))
                 ->description(array_sum($iternityTemplateCounts) . ' templates in 7 days')
