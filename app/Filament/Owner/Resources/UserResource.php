@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Owner\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\Pages\CreateUser;
-use App\Filament\Resources\UserResource\Pages\EditUser;
-use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Owner\Resources\UserResource\Pages;
+use App\Filament\Owner\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Owner\Resources\UserResource\Pages\EditUser;
+use App\Filament\Owner\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -22,12 +21,10 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Storage;
 
 class UserResource extends Resource
 {
@@ -67,6 +64,7 @@ class UserResource extends Resource
                         Toggle::make('is_admin')
                             ->onColor('success')
                             ->offColor('danger')
+
                     ])->columns(2),
                 Section::make('User New password')
                     ->schema([
@@ -80,6 +78,7 @@ class UserResource extends Resource
                             ->requiredWith('new_password'),
 
                     ])->visible(fn ($livewire) => $livewire instanceof EditUser),
+
 
 
             ]);
@@ -107,6 +106,7 @@ class UserResource extends Resource
                 ToggleColumn::make('is_admin')
                     ->onColor('success')
                     ->offColor('danger')
+
 
             ])
             ->filters([
@@ -136,25 +136,5 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
-    }
-
-    public static function canViewAny(): bool
-    {
-        return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
-    }
-
-    public static function canCreate(): bool
-    {
-        return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return Auth::check() && Auth::user()->id === 1; // Replace 1 with the ID of the user who should have access
     }
 }

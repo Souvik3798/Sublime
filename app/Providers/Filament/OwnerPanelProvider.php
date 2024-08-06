@@ -2,8 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Models\User;
-use Filament\FontProviders\GoogleFontProvider;
+use App\Http\Middleware\VerifyIsAdmin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -19,40 +18,31 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AdminPanelProvider extends PanelProvider
+class OwnerPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-
         return $panel
-            ->default()
-            ->id('admin')
-            ->path('admin')
-            ->profile()
+            ->id('owner')
+            ->path('owner')
             ->login()
             ->userMenuItems([
                 MenuItem::make()
-                    ->label('Owner Dashboard')
+                    ->label('Agency Dashboard')
                     ->icon('heroicon-o-cog-6-tooth')
-                    ->url('/owner')
-                    ->visible(fn (): bool => auth()->user()->isAdmin())
+                    ->url('/admin')
             ])
-            ->brandName(function () {
-                return Auth::check() ? Auth::user()->name : 'Admin Panel'; // Use Auth facade to check user authentication
-            })
             ->colors([
-                'primary' => Color::Green
+                'primary' => Color::Amber,
             ])
-            ->font('Times New Roman', provider: GoogleFontProvider::class)
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Owner/Resources'), for: 'App\\Filament\\Owner\\Resources')
+            ->discoverPages(in: app_path('Filament/Owner/Pages'), for: 'App\\Filament\\Owner\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Owner/Widgets'), for: 'App\\Filament\\Owner\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -67,9 +57,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
+                VerifyIsAdmin::class,
             ]);
     }
 }
