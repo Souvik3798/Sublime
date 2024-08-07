@@ -7,6 +7,9 @@ use App\Filament\Resources\FerryResource\RelationManagers;
 use App\Models\Ferry;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,12 +32,38 @@ class FerryResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('Title')
+                    ->label('Ferry Title')
                     ->required(),
-                Forms\Components\TextInput::make('price')
-                    ->label('Price')
-                    ->required()
-                    ->prefix('₹')
-                    ->suffix('/-'),
+
+                Repeater::make('price')
+                    ->label('Location and Class Wise Pricing')
+                    ->schema([
+                        Select::make('location')
+                            ->label('Location')
+                            ->options([
+                                'PB-HL' => 'PB-HL',
+                                'HL-NL' => 'HL-NL',
+                                'NL-PB' => 'NL-PB',
+                                'HL-PB' => 'HL-PB'
+                            ])
+                            ->required(),
+                        Select::make('class')
+                            ->label('Class')
+                            ->options([
+                                'Economy' => 'Economy',
+                                'Premium' => 'Premium',
+                                'Royal' => 'Royal',
+                                'Luxury' => 'Luxury'
+                            ])
+                            ->required(),
+                        TextInput::make('price')
+                            ->label('Price')
+                            ->numeric()
+                            ->prefix('₹')
+                            ->suffix('/-')
+                            ->required(),
+                    ])
+                    ->columns(3), // Adjust the number of columns to match your desired layout
                 Hidden::make('user_id')
                     ->default(auth()->id())
             ]);
@@ -45,12 +74,6 @@ class FerryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('Title')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('price')
-                    ->label('Price')
-                    ->prefix('₹.')
-                    ->suffix('/-')
                     ->sortable()
                     ->searchable(),
             ])->defaultSort('updated_at', 'desc')

@@ -481,46 +481,77 @@ class CustomPackageResource extends Resource
                                         Repeater::make('cruz')
                                             ->label('Cruise Details')
                                             ->schema([
-                                                // Select::make('days')
-                                                //     ->label('Day')
-                                                //     ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10', '11' => '11', '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17', '18' => '18', '19' => '19', '20' => '20']),
+                                                // Step 1: Select the ferry
                                                 Select::make('cruz')
                                                     ->label('Cruise')
-                                                    ->options(Ferry::pluck('Title', 'id'))
+                                                    ->options(Ferry::where('user_id', auth()->id())->pluck('Title', 'id'))
                                                     ->live()
-                                                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                                                        if ($operation !== 'create' && $operation !== 'edit') {
+                                                    ->afterStateUpdated(function ($state, $set) {
+                                                        if (!$state) {
                                                             return;
                                                         }
 
+                                                        // Fetch the ferry details including the prices for different locations and classes
+                                                        $ferry = Ferry::find($state);
 
-                                                        $ferries = Ferry::where('id', $state)->get();
-
-
-                                                        foreach ($ferries as $ferry) {
-                                                            $price = $ferry->price;
-                                                        }
-
-                                                        if ($ferries->count() > 0) {
-                                                            $set('price_adult', $price);
+                                                        // If ferry exists, set the locations and pricing data
+                                                        if ($ferry) {
+                                                            $priceData = $ferry->price;
+                                                            $locationOptions = collect($priceData)->pluck('location')->unique();
+                                                            $pricingData = [];
+                                                            foreach ($priceData as $priceDetail) {
+                                                                $pricingData[$priceDetail['location']][$priceDetail['class']] = $priceDetail['price'];
+                                                            }
+                                                            $set('locationOptions', $locationOptions->toArray());
+                                                            $set('pricingData', $pricingData);
                                                         }
                                                     }),
+
+                                                // Step 2: Select the location
                                                 Select::make('source')
                                                     ->label('Select Route')
-                                                    ->options([
-                                                        'PB-HL' => 'PB-HL',
-                                                        'HL-NL' => 'HL-NL',
-                                                        'NL-PB' => 'NL-PB',
-                                                        'HL-PB' => 'HL-PB'
-                                                    ]),
+                                                    ->options(function (callable $get) {
+                                                        $locationOptions = $get('locationOptions');
+                                                        if ($locationOptions) {
+                                                            return array_combine($locationOptions, $locationOptions);
+                                                        }
+                                                        return [];
+                                                    })
+                                                    ->live(),
+
+                                                // Step 3: Select the class based on the location
+                                                Select::make('class')
+                                                    ->label('Select Class')
+                                                    ->options(function (callable $get) {
+                                                        $location = $get('source');
+                                                        $pricingData = $get('pricingData');
+                                                        if (isset($pricingData[$location])) {
+                                                            return array_combine(array_keys($pricingData[$location]), array_keys($pricingData[$location]));
+                                                        }
+                                                        return [];
+                                                    })
+                                                    ->live()
+                                                    ->afterStateUpdated(function ($state, $get, $set) {
+                                                        // Fetch the dynamic price based on the selected location and class
+                                                        $location = $get('source');
+                                                        $pricingData = $get('pricingData');
+
+                                                        if (isset($pricingData[$location][$state])) {
+                                                            $set('price_adult', $pricingData[$location][$state]);
+                                                        }
+                                                    }),
+
+                                                // Step 4: Display the price for the selected class
                                                 TextInput::make('price_adult')
                                                     ->label('Price for Adult')
                                                     ->numeric()
                                                     ->prefix('₹')
                                                     ->suffix('/-')
                                                     ->required(),
+
+                                                // Optional: Price for infant if needed
                                                 TextInput::make('price_infant')
-                                                    ->label('Price for infant')
+                                                    ->label('Price for Infant')
                                                     ->numeric()
                                                     ->default(0)
                                                     ->prefix('₹')
@@ -542,14 +573,7 @@ class CustomPackageResource extends Resource
                                                         self::updatePrice($set, $get);
                                                     }),
 
-                                                Select::make('days')
-                                                    ->label('Day')
-                                                    ->options([
-                                                        '1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5',
-                                                        '6' => '6', '7' => '7', '8' => '8', '9' => '9', '10' => '10',
-                                                        '11' => '11', '12' => '12', '13' => '13', '14' => '14', '15' => '15',
-                                                        '16' => '16', '17' => '17', '18' => '18', '19' => '19', '20' => '20'
-                                                    ]),
+
 
                                                 Select::make('vehicle')
                                                     ->label('Vehicle Type')
