@@ -7,6 +7,7 @@ use App\Filament\Resources\CustomPackageResource\Pages;
 use App\Models\Addon;
 use App\Models\Cab;
 use App\Models\Cabs;
+use Illuminate\Support\Facades\DB;
 use App\Models\Category;
 use App\Models\Customers;
 use App\Models\CustomPackage;
@@ -481,46 +482,82 @@ class CustomPackageResource extends Resource
                                     ])->columnSpan(4),
                                 Section::make('Enter Cruise Details')
                                     ->schema([
+
+
                                         Repeater::make('cruz')
                                             ->label('Cruise Details')
                                             ->schema([
+                                                // Step 1: Select the ferry
                                                 Select::make('cruz')
                                                     ->label('Cruise')
                                                     ->options(Ferry::where('user_id', auth()->id())->pluck('Title', 'id'))
                                                     ->live()
-                                                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
-                                                        if ($operation !== 'create' && $operation !== 'edit') {
+                                                    ->afterStateUpdated(function ($state, $set) {
+                                                        if (!$state) {
                                                             return;
                                                         }
 
+                                                        // Fetch the ferry details including the prices for different locations and classes
+                                                        $ferry = Ferry::find($state);
 
-                                                        $ferries = Ferry::where('id', $state)->get();
-
-
-                                                        foreach ($ferries as $ferry) {
-                                                            $price = $ferry->price;
-                                                        }
-
-                                                        if ($ferries->count() > 0) {
-                                                            $set('price_adult', $price);
+                                                        // If ferry exists, set the locations and pricing data
+                                                        if ($ferry) {
+                                                            $priceData = $ferry->price;
+                                                            $locationOptions = collect($priceData)->pluck('location')->unique();
+                                                            $pricingData = [];
+                                                            foreach ($priceData as $priceDetail) {
+                                                                $pricingData[$priceDetail['location']][$priceDetail['class']] = $priceDetail['price'];
+                                                            }
+                                                            $set('locationOptions', $locationOptions->toArray());
+                                                            $set('pricingData', $pricingData);
                                                         }
                                                     }),
+
+                                                // Step 2: Select the location
                                                 Select::make('source')
                                                     ->label('Select Route')
-                                                    ->options([
-                                                        'PB-HL' => 'PB-HL',
-                                                        'HL-NL' => 'HL-NL',
-                                                        'NL-PB' => 'NL-PB',
-                                                        'HL-PB' => 'HL-PB'
-                                                    ]),
+                                                    ->options(function (callable $get) {
+                                                        $locationOptions = $get('locationOptions');
+                                                        if ($locationOptions) {
+                                                            return array_combine($locationOptions, $locationOptions);
+                                                        }
+                                                        return [];
+                                                    })
+                                                    ->live(),
+
+                                                // Step 3: Select the class based on the location
+                                                Select::make('class')
+                                                    ->label('Select Class')
+                                                    ->options(function (callable $get) {
+                                                        $location = $get('source');
+                                                        $pricingData = $get('pricingData');
+                                                        if (isset($pricingData[$location])) {
+                                                            return array_combine(array_keys($pricingData[$location]), array_keys($pricingData[$location]));
+                                                        }
+                                                        return [];
+                                                    })
+                                                    ->live()
+                                                    ->afterStateUpdated(function ($state, $get, $set) {
+                                                        // Fetch the dynamic price based on the selected location and class
+                                                        $location = $get('source');
+                                                        $pricingData = $get('pricingData');
+
+                                                        if (isset($pricingData[$location][$state])) {
+                                                            $set('price_adult', $pricingData[$location][$state]);
+                                                        }
+                                                    }),
+
+                                                // Step 4: Display the price for the selected class
                                                 TextInput::make('price_adult')
                                                     ->label('Price for Adult')
                                                     ->numeric()
                                                     ->prefix('₹')
                                                     ->suffix('/-')
                                                     ->required(),
+
+                                                // Optional: Price for infant if needed
                                                 TextInput::make('price_infant')
-                                                    ->label('Price for infant')
+                                                    ->label('Price for Infant')
                                                     ->numeric()
                                                     ->default(0)
                                                     ->prefix('₹')

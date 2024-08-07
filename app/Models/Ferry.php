@@ -12,6 +12,10 @@ class Ferry extends Model
 
     protected $fillable = ['Title', 'price', 'user_id'];
 
+    protected $casts = [
+        'price' => 'array',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
