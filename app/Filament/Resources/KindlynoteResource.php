@@ -19,7 +19,7 @@ class KindlynoteResource extends Resource
 {
     protected static ?string $model = Kindlynote::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
     protected static ?string $navigationGroup = 'Policy';
     protected static ?string $label = 'Kindly Note';
     protected static ?string $pluralLabel = 'Kindly Note';
@@ -33,7 +33,7 @@ class KindlynoteResource extends Resource
                     ->required()
                     ->columnSpanFull()
                     ->rows(5)
-                    ->default(fn ($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
+                    ->default(fn($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
                     ->visibleOn('create'),
                 TextInput::make('point')
                     ->label('Refund and Cancellation Policy')

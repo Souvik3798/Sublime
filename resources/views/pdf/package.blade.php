@@ -814,9 +814,7 @@
                             @endforeach
                         </td> --}}
                         <td>
-                            @foreach ($itinerary['locations'] as $location)
-                                <span class="badge badge-primary">{{ $location }}</span>
-                            @endforeach
+                            {{ $itinerary['destination'] }}
                         </td>
                     </tr>
                 @endforeach

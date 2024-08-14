@@ -56,7 +56,7 @@ class CustomPackageResource extends Resource
 {
     protected static ?string $model = CustomPackage::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-wallet';
 
     protected static ?string $navigationGroup = 'Packages';
 
@@ -723,7 +723,7 @@ class CustomPackageResource extends Resource
                 ActionGroup::make([
                     Action::make('View Doc')
                         ->icon('heroicon-o-eye')
-                        ->url(fn (CustomPackage $record) => route('CustomPackage.pdf.view', $record))
+                        ->url(fn(CustomPackage $record) => route('CustomPackage.pdf.view', $record))
                         ->openUrlInNewTab()
                         ->color('info'),
                     Tables\Actions\EditAction::make(),

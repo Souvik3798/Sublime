@@ -27,7 +27,7 @@ class IternityTemplateResource extends Resource
 {
     protected static ?string $model = IternityTemplate::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static ?string $navigationGroup = 'Templates';
 

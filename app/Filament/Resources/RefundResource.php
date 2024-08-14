@@ -21,7 +21,7 @@ class RefundResource extends Resource
 {
     protected static ?string $model = Refund::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-receipt-refund';
     protected static ?string $navigationGroup = 'Policy';
     protected static ?string $label = 'Refund and Cancellation';
 
@@ -34,7 +34,7 @@ class RefundResource extends Resource
                     ->required()
                     ->columns(1)
                     ->rows(5)
-                    ->default(fn ($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
+                    ->default(fn($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
                     ->visibleOn('create'),
                 TextInput::make('point')
                     ->label('Refund and Cancellation Policy')
