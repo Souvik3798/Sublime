@@ -40,12 +40,7 @@ class AdminPanelProvider extends PanelProvider
                     ->label('Owner Dashboard')
                     ->icon('heroicon-o-cog-6-tooth')
                     ->url('/owner')
-                    ->visible(fn(): bool => auth()->user()->isAdmin())
-            ])
-            ->navigationItems([
-                NavigationItem::make('Back')
-                    ->url('/home')
-                    ->icon('heroicon-o-arrow-left-start-on-rectangle')
+                    ->visible(fn (): bool => auth()->user()->isAdmin())
             ])
             ->brandName(function () {
                 return Auth::check() ? Auth::user()->name : 'Admin Panel'; // Use Auth facade to check user authentication
