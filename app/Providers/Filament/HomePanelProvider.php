@@ -42,6 +42,7 @@ class HomePanelProvider extends PanelProvider
                 NavigationItem::make('Design')
                     ->url('https://app.napkin.ai/')
                     ->icon('heroicon-o-newspaper')
+                    ->openUrlInNewTab()
                     ->sort(5),
             ])
             ->userMenuItems([
