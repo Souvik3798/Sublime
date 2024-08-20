@@ -20,6 +20,6 @@ class VerifyIsAdmin
             return $next($request);
         }
 
-        abort('403', 'You are now fucked....');
+        abort('403', 'You are not Allowed....');
     }
 }
