@@ -36,6 +36,12 @@ class HomePanelProvider extends PanelProvider
                 NavigationItem::make('Plan Trip')
                     ->url('/admin')
                     ->icon('heroicon-o-paper-airplane')
+                    ->sort(6),
+            ])
+            ->navigationItems([
+                NavigationItem::make('Design')
+                    ->url('https://app.napkin.ai/')
+                    ->icon('heroicon-o-newspaper')
                     ->sort(5),
             ])
             ->userMenuItems([
