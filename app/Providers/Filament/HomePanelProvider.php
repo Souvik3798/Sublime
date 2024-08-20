@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
@@ -36,6 +37,13 @@ class HomePanelProvider extends PanelProvider
                     ->url('/admin')
                     ->icon('heroicon-o-paper-airplane')
                     ->sort(5),
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Owner Dashboard')
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->url('/owner')
+                    ->visible(fn(): bool => auth()->user()->isAdmin())
             ])
             ->sidebarCollapsibleOnDesktop()
             // ->sidebarWidth('6rem')
