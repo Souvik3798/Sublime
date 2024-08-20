@@ -20,7 +20,7 @@ class HotelImageResource extends Resource
 {
     protected static ?string $model = HotelImage::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-photo';
 
     protected static ?string $navigationGroup = 'Hotels';
 
@@ -61,7 +61,7 @@ class HotelImageResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('images')
-                    ->url(fn ($record) => Storage::url('storage/' . implode(',', $record->images))) // Optional: If you want to make the image clickable
+                    ->url(fn($record) => Storage::url('storage/' . implode(',', $record->images))) // Optional: If you want to make the image clickable
                     ->height(100) // Optional: Set the height of the image
                     ->width(100) // Optional: Set the width of the image
                     ->rounded(), // Optional: Set the image to be rounded

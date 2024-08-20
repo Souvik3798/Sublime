@@ -19,7 +19,7 @@ class RoomCategoryResource extends Resource
 {
     protected static ?string $model = RoomCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
     protected static ?string $navigationGroup = 'Hotels';
 

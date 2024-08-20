@@ -2,13 +2,9 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\VerifyIsAdmin;
-use App\Models\User;
-use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
@@ -21,45 +17,34 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AdminPanelProvider extends PanelProvider
+class HomePanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-
         return $panel
-            ->default()
-            ->id('admin')
-            ->path('admin')
-            ->profile()
-            // ->login()
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label('Owner Dashboard')
-                    ->icon('heroicon-o-cog-6-tooth')
-                    ->url('/owner')
-                    ->visible(fn(): bool => auth()->user()->isAdmin())
-            ])
-            ->navigationItems([
-                NavigationItem::make('Back')
-                    ->url('/home')
-                    ->icon('heroicon-o-arrow-left-start-on-rectangle')
-            ])
-            ->brandName(function () {
-                return Auth::check() ? Auth::user()->name : 'Admin Panel'; // Use Auth facade to check user authentication
-            })
+            ->id('home')
+            ->path('home')
+            ->login()
             ->colors([
-                'primary' => Color::Green
+                'primary' => Color::Blue,
             ])
-            ->font('Times New Roman', provider: GoogleFontProvider::class)
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->brandName('Tour Craft')
+            ->navigationItems([
+                NavigationItem::make('Plan Trip')
+                    ->url('/admin')
+                    ->icon('heroicon-o-paper-airplane')
+                    ->sort(5),
+            ])
+            ->sidebarCollapsibleOnDesktop()
+            // ->sidebarWidth('6rem')
+            ->discoverResources(in: app_path('Filament/Home/Resources'), for: 'App\\Filament\\Home\\Resources')
+            ->discoverPages(in: app_path('Filament/Home/Pages'), for: 'App\\Filament\\Home\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Home/Widgets'), for: 'App\\Filament\\Home\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -74,10 +59,9 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                VerifyIsAdmin::class
             ])
             ->authMiddleware([
-                // Authenticate::class,
+                Authenticate::class,
             ]);
     }
 }

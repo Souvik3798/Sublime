@@ -5,7 +5,7 @@ use App\Http\Controllers\PaymentpdfController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/admin');
+    return redirect('/home');
 });
 
 Route::get('/{record}/view', [CustomerpdfController::class, 'view'])->name('CustomPackage.pdf.view');

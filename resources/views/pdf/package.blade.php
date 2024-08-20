@@ -814,9 +814,7 @@
                             @endforeach
                         </td> --}}
                         <td>
-                            @foreach ($itinerary['locations'] as $location)
-                                <span class="badge badge-primary">{{ $location }}</span>
-                            @endforeach
+                            {{ $itinerary['destination'] }}
                         </td>
                     </tr>
                 @endforeach
@@ -1045,6 +1043,10 @@
                 <div class="feature-item">
                     <i class="fas fa-hotel"></i>
                     <span>Vetted Hotels & Resorts</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>Since 2002</span>
                 </div>
             </div>
         </div>

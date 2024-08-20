@@ -20,7 +20,7 @@ class EntryfeesResource extends Resource
 {
     protected static ?string $model = Entryfees::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationGroup = 'General';
     protected static ?string $label = 'Entry Fees';
 

@@ -30,7 +30,7 @@ class PaymentResource extends Resource
 {
     protected static ?string $model = payment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-rupee';
 
     protected static ?string $navigationGroup = 'Packages';
 
@@ -133,14 +133,14 @@ class PaymentResource extends Resource
                 ActionGroup::make([
                     Action::make('View Doc')
                         ->icon('heroicon-o-eye')
-                        ->url(fn (payment $record) => route('voucher.pdf.voucher', $record))
+                        ->url(fn(payment $record) => route('voucher.pdf.voucher', $record))
                         ->openUrlInNewTab()
                         ->color('info'),
                     Tables\Actions\EditAction::make(),
                     DeleteAction::make(),
                     Action::make('Download Pdf')
                         ->icon('heroicon-o-arrow-down-on-square-stack')
-                        ->url(fn (payment $record) => route('voucher.pdf.download', $record))
+                        ->url(fn(payment $record) => route('voucher.pdf.download', $record))
                         ->openUrlInNewTab(),
                 ])
             ])

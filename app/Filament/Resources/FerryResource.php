@@ -21,7 +21,7 @@ class FerryResource extends Resource
 {
     protected static ?string $model = Ferry::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-moon';
 
     protected static ?string $navigationGroup = 'Transportation';
 
