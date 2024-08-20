@@ -20,6 +20,7 @@ class VerifyIsAdmin
             return $next($request);
         }
 
-        abort('403', 'You are not Allowed....');
+        return redirect('/home');
+        // abort('403', 'You are not Allowed....');
     }
 }
