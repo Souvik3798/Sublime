@@ -139,7 +139,7 @@ class CustomerpdfController extends Controller
         }
 
 
-        $totalvehicle += $record->price + $record->luggage;
+        $totalvehicle = $record->price + $record->luggage;
 
 
         //calculate Total fee
