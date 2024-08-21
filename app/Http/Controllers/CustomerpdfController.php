@@ -139,7 +139,11 @@ class CustomerpdfController extends Controller
         }
 
         foreach ($record->vehicle as $vehicle) {
-            $totalvehicle += $vehicle['price'];
+            if ($vehicle['luggage']) {
+                $totalvehicle += $vehicle['price'] + $vehicle['luggage'];
+            } else {
+                $totalvehicle += $vehicle['price'];
+            }
         }
 
         //calculate Total fee
