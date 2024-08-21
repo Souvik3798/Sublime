@@ -632,8 +632,7 @@ class CustomPackageResource extends Resource
                                             ->numeric()
                                             ->prefix('₹')
                                             ->suffix('/-')
-                                            ->required()
-                                            ->disabled(), // Disable the input to make it read-only
+                                            ->required(), // Disable the input to make it read-only
 
                                     ])->columnSpan(2),
                             ])->columns(4),
