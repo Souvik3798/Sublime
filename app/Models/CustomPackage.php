@@ -26,12 +26,15 @@ class CustomPackage extends Model
         'rooms',
         'cruz',
         'vehicle',
+        'luggage',
+        'price',
         'place',
         'fee',
         'addons',
         'voucher',
         'margin',
-        'user_id'
+        'user_id',
+
     ];
 
     protected $casts = [
