@@ -138,13 +138,9 @@ class CustomerpdfController extends Controller
             $childcruz += $cruz['price_infant'] * $childwithoutbed;
         }
 
-        foreach ($record->vehicle as $vehicle) {
-            if (isset($vehicle['luggage'])) {
-                $totalvehicle += $vehicle['price'] + $vehicle['luggage'];
-            } else {
-                $totalvehicle += $vehicle['price'];
-            }
-        }
+
+        $totalvehicle += $record->price + $record->luggage;
+
 
         //calculate Total fee
 
