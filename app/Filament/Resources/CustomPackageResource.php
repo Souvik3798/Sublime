@@ -785,7 +785,7 @@ class CustomPackageResource extends Resource
     }
     protected static function updatePrice(Forms\Set $set, Forms\Get $get)
     {
-        $adults = session('adults');
+        $adults = session('adults') + session('child');
         $includeLuggage = $get('include_luggage');
         $vehicle = Cab::find($get('vehicle'));
 
