@@ -561,77 +561,73 @@ class CustomPackageResource extends Resource
                                     ])->columnSpan(2),
                                 Section::make('Enter Vehicle Details')
                                     ->schema([
-                                        Repeater::make('vehicle')
-                                            ->label('Vehicle Details')
-                                            ->schema([
-                                                Checkbox::make('include_luggage')
-                                                    ->label('Include Luggage Vehicle')
-                                                    ->reactive() // Ensure it updates the form when toggled
-                                                    ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
-                                                        // Re-trigger vehicle selection update
-                                                        $set('vehicle', $get('vehicle'));
-                                                        self::updatePrice($set, $get);
-                                                    }),
 
+                                        Select::make('vehicle')
+                                            ->label('Vehicle Type')
+                                            ->options(Cab::where('user_id', auth()->id())->pluck('Title', 'id'))
+                                            ->multiple()
+                                            ->live()
+                                            ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                                                if ($operation !== 'create' && $operation !== 'edit') {
+                                                    return;
+                                                }
 
+                                                if (empty($state)) {
+                                                    $set('price', 0);
+                                                    return;
+                                                }
 
-                                                Select::make('vehicle')
-                                                    ->label('Vehicle Type')
-                                                    ->options(function (Forms\Get $get, $state, Set $set) {
-                                                        $adults = session('adults') + session('child');
+                                                $totalPrice = 0;
+                                                $adults = session('adults') + session('child'); // Calculate the total number of passengers
 
-                                                        Log::info('Adults' . $adults);
-                                                        $includeLuggage = $get('include_luggage'); // Get the value of the luggage checkbox
+                                                foreach ($state as $vehicleId) {
+                                                    $cab = Cab::find($vehicleId);
+                                                    if ($cab) {
+                                                        Log::info('Selected Vehicle:', ['id' => $cab->id, 'title' => $cab->Title, 'price' => $cab->price]);
 
-                                                        if (is_null($adults)) {
-                                                            return ['Error: Adults value is missing'];
-                                                        }
-
-                                                        $vehicles = [];
-                                                        // Fetch all cabs with their price data
-                                                        $cabs = Cab::all();
-
-                                                        foreach ($cabs as $cab) {
-                                                            $prices = $cab->price; // Directly use the array
-
-                                                            foreach ($prices as $price) {
-                                                                if ($adults <= 4 && $price['vehicle_type'] == '7') {
-                                                                    $vehicles[$cab->id] = $cab->Title . ' - 7 Seater';
-                                                                } elseif ($adults > 4 && $adults <= 9 && $price['vehicle_type'] == '7') {
-                                                                    $vehicles[$cab->id] = $cab->Title . ($includeLuggage ? ' - 2 x 7 Seater' : ' - 7 Seater');
-                                                                } elseif ($adults > 9 && $adults <= 14 && $price['vehicle_type'] == '17') {
-                                                                    $vehicles[$cab->id] = $cab->Title . ' - 17 Seater';
-                                                                } elseif ($adults > 14 && $adults <= 17 && in_array($price['vehicle_type'], ['17', '7'])) {
-                                                                    $vehicles[$cab->id] = $cab->Title . ($includeLuggage ? ' - 17 Seater + 7 Seater' : ' - 17 Seater');
-                                                                } elseif ($adults > 17 && $adults <= 25 && in_array($price['vehicle_type'], ['26', '7'])) {
-                                                                    $vehicles[$cab->id] = $cab->Title . ($includeLuggage ? ' - 26 Seater + 7 Seater' : ' - 26 Seater');
-                                                                }
+                                                        foreach ($cab->price as $priceDetail) {
+                                                            if ($adults <= 4 && $priceDetail['vehicle_type'] == '7') {
+                                                                // 7-seater vehicle for up to 4 passengers
+                                                                $totalPrice += (int)$priceDetail['price'];
+                                                            } elseif ($adults > 4 && $adults <= 9 && $priceDetail['vehicle_type'] == '7') {
+                                                                // 7-seater vehicle for 5 to 9 passengers
+                                                                $totalPrice += (int)$priceDetail['price'];
+                                                            } elseif ($adults > 9 && $adults <= 14 && $priceDetail['vehicle_type'] == '17') {
+                                                                // 17-seater vehicle for 10 to 14 passengers
+                                                                $totalPrice += (int)$priceDetail['price'];
+                                                            } elseif ($adults > 14 && $adults <= 17 && $priceDetail['vehicle_type'] == '17') {
+                                                                // 17-seater vehicle for 15 to 17 passengers
+                                                                $totalPrice += (int)$priceDetail['price'];
+                                                            } elseif ($adults > 17 && $adults <= 25 && $priceDetail['vehicle_type'] == '26') {
+                                                                // 26-seater vehicle for 18 to 25 passengers
+                                                                $totalPrice += (int)$priceDetail['price'];
+                                                            } elseif ($adults > 25) {
+                                                                // For more than 25 passengers, manual price entry is required
+                                                                $set('price', 'Please enter price manually for more than 25 passengers');
+                                                                return;
                                                             }
                                                         }
+                                                    }
+                                                }
 
-                                                        return $vehicles;
-                                                    })
-                                                    ->live()
-                                                    ->reactive()
-                                                    ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
-                                                        // Get the selected vehicle's price
-                                                        if (empty($state)) {
-                                                            $set('price', 0);
-                                                        } else {
-                                                            // Update price after vehicle type is selected
-                                                            self::updatePrice($set, $get);
-                                                        }
-                                                    }),
+                                                $set('price', $totalPrice);
+                                            }),
 
-                                                TextInput::make('price')
-                                                    ->label('Price')
-                                                    ->numeric()
-                                                    ->live()
-                                                    ->reactive()
-                                                    ->prefix('₹')
-                                                    ->suffix('/-')
-                                                    ->required(),
-                                            ]), // Adjust column layout if needed
+                                        TextInput::make('luggage')
+                                            ->label('Luggage Price')
+                                            ->numeric()
+                                            ->live()
+                                            ->prefix('₹')
+                                            ->suffix('/-')
+                                            ->required(),
+
+                                        TextInput::make('price')
+                                            ->label('Total Price')
+                                            ->numeric()
+                                            ->prefix('₹')
+                                            ->suffix('/-')
+                                            ->required(), // Disable the input to make it read-only
+
                                     ])->columnSpan(2),
                             ])->columns(4),
                         Tab::make('Add Extras')
@@ -719,7 +715,7 @@ class CustomPackageResource extends Resource
                 ActionGroup::make([
                     Action::make('View Doc')
                         ->icon('heroicon-o-eye')
-                        ->url(fn (CustomPackage $record) => route('CustomPackage.pdf.view', $record))
+                        ->url(fn(CustomPackage $record) => route('CustomPackage.pdf.view', $record))
                         ->openUrlInNewTab()
                         ->color('info'),
                     Tables\Actions\EditAction::make(),
@@ -775,42 +771,6 @@ class CustomPackageResource extends Resource
             $set('childlessthan5', $customer->childlessthan5);
             $set('dateofarrival', date('F d, Y', strtotime($customer->dateofarrival)));
             $set('dateofdeparture', date('F d, Y', strtotime($customer->dateofdeparture)));
-        }
-    }
-    protected static function updatePrice(Forms\Set $set, Forms\Get $get)
-    {
-        $adults = session('adults');
-        $includeLuggage = $get('include_luggage');
-        $vehicle = Cab::find($get('vehicle'));
-
-        if ($vehicle) {
-            $prices = $vehicle->price;
-            $price = 0;
-
-            // Find the price of the 7-seater vehicle
-            $sevenSeaterPrice = 0;
-            foreach ($prices as $p) {
-                if ($p['vehicle_type'] == '7') {
-                    $sevenSeaterPrice = $p['price'];
-                    break;  // Assuming there's only one 7-seater option
-                }
-            }
-
-            foreach ($prices as $p) {
-                if ($adults <= 4 && $p['vehicle_type'] == '7') {
-                    $price = $p['price'];
-                } elseif ($adults > 4 && $adults <= 9 && $p['vehicle_type'] == '7') {
-                    $price = $includeLuggage ? $p['price'] + $sevenSeaterPrice : $p['price'];
-                } elseif ($adults > 9 && $adults <= 14 && $p['vehicle_type'] == '17') {
-                    $price = $p['price'];
-                } elseif ($adults > 14 && $adults <= 17 && in_array($p['vehicle_type'], ['17', '7'])) {
-                    $price = $includeLuggage ? $p['price'] + $sevenSeaterPrice : $p['price'];
-                } elseif ($adults > 17 && $adults <= 25 && in_array($p['vehicle_type'], ['26', '7'])) {
-                    $price = $includeLuggage ? $p['price'] + $sevenSeaterPrice : $p['price'];
-                }
-            }
-
-            $set('price', $price);
         }
     }
 }
