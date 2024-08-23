@@ -484,7 +484,7 @@ class CustomPackageResource extends Resource
                                                 // Step 1: Select the ferry
                                                 Select::make('cruz')
                                                     ->label('Cruise')
-                                                    ->options(Ferry::where('user_id', auth()->id())->pluck('Title', 'id'))
+                                                    ->options(Ferry::all()->pluck('Title', 'id'))
                                                     ->live()
                                                     ->afterStateUpdated(function ($state, $set) {
                                                         if (!$state) {
@@ -564,7 +564,7 @@ class CustomPackageResource extends Resource
 
                                         Select::make('vehicle')
                                             ->label('Vehicle Type')
-                                            ->options(Cab::where('user_id', auth()->id())->pluck('Title', 'id'))
+                                            ->options(Cab::all()->pluck('Title', 'id'))
                                             ->multiple()
                                             ->live()
                                             ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
