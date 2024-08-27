@@ -5,8 +5,10 @@ namespace App\Filament\Home\Pages;
 use App\Models\WebsiteUpdate as ModelsWebsiteUpdate;
 use Filament\Pages\Page;
 use Filament\Forms;
+use Filament\Forms\Components\Hidden;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\ButtonAction;
+use GuzzleHttp\Client;
 
 class WebsiteUpdate extends Page implements Forms\Contracts\HasForms
 {
@@ -17,6 +19,7 @@ class WebsiteUpdate extends Page implements Forms\Contracts\HasForms
 
     public $url;
     public $query;
+    public $urlIsValid = false;
 
     protected function getFormSchema(): array
     {
@@ -25,7 +28,14 @@ class WebsiteUpdate extends Page implements Forms\Contracts\HasForms
                 ->label('URL')
                 ->required()
                 ->url()
-                ->placeholder('Enter the URL'),
+                ->placeholder('Enter the URL')
+                ->live() // This makes the input reactive to changes
+                ->afterStateUpdated(function (string $state) {
+                    $this->checkUrl($state); // Validate the URL
+                })
+                ->afterStateHydrated(function (string $state) {
+                    $this->checkUrl($state); // Validate the URL
+                }),
 
             Forms\Components\Textarea::make('query')
                 ->label('Query')
@@ -35,32 +45,46 @@ class WebsiteUpdate extends Page implements Forms\Contracts\HasForms
         ];
     }
 
+    public function checkUrl($url)
+    {
+        $client = new Client();
+        try {
+            $response = $client->head($url);
+            $this->url = $url;
+            $this->urlIsValid = $response->getStatusCode() === 200;
+        } catch (\Exception $e) {
+            $this->urlIsValid = false;
+        }
+    }
+
     public function submit(): void
     {
         $this->validate();
 
         ModelsWebsiteUpdate::create([
             'url' => $this->url,
+            'user_id' => auth()->id(),
             'query' => $this->query,
         ]);
 
         $this->url = '';
         $this->query = '';
+        $this->urlIsValid = false;
 
         Notification::make()
-            ->title('Query Save Successfully')
+            ->title('Request Sent Successfully')
             ->success()
             ->send();
     }
 
-    // protected function getActions(): array
-    // {
-    //     return [
-    //         ButtonAction::make('submit')
-    //             ->label('Save')
-    //             ->action('submit')
-    //             ->icon('heroicon-s-arrow-up-tray')
-    //             ->color('success'),
-    //     ];
-    // }
+    protected function getActions(): array
+    {
+        return [
+            ButtonAction::make('submit')
+                ->label('Send Request')
+                ->action('submit')
+                ->icon('heroicon-s-arrow-up-tray')
+                ->color('success'),
+        ];
+    }
 }

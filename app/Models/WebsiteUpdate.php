@@ -10,6 +10,12 @@ class WebsiteUpdate extends Model
     use HasFactory;
     protected $fillable = [
         'url',
-        'query'
+        'query',
+        'user_id'
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
