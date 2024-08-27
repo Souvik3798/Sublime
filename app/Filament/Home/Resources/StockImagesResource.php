@@ -10,17 +10,20 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class StockImagesResource extends Resource
 {
     protected static ?string $model = StockImages::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-down-on-square-stack';
 
     public static function form(Form $form): Form
     {
@@ -39,14 +42,29 @@ class StockImagesResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\ImageColumn::make('image'),
+                Stack::make([
+                    Tables\Columns\TextColumn::make('name'),
+                    Tables\Columns\ImageColumn::make('image')
+                        ->height(200),
+                ])
+            ])
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('Download')
+                    ->icon('heroicon-s-arrow-down-tray')
+                    ->color('success')
+                    ->action(function (StockImages $record) {
+                        $filePath = 'uploads/StockImages/' . basename($record->image);
+                        return Storage::disk('public')->download($filePath);
+                    }),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

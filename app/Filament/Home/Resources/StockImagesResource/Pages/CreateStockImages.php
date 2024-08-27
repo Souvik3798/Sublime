@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateStockImages extends CreateRecord
 {
     protected static string $resource = StockImagesResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
