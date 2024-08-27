@@ -29,6 +29,8 @@ class StockImagesResource extends Resource
                 Forms\Components\TextInput::make('name'),
                 FileUpload::make('image')
                     ->image()
+                    ->directory('uploads/StockImages')
+                    ->uploadingMessage('Uploading Images...')
                     ->required(),
             ]);
     }
