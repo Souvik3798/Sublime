@@ -30,27 +30,27 @@ class HomePanelProvider extends PanelProvider
             ->path('home')
             ->login()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Rose,
             ])
             ->maxContentWidth(MaxWidth::Full)
             ->brandName('Tour Craft')
             ->navigationItems([
                 NavigationItem::make('Plan Trip')
                     ->url('/admin')
-                    ->icon('heroicon-o-paper-airplane')
+                    ->icon('heroicon-s-paper-airplane')
                     ->sort(6),
             ])
             ->navigationItems([
                 NavigationItem::make('Design')
                     ->url('https://app.napkin.ai/')
-                    ->icon('heroicon-o-newspaper')
+                    ->icon('heroicon-s-newspaper')
                     ->openUrlInNewTab()
                     ->sort(5),
             ])
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Owner Dashboard')
-                    ->icon('heroicon-o-cog-6-tooth')
+                    ->icon('heroicon-s-cog-6-tooth')
                     ->url('/owner')
                     ->visible(fn(): bool => auth()->user()->isAdmin())
             ])

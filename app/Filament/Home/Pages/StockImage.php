@@ -6,7 +6,7 @@ use Filament\Pages\Page;
 
 class StockImage extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-photo';
+    protected static ?string $navigationIcon = 'heroicon-s-photo';
 
     protected static ?string $title = 'AI Images';
 
