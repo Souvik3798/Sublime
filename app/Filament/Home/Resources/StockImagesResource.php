@@ -29,12 +29,13 @@ class StockImagesResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
                 FileUpload::make('image')
                     ->image()
                     ->directory('uploads/StockImages')
                     ->uploadingMessage('Uploading Images...')
                     ->required(),
+                Forms\Components\TextInput::make('name'),
+
             ]);
     }
 
@@ -43,7 +44,8 @@ class StockImagesResource extends Resource
         return $table
             ->columns([
                 Stack::make([
-                    Tables\Columns\TextColumn::make('name'),
+                    Tables\Columns\TextColumn::make('name')
+                        ->searchable(),
                     Tables\Columns\ImageColumn::make('image')
                         ->height(200),
                 ])
