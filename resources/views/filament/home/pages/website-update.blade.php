@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     <form wire:submit.prevent="submit" class="w-full bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">Update Website Information</h2>
+        {{-- <h2 class="text-2xl font-bold mb-6 text-gray-800">Update Website Information</h2> --}}
 
         <div class="mb-4">
             {{ $this->form->getComponent('url')->render() }}

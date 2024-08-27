@@ -15,6 +15,7 @@ class WebsiteUpdate extends Page implements Forms\Contracts\HasForms
     use Forms\Concerns\InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-s-globe-alt';
+    protected static ?string $title = 'Update Website Information';
     protected static string $view = 'filament.home.pages.website-update';
 
     public $url;
