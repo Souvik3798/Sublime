@@ -34,7 +34,7 @@ class RefundResource extends Resource
                     ->required()
                     ->columns(1)
                     ->rows(5)
-                    ->default(fn ($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
+                    ->default(fn($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
                     ->visibleOn('create'),
                 TextInput::make('point')
                     ->label('Refund and Cancellation Policy')
@@ -61,6 +61,9 @@ class RefundResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->modifyQueryUsing(function ($query) {
+                return $query->where('user_id', auth()->id());
+            })
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
             ])

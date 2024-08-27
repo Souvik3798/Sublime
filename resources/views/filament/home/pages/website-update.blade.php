@@ -7,8 +7,7 @@
             <small class="text-gray-500">Enter the full URL, including http:// or https://</small>
         </div>
 
-        <iframe src="https://ai.nxtunicorn.com/" frameborder="0" width="100%" height="100%"
-            style="height: 100%;"></iframe>
+        <iframe src="{{ $this->url }}" frameborder="0" width="100%" height="100%" style="height: 100%;"></iframe>
 
         <div class="mb-4">
             {{ $this->form->getComponent('query')->render() }}
