@@ -33,7 +33,7 @@ class KindlynoteResource extends Resource
                     ->required()
                     ->columnSpanFull()
                     ->rows(5)
-                    ->default(fn ($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
+                    ->default(fn($record) => $record ? $record->points()->pluck('point')->implode("\n") : null)
                     ->visibleOn('create'),
                 TextInput::make('point')
                     ->label('Refund and Cancellation Policy')
@@ -59,6 +59,9 @@ class KindlynoteResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->modifyQueryUsing(function ($query) {
+                return $query->where('user_id', auth()->id());
+            })
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
