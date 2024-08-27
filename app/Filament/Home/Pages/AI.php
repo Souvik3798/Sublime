@@ -8,6 +8,6 @@ class AI extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-cpu-chip';
     protected static ?int $navigationSort = 2;
-    protected static ?string $title = null;
+    protected static ?string $title = 'Unicorniz Assistant';
     protected static string $view = 'filament.home.pages.a-i';
 }
