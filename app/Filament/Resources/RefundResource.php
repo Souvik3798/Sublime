@@ -21,7 +21,7 @@ class RefundResource extends Resource
 {
     protected static ?string $model = Refund::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-receipt-refund';
+    protected static ?string $navigationIcon = 'heroicon-s-receipt-refund';
     protected static ?string $navigationGroup = 'Policy';
     protected static ?string $label = 'Refund and Cancellation';
 

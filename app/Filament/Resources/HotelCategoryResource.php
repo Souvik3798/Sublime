@@ -18,7 +18,7 @@ class HotelCategoryResource extends Resource
 {
     protected static ?string $model = HotelCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
+    protected static ?string $navigationIcon = 'heroicon-s-home-modern';
 
     protected static ?string $navigationGroup = 'Hotels';
 

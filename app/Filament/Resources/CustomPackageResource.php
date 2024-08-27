@@ -56,7 +56,7 @@ class CustomPackageResource extends Resource
 {
     protected static ?string $model = CustomPackage::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-wallet';
+    protected static ?string $navigationIcon = 'heroicon-s-wallet';
 
     protected static ?string $navigationGroup = 'Packages';
 

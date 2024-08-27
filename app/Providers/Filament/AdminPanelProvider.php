@@ -39,13 +39,13 @@ class AdminPanelProvider extends PanelProvider
             ->navigationItems([
                 NavigationItem::make('Back')
                     ->url('/home')
-                    ->icon('heroicon-o-arrow-uturn-left')
+                    ->icon('heroicon-s-arrow-left-circle')
                     ->sort(5),
             ])
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Owner Dashboard')
-                    ->icon('heroicon-o-cog-6-tooth')
+                    ->icon('heroicon-s-cog-6-tooth')
                     ->url('/owner')
                     ->visible(fn(): bool => auth()->user()->isAdmin())
             ])

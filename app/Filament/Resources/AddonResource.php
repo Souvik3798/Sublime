@@ -21,7 +21,7 @@ class AddonResource extends Resource
 {
     protected static ?string $model = Addon::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
+    protected static ?string $navigationIcon = 'heroicon-s-plus-circle';
 
     protected static ?string $navigationGroup = 'General';
 

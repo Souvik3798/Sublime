@@ -19,7 +19,7 @@ class DestinationResource extends Resource
 {
     protected static ?string $model = destination::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+    protected static ?string $navigationIcon = 'heroicon-s-map-pin';
 
     protected static ?string $navigationGroup = 'Transportation';
 

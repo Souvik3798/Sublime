@@ -20,7 +20,7 @@ class HotelResource extends Resource
 {
     protected static ?string $model = Hotel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+    protected static ?string $navigationIcon = 'heroicon-s-building-office-2';
 
     protected static ?string $navigationGroup = 'Hotels';
 

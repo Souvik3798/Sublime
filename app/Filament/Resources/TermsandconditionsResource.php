@@ -19,7 +19,7 @@ class TermsandconditionsResource extends Resource
 {
     protected static ?string $model = Termsandconditions::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bars-3-center-left';
+    protected static ?string $navigationIcon = 'heroicon-s-bars-3-center-left';
     protected static ?string $navigationGroup = 'Policy';
     protected static ?string $label = 'Terms and Conditions';
 

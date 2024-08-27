@@ -30,7 +30,7 @@ class PaymentResource extends Resource
 {
     protected static ?string $model = payment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-currency-rupee';
+    protected static ?string $navigationIcon = 'heroicon-s-currency-rupee';
 
     protected static ?string $navigationGroup = 'Packages';
 

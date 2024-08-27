@@ -19,7 +19,7 @@ class KindlynoteResource extends Resource
 {
     protected static ?string $model = Kindlynote::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
+    protected static ?string $navigationIcon = 'heroicon-s-pencil-square';
     protected static ?string $navigationGroup = 'Policy';
     protected static ?string $label = 'Kindly Note';
     protected static ?string $pluralLabel = 'Kindly Note';
