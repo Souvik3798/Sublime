@@ -11,6 +11,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -31,6 +32,7 @@ class HomePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Blue,
             ])
+            ->maxContentWidth(MaxWidth::Full)
             ->brandName('Tour Craft')
             ->navigationItems([
                 NavigationItem::make('Plan Trip')
