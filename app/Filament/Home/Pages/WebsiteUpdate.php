@@ -31,11 +31,19 @@ class WebsiteUpdate extends Page implements Forms\Contracts\HasForms
                 ->url()
                 ->placeholder('Enter the URL')
                 ->live() // This makes the input reactive to changes
-                ->afterStateUpdated(function (string $state) {
-                    $this->checkUrl($state); // Validate the URL
+                ->afterStateUpdated(function (?string $state) {
+                    if ($state !== null) {
+                        $this->checkUrl($state); // Validate the URL
+                    } else {
+                        $this->urlIsValid = false;
+                    }
                 })
-                ->afterStateHydrated(function (string $state) {
-                    $this->checkUrl($state); // Validate the URL
+                ->afterStateHydrated(function (?string $state) {
+                    if ($state !== null) {
+                        $this->checkUrl($state); // Validate the URL
+                    } else {
+                        $this->urlIsValid = false;
+                    }
                 }),
 
             Forms\Components\Textarea::make('query')
