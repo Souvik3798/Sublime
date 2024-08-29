@@ -19,6 +19,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class HomePanelProvider extends PanelProvider
@@ -34,6 +35,10 @@ class HomePanelProvider extends PanelProvider
             ])
             ->maxContentWidth(MaxWidth::Full)
             ->brandName('Tour Craft')
+            ->brandLogo(function () {
+                return Auth::check() ? 'Tour Craft' : asset('images/logo.png'); // Use Auth facade to check user authentication
+            })
+            ->brandLogoHeight('8rem')
             ->navigationItems([
                 NavigationItem::make('Plan Trip')
                     ->url('/admin')
