@@ -36,7 +36,7 @@ class HomePanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->brandName('Tour Craft')
             ->brandLogo(function () {
-                return Auth::check() ? '' : asset('https://drive.google.com/file/d/1fvCDNINXzTRT8IY7_cnsM9TaD_aZKivp/view?usp=sharing'); // Use Auth facade to check user authentication
+                return Auth::check() ? '' : 'https://drive.google.com/file/d/1fvCDNINXzTRT8IY7_cnsM9TaD_aZKivp/view?usp=sharing'; // Use Auth facade to check user authentication
             })
             ->brandLogoHeight(function () {
                 return Auth::check() ? '2rem' : '14rem';
