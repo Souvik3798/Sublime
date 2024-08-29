@@ -36,9 +36,11 @@ class HomePanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->brandName('Tour Craft')
             ->brandLogo(function () {
-                return Auth::check() ? 'Tour Craft' : asset('images/logo.png'); // Use Auth facade to check user authentication
+                return Auth::check() ? '' : asset('images/logo.png'); // Use Auth facade to check user authentication
             })
-            ->brandLogoHeight('8rem')
+            ->brandLogoHeight(function () {
+                return Auth::check() ? '2rem' : '14rem';
+            })
             ->navigationItems([
                 NavigationItem::make('Plan Trip')
                     ->url('/admin')
