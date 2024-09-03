@@ -37,7 +37,7 @@ class HomePanelProvider extends PanelProvider
             ->brandName('Tour Craft')
             ->brandLogo(asset('storage/logo.png'))
             ->brandLogoHeight(function () {
-                return Auth::check() ? '2rem' : '14rem';
+                return Auth::check() ? '6rem' : '14rem';
             })
             ->navigationItems([
                 NavigationItem::make('Plan Trip')
