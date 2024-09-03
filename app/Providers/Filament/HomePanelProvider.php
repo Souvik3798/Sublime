@@ -37,9 +37,6 @@ class HomePanelProvider extends PanelProvider
             ->brandName('Tour Craft')
             ->brandLogo(asset('storage/logo.png'))
             ->brandLogoHeight(function () {
-                if (request()->header('User-Agent') && preg_match('/mobile|android|touch|webos|iphone|ipad|ipod|blackberry|opera mini|iemobile/i', request()->header('User-Agent'))) {
-                    return '7rem';
-                }
                 return Auth::check() ? '5rem' : '14rem';
             })
             ->navigationItems([
