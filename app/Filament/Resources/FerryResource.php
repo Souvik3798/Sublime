@@ -53,7 +53,8 @@ class FerryResource extends Resource
                                 'Economy' => 'Economy',
                                 'Premium' => 'Premium',
                                 'Royal' => 'Royal',
-                                'Luxury' => 'Luxury'
+                                'Luxury' => 'Luxury',
+                                'Deluxe' => 'Deluxe'
                             ])
                             ->required(),
                         TextInput::make('price')
