@@ -1000,21 +1000,7 @@
             }
         </style>
 
-        <div class="addons-section">
-            <h2>Optional Add-ons</h2>
 
-            @foreach ($record->addons as $addon)
-                <div class="addon-item">
-                    <div class="addon-details">
-                        <div class="addon-title">{{ ucwords($addon['title']) }}</div>
-                        <div class="addon-day">Day {{ $addon['day'] }}</div>
-                    </div>
-                    <div class="addon-price">
-                        ₹{{ number_format($addon['price']) }}/-
-                    </div>
-                </div>
-            @endforeach
-        </div>
 
 
         <div class="inclusions">
