@@ -1003,23 +1003,24 @@
 
         {{-- addons --}}
         <div class="addons-container">
-            <h2 class="addons-heading">Additional Activities & Services</h2>
+            <h2 class="addons-heading"><i class="fas fa-plus-circle"></i> Additional Activities & Services</h2>
             @foreach ($record->addons as $addon)
                 <div class="addon-card">
                     <div class="addon-header">
                         @php
                             $addonname = App\Models\Addon::findorfail($addon['addon']);
                         @endphp
-                        <h3 class="addon-name">{{ $addonname['name'] }}</h3>
-                        <span class="addon-day">Day {{ $addon['days'] }}</span>
+                        <h3 class="addon-name"><i class="fas fa-plus"></i> {{ $addonname['name'] }}</h3>
+                        <span class="addon-day"><i class="far fa-calendar-alt"></i> Day {{ $addon['days'] }}</span>
                     </div>
                     <div class="addon-body">
                         <div class="addon-location">
-                            <i class="location-icon">📍</i>
+                            <i class="fas fa-map-marker-alt"></i>
                             <span>{{ $addon['source'] }}</span>
                         </div>
                         @if ($addon['notes'])
                             <div class="addon-notes">
+                                <i class="fas fa-sticky-note"></i>
                                 <p>{{ $addon['notes'] }}</p>
                             </div>
                         @endif
@@ -1043,6 +1044,11 @@
                 margin-bottom: 1.5rem;
                 padding-bottom: 0.5rem;
                 border-bottom: 2px solid #e5e7eb;
+            }
+
+            .addons-heading i {
+                color: #4CAF50;
+                margin-right: 0.5rem;
             }
 
             .addon-card {
@@ -1073,12 +1079,22 @@
                 margin: 0;
             }
 
+            .addon-name i {
+                color: #4CAF50;
+                margin-right: 0.5rem;
+            }
+
             .addon-day {
                 background: #edf2f7;
                 padding: 0.25rem 0.75rem;
                 border-radius: 999px;
                 font-size: 0.875rem;
                 color: #4a5568;
+            }
+
+            .addon-day i {
+                color: #3182ce;
+                margin-right: 0.5rem;
             }
 
             .addon-body {
@@ -1094,8 +1110,8 @@
                 font-size: 0.95rem;
             }
 
-            .location-icon {
-                font-size: 1rem;
+            .addon-location i {
+                color: #e53e3e;
             }
 
             .addon-price {
@@ -1114,6 +1130,14 @@
                 border-left: 3px solid #ed8936;
                 font-size: 0.9rem;
                 color: #744210;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .addon-notes i {
+                color: #ed8936;
+                margin-top: 0.2rem;
             }
         </style>
 
