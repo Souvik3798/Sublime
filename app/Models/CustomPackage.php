@@ -67,4 +67,9 @@ class CustomPackage extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function addon(): BelongsTo
+    {
+        return $this->belongsTo(Addon::class);
+    }
 }
