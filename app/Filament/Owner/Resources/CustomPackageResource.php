@@ -659,8 +659,7 @@ class CustomPackageResource extends Resource
                                                     ->numeric(),
                                                 Select::make('source')
                                                     ->label('Location')
-                                                    ->options(destination::where('user_id', auth()->id())->pluck('Title', 'Title')),
-
+                                                    ->options(destination::pluck('Title', 'id')),
                                                 Textarea::make('notes')
                                                     ->label('Notes (if any)')
                                             ])->columns(3),

@@ -1001,6 +1001,119 @@
         </style>
 
 
+        {{-- addons --}}
+        <div class="addons-container">
+            <h2 class="addons-heading">Additional Activities & Services</h2>
+            @foreach ($record->addons as $addon)
+                <div class="addon-card">
+                    <div class="addon-header">
+                        <h3 class="addon-name">{{ $addon['addon'] }}</h3>
+                        <span class="addon-day">Day {{ $addon['days'] }}</span>
+                    </div>
+                    <div class="addon-body">
+                        <div class="addon-location">
+                            <i class="location-icon">📍</i>
+                            <span>{{ $addon['source'] }}</span>
+                        </div>
+                        @if ($addon['notes'])
+                            <div class="addon-notes">
+                                <p>{{ $addon['notes'] }}</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <style>
+            .addons-container {
+                padding: 2rem;
+                background: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                margin: 2rem 0;
+            }
+
+            .addons-heading {
+                font-size: 1.5rem;
+                color: #1a1a1a;
+                margin-bottom: 1.5rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid #e5e7eb;
+            }
+
+            .addon-card {
+                background: #f8fafc;
+                border-radius: 8px;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                border: 1px solid #e2e8f0;
+                transition: transform 0.2s ease;
+            }
+
+            .addon-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            }
+
+            .addon-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0.75rem;
+            }
+
+            .addon-name {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #2d3748;
+                margin: 0;
+            }
+
+            .addon-day {
+                background: #edf2f7;
+                padding: 0.25rem 0.75rem;
+                border-radius: 999px;
+                font-size: 0.875rem;
+                color: #4a5568;
+            }
+
+            .addon-body {
+                display: grid;
+                gap: 0.75rem;
+            }
+
+            .addon-location {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: #4a5568;
+                font-size: 0.95rem;
+            }
+
+            .location-icon {
+                font-size: 1rem;
+            }
+
+            .addon-price {
+                font-weight: 600;
+                color: #2c5282;
+                background: #ebf8ff;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                display: inline-block;
+            }
+
+            .addon-notes {
+                background: #fffaf0;
+                padding: 0.75rem;
+                border-radius: 6px;
+                border-left: 3px solid #ed8936;
+                font-size: 0.9rem;
+                color: #744210;
+            }
+        </style>
+
 
 
         <div class="inclusions">
