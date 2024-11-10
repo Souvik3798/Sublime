@@ -3,6 +3,7 @@
 
 @php
     $user = App\Models\User::findorfail(auth()->id());
+    // dd($user);
 @endphp
 
 <head>
@@ -10,293 +11,733 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <title>{{ $record->name }}</title>
+    <title>{{ $record->name }} </title>
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #e74c3c;
-            --accent-color: #3498db;
-            --text-color: #2c3e50;
-            --light-bg: #f8f9fa;
-            --border-radius: 8px;
-            --box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-        }
-
-        * {
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--light-bg);
+            background-color: #f4f4f4;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
+            background: #35424a;
+            color: #ffffff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #e8491d 3px solid;
+        }
+
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
         }
 
         .main-header {
             text-align: center;
+            font-size: 24px;
         }
 
-        .main-header img {
-            max-width: 300px;
-            height: auto;
-            margin-bottom: 1.5rem;
+        .package-details,
+        .hotels,
+        .inclusions,
+        .exclusions,
+        .cancellation-policy,
+        .vehicles,
+        .itinerary {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .main-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        .main-header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .section {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .section h2 {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--secondary-color);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-        }
-
-        /* Package Details Table */
-        table {
+        .package-details table,
+        .hotels table,
+        .vehicles table {
             width: 100%;
             border-collapse: collapse;
-            margin: 1rem 0;
         }
 
-        th, td {
-            padding: 1rem;
-            border: 1px solid #dee2e6;
+        .package-details th,
+        .package-details td,
+        .hotels th,
+        .hotels td,
+        .vehicles th,
+        .vehicles td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
 
-        th {
-            background: var(--light-bg);
-            font-weight: 600;
-            width: 25%;
+        .package-details th,
+        .hotels th,
+        .vehicles th {
+            background-color: #f2f2f2;
         }
 
-        /* Itinerary Section */
-        .itinerary-day {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--secondary-color);
+        .package-details h2,
+        .hotels h2,
+        .inclusions h2,
+        .exclusions h2,
+        .cancellation-policy h2,
+        .vehicles h2,
+        .itinerary h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
         }
 
-        .itinerary-day h3 {
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
-        /* Hotels Section */
-        .hotel-block {
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            margin-bottom: 2rem;
-            box-shadow: var(--box-shadow);
+        .hotels img {
+            width: 15%;
+            height: auto;
+            border-radius: 5px;
         }
 
         .hotel-info {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            padding: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
 
         .hotel-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-        }
-
-        .hotel-images img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: var(--border-radius);
+            display: flex;
+            flex: 4;
+            margin-right: 20px;
         }
 
         .hotel-details {
-            padding: 1.5rem;
-            background: var(--light-bg);
-            border-radius: var(--border-radius);
+            flex: 2;
+            padding-left: 20px;
+            border-left: 1px solid #ddd;
         }
 
-        /* Inclusions/Exclusions Lists */
+        .hotel-block {
+            width: 100%;
+        }
+
+        .hotel-block h3 {
+            margin-top: 0;
+        }
+
+        .hotel-images img {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        /* New Itinerary Timeline Styles */
+        .itinerary {
+            position: relative;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: #e8491d;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        .container-timeline {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .container-timeline::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid #e8491d;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            left: 50%;
+        }
+
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid white;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+        }
+
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        .right::after {
+            left: -10px;
+        }
+
+        .content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .content h3 {
+            margin-top: 0;
+            color: #e8491d;
+        }
+
+        .content h4 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        /* Inclusion and exlusions */
+
         .styled-list {
-            list-style: none;
+            list-style-type: none;
+            /* Remove default bullets */
+            padding: 0;
+            margin: 0;
         }
 
         .styled-list li {
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            background: white;
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--accent-color);
+            padding: 10px 0;
+            margin: 5px 0;
+            border-bottom: 1px solid #ddd;
             position: relative;
-            padding-left: 3rem;
+            padding-left: 35px;
         }
 
         .styled-list li:before {
+            content: "\2717";
+            color: red;
             position: absolute;
-            left: 1rem;
-            font-family: "Font Awesome 5 Free";
-            font-weight: 900;
-        }
-
-        .inclusions .styled-list li:before {
-            content: "\f00c";
-            color: #28a745;
+            left: 0;
+            font-size: 14px;
+            line-height: 1.2em;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
         }
 
         .exclusions .styled-list li:before {
-            content: "\f00d";
-            color: #dc3545;
+            content: "\2717";
         }
 
-        /* Terms and Cancellation Policy */
-        .policy-content {
-            background: var(--light-bg);
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
+        .inclusions .styled-list li:before {
+            content: "\2713";
+            color: green;
+            border-color: green;
+        }
+
+        .inclusions,
+        .exclusions {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .inclusions h2,
+        .exclusions h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+            color: #e8491d;
+        }
+
+        /* calcelation and refund */
+
+        .styled-policy-list {
+            counter-reset: item;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
         }
 
         .styled-policy-list li {
-            background: white;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            counter-increment: item;
+            padding: 10px;
+            margin: 5px 0;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            padding-left: 40px;
+            /* background: #f9f9f9; */
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* Why Book Section */
+        .styled-policy-list li:before {
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #e8491d;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .cancellation-policy {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cancellation-policy h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+            color: #e8491d;
+        }
+
+        .policy-content {
+            padding: 15px;
+            /* background-color: #f4f4f4; */
+            border-radius: 5px;
+        }
+
+        /* Terms and Conditions */
+        .terms-and-conditions {
+            background: #f0f8ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .terms-and-conditions h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .terms-content {
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+        }
+
+        .styled-terms-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .styled-terms-list li {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: #ffffff;
+            border-left: 5px solid #007bff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .styled-terms-list li i {
+            color: #007bff;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .styled-terms-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .styled-terms-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* why choose us */
         .why-book-section {
             text-align: center;
-            padding: 2rem;
+            margin: 40px 0;
+            padding: 20px
+        }
+
+        .why-book-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         .features {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 10px;
         }
 
         .feature-item {
-            background: white;
-            padding: 1rem 2rem;
-            border-radius: 30px;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.2s;
+            border: 1px solid #28a745;
+            border-radius: 30px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #28a745;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item i {
+            margin-right: 10px;
+            font-size: 1.2em;
         }
 
         .feature-item:hover {
-            transform: translateY(-2px);
+            background-color: #28a745;
+            color: #ffffff;
         }
 
-        /* Print Styles */
+        .feature-item:hover i {
+            color: #ffffff;
+        }
+
+        @media screen and (max-width: 768px) {
+            .feature-item {
+                flex-basis: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* kindly notes */
+        .kindly-notes {
+            background-color: #ffffff;
+            border-left: 5px solid #28a745;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .kindly-notes h2 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            font-size: 26px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 10px;
+        }
+
+        .kindly-content {
+            padding-left: 10px;
+        }
+
+        .styled-kindly-list {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .styled-kindly-list li {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #555;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .styled-kindly-list li::before {
+            content: "\1F4DD";
+            font-size: 22px;
+            color: #007bff;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+        @media screen and (max-width: 600px) {
+            .timeline::after {
+                left: 31px;
+            }
+
+            .container-timeline {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .container-timeline::before {
+                left: 60px;
+                border: medium solid white;
+                border-width: 10px 10px 10px 0;
+                border-color: transparent white transparent transparent;
+            }
+
+            .left::after,
+            .right::after {
+                left: 21px;
+            }
+
+            .right {
+                left: 0%;
+            }
+        }
+
         @media print {
             body {
-                background: white;
-                color: black;
+                background-color: #ffffff;
+                font-size: 10pt;
+                color: #000000;
             }
 
             .container {
-                max-width: 100%;
+                width: 100%;
+                margin: 0;
                 padding: 0;
             }
 
             header {
-                background: white !important;
-                color: black;
-                padding: 1rem 0;
+                background: #ffffff;
+                color: #000000;
+                padding-top: 30px;
+                min-height: 70px;
+                border-bottom: #e8491d 3px solid;
+
             }
 
-            .section {
-                break-inside: avoid;
+            header .main-header h1 {
+                font-size: 25pt;
+                color: #000;
+            }
+
+            header .main-header p {
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                font-size: 10pt;
+                color: #000000;
+            }
+
+            header .main-header img {
+                width: 50%;
+                height: auto;
+            }
+
+            .kindly-notes {
+                background-color: #ffffff !important;
+                border-left: 5px solid #28a745 !important;
+                /* Ensure border is visible in print */
+                padding: 20px 30px;
+                margin-bottom: 20px;
+                border-radius: 10px !important;
+                /* Ensure border radius is applied */
+                box-shadow: none !important;
+                /* Remove shadow in print */
+            }
+
+            .kindly-notes h2 {
+                color: #333 !important;
+                font-size: 22px;
+                /* Slightly reduce font size for print */
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ddd;
+                /* Lighter border for print */
+                padding-bottom: 5px;
+            }
+
+            .styled-kindly-list li {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .package-details,
+            .hotels,
+            .kindly-notes,
+            .inclusions,
+            .exclusions,
+            .cancellation-policy,
+            .vehicles,
+            .terms-and-conditions,
+            .why-book-section,
+            .itinerary {
                 box-shadow: none;
+                margin: 10px 0;
+                page-break-inside: avoid;
                 border: 1px solid #ddd;
-                margin: 1rem 0;
+                background-color: #ffffff;
+            }
+
+            .hotel-images img,
+            .itinerary img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                page-break-inside: avoid;
+            }
+
+            .vehicles table,
+            .package-details table,
+            .hotels table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            .vehicles th,
+            .vehicles td,
+            .package-details th,
+            .package-details td,
+            .hotels th,
+            .hotels td {
+                border: 1px solid #000;
+                padding: 4px;
+                page-break-inside: avoid;
+            }
+
+            .timeline,
+            .container-timeline,
+            .content,
+            .itinerary h2,
+            .package-details h2,
+            .hotels h2,
+            .inclusions h2,
+            .exclusions h2,
+            .cancellation-policy h2,
+            .vehicles h2 {
+                page-break-inside: avoid;
+            }
+
+            .hotel-info {
+                flex-wrap: nowrap;
+                page-break-inside: avoid;
+            }
+
+            .hotel-images {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                margin-right: 0;
+                page-break-inside: avoid;
             }
 
             .hotel-images img {
-                max-height: 100px;
+                width: 20%;
+                margin-bottom: 10px;
             }
 
-            .feature-item {
-                border: 1px solid #ddd;
-                box-shadow: none;
+            .hotel-details {
+                padding-left: 0;
+                border-left: none;
+                page-break-inside: avoid;
             }
 
-            table {
-                break-inside: avoid;
+            .hotel-block {
+                page-break-inside: avoid;
+                margin-bottom: 20px;
             }
 
-            .itinerary-day {
-                break-inside: avoid;
+            h2 {
+                color: #000000;
+                border-bottom: 2px solid #000000;
             }
 
-            .styled-list li {
-                break-inside: avoid;
+            a {
+                text-decoration: none;
+                color: #000000;
             }
 
             @page {
-                margin: 1.5cm;
-                size: A4;
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hotel-info {
-                grid-template-columns: 1fr;
+                margin: 0.7cm !important;
             }
 
-            .container {
-                padding: 0 1rem;
+            @page: first {
+                margin-top: 4cm !important;
             }
 
-            .features {
-                flex-direction: column;
+            .container-timeline {
+                /* padding: 10px 40px !important; */
+                position: relative !important;
+                background-color: inherit !important;
+                width: 57% !important;
+                left: -6%;
+                /* Increase width here */
+                box-sizing: border-box !important;
             }
 
-            .feature-item {
-                width: 100%;
+            .right {
+                left: 49%;
             }
+
+
+
         }
     </style>
 </head>
@@ -306,19 +747,24 @@
         <div class="container">
             <div class="main-header">
                 @if ($user['logo'] == '')
-                    <img src="{{ asset('Images/default.webp') }}" alt="Logo">
+                    <img src="{{ asset('Images/default.webp') }}" alt="Logo"
+                        style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
                 @else
-                    <img src="{{ asset('storage/' . $user['logo']) }}" alt="Logo">
+                    <img src="{{ asset('storage/' . $user['logo']) }}" alt="Logo"
+                        style="vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
                 @endif
-                <h1>Hello, {{ $record->customers->customer }}</h1>
+                <br>
+                <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">
+                    Hello, {{ $record->customers->customer }}
+                </h1>
                 <p>{{ $user['website'] }} | +91-{{ $user['phone'] }} | {{ $user['email'] }}</p>
-                <p>{{ $user['address'] }}</p>
+                <p style="font-size: 15px; margin-top: 20px">{{ $user['address'] }}</p>
             </div>
         </div>
     </header>
 
     <div class="container">
-        <section class="section package-details">
+        <div class="package-details">
             <h2>Package Details</h2>
             <table>
                 <tr>
@@ -348,9 +794,9 @@
                     <td colspan="3">{{ $record->days }}-Days {{ $record->nights }}-Nights</td>
                 </tr>
             </table>
-        </section>
+        </div>
 
-        <section class="section itinerary">
+        <div class="vehicles" style="margin-bottom: 20px">
             <h2>Short Itinerary</h2>
             <table>
                 <tr>
@@ -362,81 +808,173 @@
                     <tr>
                         <td><strong>{{ $itinerary['days'] }}</strong></td>
                         <td>{{ $itinerary['description'] }}</td>
-                        <td>{{ $itinerary['destination'] }}</td>
+                        {{-- <td>
+                            @foreach ($itinerary['specialities'] as $speciality)
+                                <span class="badge badge-primary">{{ $speciality }}</span>
+                            @endforeach
+                        </td> --}}
+                        <td>
+                            {{ $itinerary['destination'] }}
+                        </td>
                     </tr>
                 @endforeach
             </table>
-        </section>
+        </div>
 
-        <section class="section detailed-itinerary">
+        <div class="itinerary">
             <h2>Detailed Itinerary</h2>
             @foreach ($record->itinerary as $itinerary)
-                <div class="itinerary-day">
-                    <h3>Day {{ $itinerary['days'] }}</h3>
-                    {!! $itinerary['longdescription'] !!}
-                </div>
+                <h3 style="color: red"><strong> Day {{ $itinerary['days'] }} </strong></h3>
+                {!! $itinerary['longdescription'] !!} <br /><br />
             @endforeach
-        </section>
 
-        <section class="section hotels">
+        </div>
+
+        {{-- <div class="itinerary">
+
+            <div class="timeline">
+                <h2>Itinerary Timeline</h2>
+                @php
+                    $j = 1;
+                @endphp
+                @foreach ($record->itinerary as $itinerary)
+                    @if ($j % 2 != 0)
+                        <div class="container-timeline left">
+                        @else
+                            <div class="container-timeline right">
+                    @endif
+
+                    <div class="content">
+                        <h3>Day {{ $itinerary['days'] }}</h3>
+                        <h4>Title: {{ $itinerary['name'] }}</h4>
+                        <p><strong>Date:</strong> {{ date('l, F j, Y', strtotime($itinerary['date'])) }}</p>
+                        <p><strong>Specialities:</strong>
+
+                            @foreach ($itinerary['specialities'] as $speciality)
+                                {{ $speciality }}
+                            @endforeach
+
+                        </p>
+                        <p><strong>Locations Covered:</strong>
+
+                            @foreach ($itinerary['locations'] as $location)
+                                {{ $location }}
+                            @endforeach
+                        </p>
+                    </div>
+            </div>
+            @php
+                $j++;
+            @endphp
+            @endforeach
+
+        </div>
+    </div>
+    <div class="vehicles">
+        <h2>Vehicles and Ferry Plan</h2>
+        <table>
+            <tr>
+                <th>Day</th>
+                <th>Vehicle</th>
+                <th>Ferry</th>
+            </tr>
+
+            @php
+                $days = $record->days;
+            @endphp
+            @for ($i = 1; $i <= $days; $i++)
+                <tr>
+                    <td>Day {{ $i }}</td>
+                    <td>
+                        @foreach ($record->vehicle as $vehicle)
+                            @if ($vehicle['days'] == $i)
+                                For {{ $vehicle['source'] }}
+                            @endif
+                        @endforeach
+                    </td>
+                    <td>
+                        @foreach ($record->cruz as $cruz)
+                            @if ($cruz['days'] == $i)
+                                From {{ $cruz['source'] }} to {{ $cruz['destination'] }}
+                            @endif
+                        @endforeach
+                    </td>
+                </tr>
+            @endfor
+
+
+        </table>
+    </div> --}}
+
+        <div class="hotels">
             <h2>Hotel Plan</h2>
+
             @foreach ($hotelrates as $index => $hotelrates)
                 @php
                     $hoteltype = App\Models\HotelCategory::findorfail($index);
                 @endphp
-                <div class="hotel-category">
-                    <h3>{{ $hoteltype['category'] }} - ₹.{{ number_format($hotelrates) }}/- Per Person</h3>
+                <div class="hotels">
+                    <h2>{{ $hoteltype['category'] }} -
+                        <mark>₹.{{ number_format($hotelrates) }}/-</mark> Per Person
+                    </h2>
 
                     @foreach ($record->rooms as $room)
                         @if ($room['hotel_type'] == $hoteltype['id'])
-                            @php
-                                $des = App\Models\destination::findorfail($room['location']);
-                                $roomtype = App\Models\RoomCategory::findorfail($room['room_type']);
-                                $hotelImages = App\Models\HotelImage::where('hotel_id', $room['hotel_name'])->get();
-                                $hotel = App\Models\Hotel::findorfail($room['hotel_name']);
-                            @endphp
                             <div class="hotel-block">
-                                <h4>Day {{ $room['days'] }} - {{ $des['Title'] }}</h4>
+                                @php
+                                    $des = App\Models\destination::findorfail($room['location']);
+                                    $roomtype = App\Models\RoomCategory::findorfail($room['room_type']);
+                                    $hotelImages = App\Models\HotelImage::where('hotel_id', $room['hotel_name'])->get();
+                                    $hotel = App\Models\Hotel::findorfail($room['hotel_name']);
+                                @endphp
+                                <h3>Day {{ $room['days'] }}
+                                    {{-- ({{ Carbon\Carbon::parse($room['date'])->format('d F Y') }}) --}}
+                                    - {{ $des['Title'] }}, hotel details</h3>
                                 <div class="hotel-info">
                                     <div class="hotel-images">
+
                                         @foreach ($hotelImages as $images)
                                             @foreach ($images['images'] as $image)
-                                                <img src="{{ asset('storage/' . $image) }}" alt="Hotel Image">
+                                                <img src="{{ asset('storage/' . $image) }}" width="10px"
+                                                    alt="Seashell Coral Cove">
                                             @endforeach
                                         @endforeach
+
                                     </div>
                                     <div class="hotel-details">
-                                        <h5>{{ strtoupper($hotel['hotelName']) }}</h5>
-                                        <p><strong>Room Type:</strong> {{ $roomtype['category'] }}</p>
-                                        <p><strong>Meal Plan:</strong> {{ strtoupper($room['meal_plan']) }}</p>
+                                        <br><strong>{{ strtoupper($hotel['hotelName']) }}</strong><br>
+                                        {{-- Date: {{ Carbon\Carbon::parse($room['date'])->format('d F Y') }}<br> --}}
+                                        Room Type: <strong>{{ $roomtype['category'] }}</strong><br>
+                                        Meal Plan: <strong>{{ strtoupper($room['meal_plan']) }}</strong>
                                     </div>
                                 </div>
                             </div>
                         @endif
                     @endforeach
+
                 </div>
             @endforeach
-        </section>
+        </div>
 
-        <section class="section inclusions">
+        <div class="inclusions">
             <h2>Package Includes</h2>
             <ul class="styled-list">
                 @foreach ($record->inclusions as $inclusion)
                     <li>{{ ucwords($inclusion) }}</li>
                 @endforeach
             </ul>
-        </section>
+        </div>
 
-        <section class="section exclusions">
+        <div class="exclusions">
             <h2>Package Excludes</h2>
             <ul class="styled-list">
                 @foreach ($record->exclusions as $exclusion)
                     <li>{{ ucwords($exclusion) }}</li>
                 @endforeach
             </ul>
-        </section>
+        </div>
 
-        <section class="section cancellation-policy">
+        <div class="cancellation-policy">
             <h2>Refund and Cancellation Policy</h2>
             @php
                 $refunds = App\Models\Refund::where('user_id', auth()->id())->get();
@@ -448,38 +986,39 @@
                     @endforeach
                 </ol>
             </div>
-        </section>
+        </div>
 
-        <section class="section terms-and-conditions">
+        <div class="terms-and-conditions">
             <h2>Terms and Conditions</h2>
             @php
                 $terms = App\Models\Termsandconditions::where('user_id', auth()->id())->get();
             @endphp
-            <div class="policy-content">
-                <ol class="styled-policy-list">
+            <div class="terms-content">
+                <ol class="styled-terms-list">
                     @foreach ($terms as $term)
                         <li>{{ $term['point'] }}</li>
                     @endforeach
                 </ol>
             </div>
-        </section>
+        </div>
 
-        <section class="section kindly-notes">
+        <div class="kindly-notes">
             <h2>Kindly Note</h2>
             @php
                 $kns = App\Models\Kindlynote::where('user_id', auth()->id())->get();
             @endphp
-            <div class="policy-content">
-                <ol class="styled-policy-list">
+            <div class="kindly-content">
+                <ol class="styled-kindly-list">
                     @foreach ($kns as $kn)
                         <li>{{ $kn['point'] }}</li>
                     @endforeach
                 </ol>
             </div>
-        </section>
+        </div>
 
-        <section class="section why-book-section">
-            <h2>Why Book with {{ $user['name'] }}?</h2>
+
+        <div class="why-book-section">
+            <h3>Why Book with {{ $user['name'] }} ?</h3>
             <div class="features">
                 <div class="feature-item">
                     <i class="fas fa-calendar-alt"></i>
@@ -510,7 +1049,9 @@
                     <span>Since 2002</span>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+
+
 </body>
+
 </html>
