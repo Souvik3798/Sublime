@@ -1007,7 +1007,7 @@
             @foreach ($record->addons as $addon)
                 <div class="addon-card">
                     <div class="addon-header">
-                        <h3 class="addon-name">{{ $addon->addon->name }}</h3>
+                        <h3 class="addon-name">{{ $addon['addon']['name'] }}</h3>
                         <span class="addon-day">Day {{ $addon['days'] }}</span>
                     </div>
                     <div class="addon-body">
