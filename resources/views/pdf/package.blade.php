@@ -1034,7 +1034,7 @@
                                 @foreach ($record->rooms as $room)
                                     @if ($room['hotel_type'] == $hoteltype->id)
                                         @php
-                                            $des = App\Models\Destination::find($room['location']);
+                                            $des = App\Models\destination::find($room['location']);
                                             $roomtype = App\Models\RoomCategory::find($room['room_type']);
                                             $hotel = App\Models\Hotel::find($room['hotel_name']);
                                         @endphp
