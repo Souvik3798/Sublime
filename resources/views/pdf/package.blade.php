@@ -2,16 +2,17 @@
 <html lang="en">
 
 @php
-    $user = App\Models\User::findorfail(auth()->id());
-    // dd($user);
+    $user = auth()->check() ? App\Models\User::find(auth()->id()) : null;
 @endphp
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <title>{{ $record->name }} </title>
+
+    <title>{{ $record->name ?? 'Package Details' }}</title>
     <style>
         body {
             font-family: Georgia, 'Times New Roman', Times, serif;
@@ -465,6 +466,57 @@
             color: #ffffff;
         }
 
+        /* per person price */
+
+        /* General Material Design styles */
+        .material-card {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            margin: 16px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            max-width: 500px;
+        }
+
+        /* Icon styling */
+        .icon-wrapper {
+            flex-shrink: 0;
+            background-color: #f32121;
+            color: #ffffff;
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+        }
+
+        .icon-wrapper i {
+            font-size: 24px;
+        }
+
+        /* Content Styling */
+        .content {
+            flex-grow: 1;
+        }
+
+        .price-label {
+            font-size: 16px;
+            color: #555555;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .price-value {
+            font-size: 20px;
+            color: #f32121;
+            margin: 4px 0 0;
+            font-weight: bold;
+        }
+
         @media screen and (max-width: 768px) {
             .feature-item {
                 flex-basis: 100%;
@@ -522,6 +574,49 @@
             top: 0;
         }
 
+
+        /* addons-container */
+        .addons-section {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .addon-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .addon-details {
+            flex: 1;
+        }
+
+        .addon-day {
+            color: #666;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .addon-price {
+            font-weight: bold;
+            color: #2c5282;
+            padding: 5px 10px;
+            background: #ebf4ff;
+            border-radius: 4px;
+        }
+
+        .addon-title {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
 
 
         @media screen and (max-width: 600px) {
@@ -739,26 +834,138 @@
 
 
         }
+
+        .addons-container {
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+
+        .addons-heading {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .addons-heading i {
+            color: #4CAF50;
+            margin-right: 0.5rem;
+        }
+
+        .addon-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease;
+        }
+
+        .addon-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .addon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .addon-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .addon-name i {
+            color: #4CAF50;
+            margin-right: 0.5rem;
+        }
+
+        .addon-day {
+            background: #edf2f7;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            color: #4a5568;
+        }
+
+        .addon-day i {
+            color: #3182ce;
+            margin-right: 0.5rem;
+        }
+
+        .addon-body {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .addon-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        .addon-location i {
+            color: #e53e3e;
+        }
+
+        .addon-price {
+            font-weight: 600;
+            color: #2c5282;
+            background: #ebf8ff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .addon-notes {
+            background: #fffaf0;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border-left: 3px solid #ed8936;
+            font-size: 0.9rem;
+            color: #744210;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .addon-notes i {
+            color: #ed8936;
+            margin-top: 0.2rem;
+        }
     </style>
+
 </head>
 
 <body>
     <header>
         <div class="container">
             <div class="main-header">
-                @if ($user['logo'] == '')
-                    <img src="{{ asset('Images/default.webp') }}" alt="Logo"
-                        style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
+                @if ($user && $user->logo)
+                    <img src="{{ asset('storage/' . $user->logo) }}" alt="Logo"
+                        style="vertical-align: middle; margin-right: 10px; margin-bottom: 20px">
                 @else
-                    <img src="{{ asset('storage/' . $user['logo']) }}" alt="Logo"
-                        style="vertical-align: middle; margin-right: 10px;margin-bottom: 20px">
+                    <img src="{{ asset('Images/default.webp') }}" alt="Logo"
+                        style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px; margin-bottom: 20px">
                 @endif
                 <br>
                 <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">
-                    Hello, {{ $record->customers->customer }}
+                    Hello, {{ $record->customers->customer ?? 'Guest' }}
                 </h1>
-                <p>{{ $user['website'] }} | +91-{{ $user['phone'] }} | {{ $user['email'] }}</p>
-                <p style="font-size: 15px; margin-top: 20px">{{ $user['address'] }}</p>
+                <p>{{ $user->website ?? 'Your Website' }} | +91-{{ $user->phone ?? 'XXXXXXX' }} |
+                    {{ $user->email ?? 'support@example.com' }}</p>
+                <p style="font-size: 15px; margin-top: 20px">{{ $user->address ?? 'Your Address' }}</p>
             </div>
         </div>
     </header>
@@ -769,396 +976,146 @@
             <table>
                 <tr>
                     <th>Arrival:</th>
-                    <td>{{ Carbon\Carbon::parse($record->customers->dateofarrival)->format('d F, Y') }}</td>
+                    <td>{{ optional($record->customers)->dateofarrival ? Carbon\Carbon::parse($record->customers->dateofarrival)->format('d F, Y') : 'N/A' }}
+                    </td>
                     <th>Departure:</th>
-                    <td>{{ Carbon\Carbon::parse($record->customers->dateofdeparture)->format('d F, Y') }}</td>
+                    <td>{{ optional($record->customers)->dateofdeparture ? Carbon\Carbon::parse($record->customers->dateofdeparture)->format('d F, Y') : 'N/A' }}
+                    </td>
                 </tr>
                 <tr>
                     <th>Adults:</th>
-                    <td>{{ $record->customers->adults }}</td>
+                    <td>{{ $record->customers->adults ?? 0 }}</td>
                     <th>Children (5y-12y):</th>
-                    <td>{{ $record->customers->childgreaterthan5 }}</td>
+                    <td>{{ $record->customers->childgreaterthan5 ?? 0 }}</td>
                 </tr>
                 <tr>
                     <th>Children (2y-5y):</th>
-                    <td>{{ $record->customers->childlessthan5 }}</td>
+                    <td>{{ $record->customers->childlessthan5 ?? 0 }}</td>
                     <th>Mobile:</th>
-                    <td>{{ $record->customers->number }}</td>
+                    <td>{{ $record->customers->number ?? 'N/A' }}</td>
                 </tr>
                 <tr>
                     <th>Package Name:</th>
-                    <td colspan="3">{{ $record->name }}</td>
+                    <td colspan="3">{{ $record->name ?? 'N/A' }}</td>
                 </tr>
                 <tr>
                     <th>Duration:</th>
-                    <td colspan="3">{{ $record->days }}-Days {{ $record->nights }}-Nights</td>
+                    <td colspan="3">{{ $record->days ?? 0 }}-Days {{ $record->nights ?? 0 }}-Nights</td>
                 </tr>
-            </table>
-        </div>
-
-        <div class="vehicles" style="margin-bottom: 20px">
-            <h2>Short Itinerary</h2>
-            <table>
-                <tr>
-                    <th>Day</th>
-                    <th>Itinerary</th>
-                    <th>Location Covered</th>
-                </tr>
-                @foreach ($record->itinerary as $itinerary)
-                    <tr>
-                        <td><strong>{{ $itinerary['days'] }}</strong></td>
-                        <td>{{ $itinerary['description'] }}</td>
-                        {{-- <td>
-                            @foreach ($itinerary['specialities'] as $speciality)
-                                <span class="badge badge-primary">{{ $speciality }}</span>
-                            @endforeach
-                        </td> --}}
-                        <td>
-                            {{ $itinerary['destination'] }}
-                        </td>
-                    </tr>
-                @endforeach
             </table>
         </div>
 
         <div class="itinerary">
             <h2>Detailed Itinerary</h2>
-            @foreach ($record->itinerary as $itinerary)
-                <h3 style="color: red"><strong> Day {{ $itinerary['days'] }} </strong></h3>
-                {!! $itinerary['longdescription'] !!} <br /><br />
-            @endforeach
-
-        </div>
-
-        {{-- <div class="itinerary">
-
-            <div class="timeline">
-                <h2>Itinerary Timeline</h2>
-                @php
-                    $j = 1;
-                @endphp
+            @if (!empty($record->itinerary))
                 @foreach ($record->itinerary as $itinerary)
-                    @if ($j % 2 != 0)
-                        <div class="container-timeline left">
-                        @else
-                            <div class="container-timeline right">
-                    @endif
-
-                    <div class="content">
-                        <h3>Day {{ $itinerary['days'] }}</h3>
-                        <h4>Title: {{ $itinerary['name'] }}</h4>
-                        <p><strong>Date:</strong> {{ date('l, F j, Y', strtotime($itinerary['date'])) }}</p>
-                        <p><strong>Specialities:</strong>
-
-                            @foreach ($itinerary['specialities'] as $speciality)
-                                {{ $speciality }}
-                            @endforeach
-
-                        </p>
-                        <p><strong>Locations Covered:</strong>
-
-                            @foreach ($itinerary['locations'] as $location)
-                                {{ $location }}
-                            @endforeach
-                        </p>
-                    </div>
-            </div>
-            @php
-                $j++;
-            @endphp
-            @endforeach
-
-        </div>
-    </div>
-    <div class="vehicles">
-        <h2>Vehicles and Ferry Plan</h2>
-        <table>
-            <tr>
-                <th>Day</th>
-                <th>Vehicle</th>
-                <th>Ferry</th>
-            </tr>
-
-            @php
-                $days = $record->days;
-            @endphp
-            @for ($i = 1; $i <= $days; $i++)
-                <tr>
-                    <td>Day {{ $i }}</td>
-                    <td>
-                        @foreach ($record->vehicle as $vehicle)
-                            @if ($vehicle['days'] == $i)
-                                For {{ $vehicle['source'] }}
-                            @endif
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach ($record->cruz as $cruz)
-                            @if ($cruz['days'] == $i)
-                                From {{ $cruz['source'] }} to {{ $cruz['destination'] }}
-                            @endif
-                        @endforeach
-                    </td>
-                </tr>
-            @endfor
-
-
-        </table>
-    </div> --}}
-
-        <div class="hotels">
-            <h2>Hotel Plan</h2>
-
-            @foreach ($hotelrates as $index => $hotelrates)
-                @php
-                    $hoteltype = App\Models\HotelCategory::findorfail($index);
-                @endphp
-                <div class="hotels">
-                    <h2>{{ $hoteltype['category'] }} -
-                        <mark>₹.{{ number_format($hotelrates) }}/-</mark> Per Person
-                    </h2>
-
-                    @foreach ($record->rooms as $room)
-                        @if ($room['hotel_type'] == $hoteltype['id'])
-                            <div class="hotel-block">
-                                @php
-                                    $des = App\Models\destination::findorfail($room['location']);
-                                    $roomtype = App\Models\RoomCategory::findorfail($room['room_type']);
-                                    $hotelImages = App\Models\HotelImage::where('hotel_id', $room['hotel_name'])->get();
-                                    $hotel = App\Models\Hotel::findorfail($room['hotel_name']);
-                                @endphp
-                                <h3>Day {{ $room['days'] }}
-                                    {{-- ({{ Carbon\Carbon::parse($room['date'])->format('d F Y') }}) --}}
-                                    - {{ $des['Title'] }}, hotel details</h3>
-                                <div class="hotel-info">
-                                    <div class="hotel-images">
-
-                                        @foreach ($hotelImages as $images)
-                                            @foreach ($images['images'] as $image)
-                                                <img src="{{ asset('storage/' . $image) }}" width="10px"
-                                                    alt="Seashell Coral Cove">
-                                            @endforeach
-                                        @endforeach
-
-                                    </div>
-                                    <div class="hotel-details">
-                                        <br><strong>{{ strtoupper($hotel['hotelName']) }}</strong><br>
-                                        {{-- Date: {{ Carbon\Carbon::parse($room['date'])->format('d F Y') }}<br> --}}
-                                        Room Type: <strong>{{ $roomtype['category'] }}</strong><br>
-                                        Meal Plan: <strong>{{ strtoupper($room['meal_plan']) }}</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
-
-                </div>
-            @endforeach
+                    <h3 style="color: red"><strong> Day {{ $itinerary['days'] ?? 'N/A' }} </strong></h3>
+                    {!! $itinerary['longdescription'] ?? 'No details available.' !!} <br /><br />
+                @endforeach
+            @else
+                <p>No itinerary details available.</p>
+            @endif
         </div>
 
-        <style>
-            .addons-section {
-                margin: 20px 0;
-                padding: 15px;
-                background-color: #f9f9f9;
-                border-radius: 8px;
-            }
+        @if (!empty($hotelrates))
+            <div class="hotels">
+                <h2>Hotel Plan</h2>
+                @foreach ($hotelrates as $index => $rate)
+                    @php
+                        $hoteltype = App\Models\HotelCategory::find($index);
+                    @endphp
+                    @if ($hoteltype)
+                        <div class="hotels">
+                            <h2>{{ $hoteltype->category ?? 'Unknown Category' }} -
+                                <mark>₹.{{ number_format($rate) }}/-</mark> Per Person
+                            </h2>
 
-            .addon-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 12px;
-                margin: 8px 0;
-                background: white;
-                border-radius: 6px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            }
-
-            .addon-details {
-                flex: 1;
-            }
-
-            .addon-day {
-                color: #666;
-                font-size: 0.9em;
-                font-style: italic;
-            }
-
-            .addon-price {
-                font-weight: bold;
-                color: #2c5282;
-                padding: 5px 10px;
-                background: #ebf4ff;
-                border-radius: 4px;
-            }
-
-            .addon-title {
-                font-weight: 600;
-                color: #1a202c;
-                margin-bottom: 4px;
-            }
-        </style>
-
-
-        {{-- addons --}}
-        <div class="addons-container">
-            <h2 class="addons-heading"><i class="fas fa-plus-circle"></i> Additional Activities & Services</h2>
-            @foreach ($record->addons as $addon)
-                <div class="addon-card">
-                    <div class="addon-header">
-                        @php
-                            $addonname = App\Models\Addon::findorfail($addon['addon']);
-                        @endphp
-                        <h3 class="addon-name"><i class="fas fa-plus"></i> {{ $addonname['name'] }}</h3>
-                        <span class="addon-day"><i class="far fa-calendar-alt"></i> Day {{ $addon['days'] }}</span>
-                    </div>
-                    <div class="addon-body">
-                        <div class="addon-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>{{ $addon['source'] }}</span>
+                            @if (!empty($record->rooms))
+                                @foreach ($record->rooms as $room)
+                                    @if ($room['hotel_type'] == $hoteltype->id)
+                                        @php
+                                            $des = App\Models\Destination::find($room['location']);
+                                            $roomtype = App\Models\RoomCategory::find($room['room_type']);
+                                            $hotel = App\Models\Hotel::find($room['hotel_name']);
+                                        @endphp
+                                        <div class="hotel-block">
+                                            <h3>Day {{ $room['days'] ?? 'N/A' }}
+                                                - {{ $des->Title ?? 'Unknown Location' }}, hotel details</h3>
+                                            <div class="hotel-info">
+                                                <div class="hotel-images">
+                                                    @php
+                                                        $hotelImages = App\Models\HotelImage::where(
+                                                            'hotel_id',
+                                                            $room['hotel_name'],
+                                                        )->first();
+                                                    @endphp
+                                                    @if ($hotelImages && !empty($hotelImages->images))
+                                                        @foreach ($hotelImages->images as $image)
+                                                            <img src="{{ asset('storage/' . $image) }}" width="10px"
+                                                                alt="Hotel Image">
+                                                        @endforeach
+                                                    @else
+                                                        <p>No images available.</p>
+                                                    @endif
+                                                </div>
+                                                <div class="hotel-details">
+                                                    <br><strong>{{ strtoupper($hotel->hotelName ?? 'Unknown Hotel') }}</strong><br>
+                                                    Room Type: <strong>{{ $roomtype->category ?? 'N/A' }}</strong><br>
+                                                    Meal Plan:
+                                                    <strong>{{ strtoupper($room['meal_plan'] ?? 'N/A') }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @else
+                                <p>No room details available.</p>
+                            @endif
                         </div>
-                        @if ($addon['notes'])
-                            <div class="addon-notes">
-                                <i class="fas fa-sticky-note"></i>
-                                <p>{{ $addon['notes'] }}</p>
-                            </div>
-                        @endif
-                    </div>
+                    @endif
+                @endforeach
+
+
+            </div>
+        @endif
+
+        @if (empty($record->rooms))
+            <div class="extras-margin material-card">
+                <div class="icon-wrapper">
+                    <i class="material-icons">info_outline</i>
                 </div>
-            @endforeach
-        </div>
-
-        <style>
-            .addons-container {
-                padding: 2rem;
-                background: #ffffff;
-                border-radius: 12px;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                margin: 2rem 0;
-            }
-
-            .addons-heading {
-                font-size: 1.5rem;
-                color: #1a1a1a;
-                margin-bottom: 1.5rem;
-                padding-bottom: 0.5rem;
-                border-bottom: 2px solid #e5e7eb;
-            }
-
-            .addons-heading i {
-                color: #4CAF50;
-                margin-right: 0.5rem;
-            }
-
-            .addon-card {
-                background: #f8fafc;
-                border-radius: 8px;
-                padding: 1rem;
-                margin-bottom: 1rem;
-                border: 1px solid #e2e8f0;
-                transition: transform 0.2s ease;
-            }
-
-            .addon-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            }
-
-            .addon-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 0.75rem;
-            }
-
-            .addon-name {
-                font-size: 1.1rem;
-                font-weight: 600;
-                color: #2d3748;
-                margin: 0;
-            }
-
-            .addon-name i {
-                color: #4CAF50;
-                margin-right: 0.5rem;
-            }
-
-            .addon-day {
-                background: #edf2f7;
-                padding: 0.25rem 0.75rem;
-                border-radius: 999px;
-                font-size: 0.875rem;
-                color: #4a5568;
-            }
-
-            .addon-day i {
-                color: #3182ce;
-                margin-right: 0.5rem;
-            }
-
-            .addon-body {
-                display: grid;
-                gap: 0.75rem;
-            }
-
-            .addon-location {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                color: #4a5568;
-                font-size: 0.95rem;
-            }
-
-            .addon-location i {
-                color: #e53e3e;
-            }
-
-            .addon-price {
-                font-weight: 600;
-                color: #2c5282;
-                background: #ebf8ff;
-                padding: 0.5rem 1rem;
-                border-radius: 6px;
-                display: inline-block;
-            }
-
-            .addon-notes {
-                background: #fffaf0;
-                padding: 0.75rem;
-                border-radius: 6px;
-                border-left: 3px solid #ed8936;
-                font-size: 0.9rem;
-                color: #744210;
-                display: flex;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-
-            .addon-notes i {
-                color: #ed8936;
-                margin-top: 0.2rem;
-            }
-        </style>
-
+                <div class="content">
+                    <p class="price-label">Per Person Price:</p>
+                    <p class="price-value">₹.{{ $margin }}/-</p>
+                </div>
+            </div>
+        @endif
 
 
         <div class="inclusions">
             <h2>Package Includes</h2>
-            <ul class="styled-list">
-                @foreach ($record->inclusions as $inclusion)
-                    <li>{{ ucwords($inclusion) }}</li>
-                @endforeach
-            </ul>
+            @if (!empty($record->inclusions))
+                <ul class="styled-list">
+                    @foreach ($record->inclusions as $inclusion)
+                        <li>{{ ucwords($inclusion) }}</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No inclusions available.</p>
+            @endif
         </div>
 
         <div class="exclusions">
             <h2>Package Excludes</h2>
-            <ul class="styled-list">
-                @foreach ($record->exclusions as $exclusion)
-                    <li>{{ ucwords($exclusion) }}</li>
-                @endforeach
-            </ul>
+            @if (!empty($record->exclusions))
+                <ul class="styled-list">
+                    @foreach ($record->exclusions as $exclusion)
+                        <li>{{ ucwords($exclusion) }}</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No exclusions available.</p>
+            @endif
         </div>
 
         <div class="cancellation-policy">
@@ -1166,13 +1123,17 @@
             @php
                 $refunds = App\Models\Refund::where('user_id', auth()->id())->get();
             @endphp
-            <div class="policy-content">
-                <ol class="styled-policy-list">
-                    @foreach ($refunds as $refund)
-                        <li>{{ $refund['point'] }}</li>
-                    @endforeach
-                </ol>
-            </div>
+            @if ($refunds->isNotEmpty())
+                <div class="policy-content">
+                    <ol class="styled-policy-list">
+                        @foreach ($refunds as $refund)
+                            <li>{{ $refund->point }}</li>
+                        @endforeach
+                    </ol>
+                </div>
+            @else
+                <p>No refund policies available.</p>
+            @endif
         </div>
 
         <div class="terms-and-conditions">
@@ -1237,8 +1198,7 @@
                 </div>
             </div>
         </div>
-
-
+    </div>
 </body>
 
 </html>

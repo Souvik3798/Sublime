@@ -34,7 +34,7 @@ class CustomPackage extends Model
         'voucher',
         'margin',
         'user_id',
-
+        'water_sports',
     ];
 
     protected $casts = [
@@ -45,7 +45,8 @@ class CustomPackage extends Model
         'cruz' => 'array',
         'vehicle' => 'array',
         'addons' => 'array',
-        'place' => 'array'
+        'place' => 'array',
+        'water_sports' => 'array',
     ];
 
     public function category(): BelongsTo

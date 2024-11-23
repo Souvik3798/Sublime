@@ -121,10 +121,10 @@ class CustomerpdfController extends Controller
         $totaladdon = 0;
         $grandtotal = 0;
         $fee = 0;
+        $waterSportsTotal = 0;
 
         // Calculate total customers and extra customers
         $totalcustomers = $record->customers->adults;
-
         $childwithbed = $record->customers->childgreaterthan5;
         $childwithoutbed = $record->customers->childlessthan5;
 
@@ -138,12 +138,9 @@ class CustomerpdfController extends Controller
             $childcruz += $cruz['price_infant'] * $childwithoutbed;
         }
 
-
         $totalvehicle = $record->price + $record->luggage;
 
-
-        //calculate Total fee
-
+        // Calculate total fee
         $fee = $record->fee * ($record->customers->adults + $record->customers->childgreaterthan5 + $record->customers->childlessthan5);
 
         // Calculate total addon costs
@@ -151,45 +148,58 @@ class CustomerpdfController extends Controller
             $totaladdon += $addon['price'];
         }
 
-        // Fetch all hotel categories once
-        $hotelCategories = HotelCategory::all()->keyBy('id');
-
-        // Calculate hotel rates
-        $hotelrates = [];
-        foreach ($record->rooms as $room) {
-            $hotelTypeId = $room['hotel_type'];
-            if (isset($hotelCategories[$hotelTypeId])) {
-                if (!isset($hotelrates[$hotelTypeId])) {
-                    $hotelrates[$hotelTypeId] = 0;
-                }
-                $hotelrates[$hotelTypeId] += ($room['price']) * $room['no_of_room'];
-                $hotelrates[$hotelTypeId] += $room['adult_mattress_price'];
-                $hotelrates[$hotelTypeId] += $room['extra_person_mattress'];
-                $hotelrates[$hotelTypeId] += $room['child_with_mattress_price'];
+        // Calculate water sports costs
+        if (!empty($record->water_sports)) {
+            foreach ($record->water_sports as $activity) {
+                $waterSportsTotal += ($activity['adult_price'] * $totalcustomers);
+                $waterSportsTotal += ($activity['child_5_12_price'] * $childwithbed);
+                $waterSportsTotal += ($activity['child_2_5_price'] * $childwithoutbed);
+                $waterSportsTotal += ($activity['infant_price']);
             }
         }
 
-        $extras = $adultcruz + $childcruz + $totalvehicle + $totaladdon + $fee;
+        // Fetch all hotel categories once
+        $hotelCategories = HotelCategory::all()->keyBy('id');
+        $hotelrates = [];
 
-        // dd($hotelrates);
+        // Proceed only if $record->rooms is not empty
+        if (!empty($record->rooms)) {
+            // Calculate hotel rates
+            foreach ($record->rooms as $room) {
+                $hotelTypeId = $room['hotel_type'];
+                if (isset($hotelCategories[$hotelTypeId])) {
+                    if (!isset($hotelrates[$hotelTypeId])) {
+                        $hotelrates[$hotelTypeId] = 0;
+                    }
 
-        $margin = $record->margin * ($record->customers->adults + $record->customers->childgreaterthan5 + $record->customers->childlessthan5);
-        // Add other rates to hotel rates
-        foreach ($hotelrates as $type => $rate) {
-            $hotelrates[$type] += $extras + $margin;
-            // Log::info($hotelrates[$type]);
-            $hotelrates[$type] /= ($record->customers->adults + $record->customers->childgreaterthan5);
-            // Log::info($hotelrates[$type] . ',' . $record->customers->adults . ',' . $record->customers->childgreaterthan5);
+                    $hotelrates[$hotelTypeId] += ($room['price'] * $room['no_of_room']);
+                    $hotelrates[$hotelTypeId] += $room['adult_mattress_price'];
+                    $hotelrates[$hotelTypeId] += $room['extra_person_mattress'];
+                    $hotelrates[$hotelTypeId] += $room['child_with_mattress_price'];
+                    $hotelrates[$hotelTypeId] += $room['surge_charges'];
+                    $hotelrates[$hotelTypeId] += $room['gala_dinner_24_dec'];
+                    $hotelrates[$hotelTypeId] += $room['gala_dinner_31_dec'];
+                }
+            }
+
+            $extras = $adultcruz + $childcruz + $totalvehicle + $totaladdon + $fee + $waterSportsTotal;
+
+            $margin = $record->margin * ($record->customers->adults + $record->customers->childgreaterthan5 + $record->customers->childlessthan5);
+
+            // Add other rates to hotel rates
+            foreach ($hotelrates as $type => $rate) {
+                $hotelrates[$type] += $extras + $margin;
+                $hotelrates[$type] /= ($record->customers->adults + $record->customers->childgreaterthan5);
+            }
+        } else {
+            $extras = $adultcruz + $childcruz + $totalvehicle + $totaladdon + $fee + $waterSportsTotal;
+
+            $margin = $record->margin * ($record->customers->adults + $record->customers->childgreaterthan5 + $record->customers->childlessthan5);
+
+            $margin = $margin + $extras;
         }
 
-        // dd($hotelrates);
-
-
-
-        // dd($margin, $record->customers->adults, $record->customers->childgreaterthan5, $record->customers->childlessthan5, $hotelrates);
-
-
-
+        // Return the view with calculated values
         return view('pdf.package', compact(['record', 'hotelrates', 'margin']));
     }
 }

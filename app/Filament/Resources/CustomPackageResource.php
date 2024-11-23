@@ -264,8 +264,9 @@ class CustomPackageResource extends Resource
                                                     ->schema([
                                                         Select::make('location')
                                                             ->label('Select Location')
-                                                            ->options(destination::where('user_id', auth()->id())->pluck('Title', 'id'))
                                                             ->required()
+                                                            ->options(destination::where('user_id', auth()->id())->pluck('Title', 'id'))
+
                                                             ->live()
                                                             ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
                                                                 if ($operation === 'create' || $operation === 'edit') {
@@ -289,6 +290,7 @@ class CustomPackageResource extends Resource
                                                     ->schema([
                                                         Select::make('hotel_type')
                                                             ->label('Hotel Type')
+                                                            ->required()
                                                             // ->options(HotelCategory::all()->pluck('category', 'id'))
                                                             ->options(function (callable $get) {
                                                                 $locationId = $get('location');
@@ -299,7 +301,6 @@ class CustomPackageResource extends Resource
                                                                 }
                                                                 return [];
                                                             })
-                                                            ->required()
                                                             ->live()
                                                             ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
                                                                 if ($operation === 'create' || $operation === 'edit') {
@@ -312,6 +313,7 @@ class CustomPackageResource extends Resource
 
                                                         Select::make('hotel_name')
                                                             ->label('Hotel Name')
+                                                            ->required()
                                                             ->options(function (callable $get) {
                                                                 $hotelcategory = HotelCategory::find($get('hotel_type'));
                                                                 if (!$hotelcategory) {
@@ -321,7 +323,6 @@ class CustomPackageResource extends Resource
                                                                 $des = $loc->id;
                                                                 return $hotelcategory->hotel->where('destination_id', $des)->pluck('hotelName', 'id');
                                                             })
-                                                            ->required()
                                                             ->live()
                                                             ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
                                                                 if ($operation === 'create' || $operation === 'edit') {
@@ -332,6 +333,7 @@ class CustomPackageResource extends Resource
 
                                                         Select::make('room_type')
                                                             ->label('Room Type')
+                                                            ->required()
                                                             ->options(function (callable $get) {
                                                                 $hotel = Hotel::find($get('hotel_name'));
                                                                 if (!$hotel) {
@@ -339,7 +341,6 @@ class CustomPackageResource extends Resource
                                                                 }
                                                                 return $hotel->room_category->pluck('category', 'id');
                                                             })
-                                                            ->required()
                                                             ->live()
                                                             ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
                                                                 if ($operation === 'create' || $operation === 'edit') {
@@ -350,6 +351,7 @@ class CustomPackageResource extends Resource
 
                                                         Select::make('meal_plan')
                                                             ->label('Meal Plan')
+                                                            ->required()
                                                             ->live()
                                                             ->options(function (callable $get) {
                                                                 $roomtype = $get('room_type');
@@ -365,7 +367,6 @@ class CustomPackageResource extends Resource
                                                                 }
                                                                 return []; // Return an empty array if no hotel is selected
                                                             })
-                                                            ->required()
                                                             ->afterStateUpdated(function (string $operation, $state, Forms\Set $set, $get) {
                                                                 if ($operation === 'create' || $operation === 'edit') {
                                                                     $roomtype = $get('room_type');
@@ -394,43 +395,63 @@ class CustomPackageResource extends Resource
                                                             }),
                                                         TextInput::make('price')
                                                             ->label('Cost')
+                                                            ->required()
                                                             ->numeric()
                                                             ->live()
                                                             ->prefix('₹')
-                                                            ->suffix('/-')
-                                                            ->required(),
+                                                            ->suffix('/-'),
                                                         // DatePicker::make('date')
                                                         //     ->label('Date'),
                                                     ])->columns(3),
                                             ]),
                                         Section::make('Extras')
                                             ->schema([
-                                                Fieldset::make('Extra Matress')
+                                                Fieldset::make('Extra Mattress')
                                                     ->schema([
                                                         TextInput::make('adult_mattress_price')
-                                                            ->label('Adult with Matress')
-                                                            ->required()
+                                                            ->label('Adult with Mattress')
                                                             ->default(0)
                                                             ->numeric()
                                                             ->prefix('₹')
                                                             ->suffix('/-'),
 
                                                         TextInput::make('child_with_mattress_price')
-                                                            ->label('Child With Matress')
-                                                            ->required()
+                                                            ->label('Child With Mattress')
                                                             ->default(0)
                                                             ->numeric()
                                                             ->prefix('₹')
                                                             ->suffix('/-'),
 
                                                         TextInput::make('extra_person_mattress')
-                                                            ->label('Extra Person mattress')
-                                                            ->required()
+                                                            ->label('Extra Person Mattress')
                                                             ->default(0)
                                                             ->numeric()
                                                             ->prefix('₹')
                                                             ->suffix('/-')
+                                                    ])->columns(3),
 
+                                                Fieldset::make('Additional Charges')
+                                                    ->schema([
+                                                        TextInput::make('surge_charges')
+                                                            ->label('Peak Season Charges')
+                                                            ->default(0)
+                                                            ->numeric()
+                                                            ->prefix('₹')
+                                                            ->suffix('/-'),
+
+                                                        TextInput::make('gala_dinner_24_dec')
+                                                            ->label('Gala Dinner (24th Dec)')
+                                                            ->default(0)
+                                                            ->numeric()
+                                                            ->prefix('₹')
+                                                            ->suffix('/-'),
+
+                                                        TextInput::make('gala_dinner_31_dec')
+                                                            ->label('Gala Dinner (31st Dec)')
+                                                            ->default(0)
+                                                            ->numeric()
+                                                            ->prefix('₹')
+                                                            ->suffix('/-')
                                                     ])->columns(3),
                                             ])
                                     ]),
@@ -672,6 +693,110 @@ class CustomPackageResource extends Resource
                                             ])->columns(3),
                                     ])
                             ]),
+                        Tab::make('Water Sports Activity')
+                            ->schema([
+                                Repeater::make('water_sports')
+                                    ->schema([
+                                        Checkbox::make('manual')
+                                            ->label('Custom')
+                                            ->live(),
+
+                                        Select::make('Day')
+                                            ->label('Select Day')
+                                            ->options(
+                                                collect(range(1, 30)) // Adjust the range based on your requirement
+                                                    ->mapWithKeys(fn($day) => ["Day {$day}" => "Day {$day}"])
+                                                    ->toArray()
+                                            )
+                                            ->required()
+                                            ->live(),
+
+
+                                        TextInput::make('activity_name')
+                                            ->label('Activity Name')
+                                            ->required()
+                                            ->datalist(function () {
+                                                // Fetch activity names for the current user
+                                                return \App\Models\WaterSportsActivity::where('user_id', auth()->id())->pluck('name');
+                                            })
+                                            ->live()
+                                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                                if (!$state) {
+                                                    return;
+                                                }
+
+                                                // Fetch and populate data based on selected activity name
+                                                $activity = \App\Models\WaterSportsActivity::where('user_id', auth()->id())
+                                                    ->where('name', $state)
+                                                    ->first();
+
+                                                if ($activity) {
+                                                    $set('description', $activity->description);
+                                                    $set('adult_price', $activity->adult_price);
+                                                    $set('child_5_12_price', $activity->child_5_12_price);
+                                                    $set('child_2_5_price', $activity->child_2_5_price);
+                                                    $set('infant_price', $activity->infant_price);
+                                                }
+                                            }),
+
+                                        Textarea::make('description')
+                                            ->label('Description')
+                                            ->placeholder('Auto-filled or enter manually')
+                                            ->readonly(fn(Forms\Get $get) => !$get('manual'))
+                                            ->extraAttributes(fn(Forms\Get $get) => [
+                                                'class' => $get('manual') ? '' : 'readonly-field', // Add a custom class
+                                                'style' => $get('manual') ? '' : 'background-color: #f8f9fa; color: #6c757d;', // Apply styles directly
+                                            ]),
+
+                                        TextInput::make('adult_price')
+                                            ->label('Price (Adult)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->prefix('₹')
+                                            ->readonly(fn(Forms\Get $get) => !$get('manual'))
+                                            ->extraAttributes(fn(Forms\Get $get) => [
+                                                'class' => $get('manual') ? '' : 'readonly-field', // Add a custom class
+                                                'style' => $get('manual') ? '' : 'background-color: #f8f9fa; color: #6c757d;', // Apply styles directly
+                                            ]),
+
+                                        TextInput::make('child_5_12_price')
+                                            ->label('Price (Child 5-12 Years)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->prefix('₹')
+                                            ->readonly(fn(Forms\Get $get) => !$get('manual'))
+                                            ->extraAttributes(fn(Forms\Get $get) => [
+                                                'class' => $get('manual') ? '' : 'readonly-field', // Add a custom class
+                                                'style' => $get('manual') ? '' : 'background-color: #f8f9fa; color: #6c757d;', // Apply styles directly
+                                            ]),
+
+                                        TextInput::make('child_2_5_price')
+                                            ->label('Price (Child 2-5 Years)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->prefix('₹')
+                                            ->readonly(fn(Forms\Get $get) => !$get('manual'))
+                                            ->extraAttributes(fn(Forms\Get $get) => [
+                                                'class' => $get('manual') ? '' : 'readonly-field', // Add a custom class
+                                                'style' => $get('manual') ? '' : 'background-color: #f8f9fa; color: #6c757d;', // Apply styles directly
+                                            ]),
+
+                                        TextInput::make('infant_price')
+                                            ->label('Price (Infant)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->prefix('₹')
+                                            ->readonly(fn(Forms\Get $get) => !$get('manual'))
+                                            ->extraAttributes(fn(Forms\Get $get) => [
+                                                'class' => $get('manual') ? '' : 'readonly-field', // Add a custom class
+                                                'style' => $get('manual') ? '' : 'background-color: #f8f9fa; color: #6c757d;', // Apply styles directly
+                                            ]),
+                                    ])
+                                    ->columns(2)
+                                    ->addActionLabel('Add Water Sports Activity'),
+                            ]),
+
+
                         Tab::make('Voucher Conformation')
                             ->schema([
                                 Checkbox::make('voucher')

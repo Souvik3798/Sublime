@@ -391,42 +391,62 @@ class CustomPackageResource extends Resource
                                                         TextInput::make('price')
                                                             ->label('Cost')
                                                             ->numeric()
+                                                            ->required()
                                                             ->live()
                                                             ->prefix('₹')
-                                                            ->suffix('/-')
-                                                            ->required(),
+                                                            ->suffix('/-'),
                                                         // DatePicker::make('date')
                                                         //     ->label('Date'),
                                                     ])->columns(3),
                                             ]),
                                         Section::make('Extras')
                                             ->schema([
-                                                Fieldset::make('Extra Matress')
+                                                Fieldset::make('Extra Mattress')
                                                     ->schema([
                                                         TextInput::make('adult_mattress_price')
-                                                            ->label('Adult with Matress')
-                                                            ->required()
+                                                            ->label('Adult with Mattress')
                                                             ->default(0)
                                                             ->numeric()
                                                             ->prefix('₹')
                                                             ->suffix('/-'),
 
                                                         TextInput::make('child_with_mattress_price')
-                                                            ->label('Child With Matress')
-                                                            ->required()
+                                                            ->label('Child With Mattress')
                                                             ->default(0)
                                                             ->numeric()
                                                             ->prefix('₹')
                                                             ->suffix('/-'),
 
                                                         TextInput::make('extra_person_mattress')
-                                                            ->label('Extra Person mattress')
-                                                            ->required()
+                                                            ->label('Extra Person Mattress')
                                                             ->default(0)
                                                             ->numeric()
                                                             ->prefix('₹')
                                                             ->suffix('/-')
+                                                    ])->columns(3),
 
+                                                Fieldset::make('Additional Charges')
+                                                    ->schema([
+                                                        TextInput::make('surge_charges')
+                                                            ->label('Peak Season Charges')
+                                                            ->default(0)
+                                                            ->numeric()
+                                                            ->prefix('₹')
+                                                            ->suffix('/-'),
+
+                                                        TextInput::make('gala_dinner_24_dec')
+                                                            ->label('Gala Dinner (24th Dec)')
+                                                            ->default(0)
+                                                            ->numeric()
+                                                            ->prefix('₹')
+                                                            ->suffix('/-'),
+
+                                                        TextInput::make('gala_dinner_31_dec')
+                                                            ->label('Gala Dinner (31st Dec)')
+                                                            ->default(0)
+                                                            ->numeric()
+                                                            ->prefix('₹')
+                                                            ->suffix('/-')
                                                     ])->columns(3),
                                             ])
                                     ]),
@@ -664,6 +684,87 @@ class CustomPackageResource extends Resource
                                                     ->label('Notes (if any)')
                                             ])->columns(3),
                                     ])
+                            ]),
+                        Tab::make('Water Sports Activity')
+                            ->schema([
+                                Repeater::make('water_sports')
+                                    ->schema([
+                                        Checkbox::make('manual')
+                                            ->label('Custom')
+                                            ->live(),
+
+                                        Select::make('Day')
+                                            ->label('Select Day')
+                                            ->options(
+                                                collect(range(1, 30)) // Adjust the range based on your requirement
+                                                    ->mapWithKeys(fn($day) => ["Day {$day}" => "Day {$day}"])
+                                                    ->toArray()
+                                            )
+                                            ->required()
+                                            ->live(),
+
+
+                                        TextInput::make('activity_name')
+                                            ->label('Activity Name')
+                                            ->required()
+                                            ->datalist(function () {
+                                                // Fetch activity names for the current user
+                                                return \App\Models\WaterSportsActivity::pluck('name');
+                                            })
+                                            ->live()
+                                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                                if (!$state) {
+                                                    return;
+                                                }
+
+                                                // Fetch and populate data based on selected activity name
+                                                $activity = \App\Models\WaterSportsActivity::where('name', $state)
+                                                    ->first();
+
+                                                if ($activity) {
+                                                    $set('description', $activity->description);
+                                                    $set('adult_price', $activity->adult_price);
+                                                    $set('child_5_12_price', $activity->child_5_12_price);
+                                                    $set('child_2_5_price', $activity->child_2_5_price);
+                                                    $set('infant_price', $activity->infant_price);
+                                                }
+                                            }),
+
+                                        Textarea::make('description')
+                                            ->label('Description')
+                                            ->placeholder('Auto-filled or enter manually')
+                                            ->disabled(fn(Forms\Get $get) => !$get('manual')),
+
+                                        TextInput::make('adult_price')
+                                            ->label('Price (Adult)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->prefix('₹')
+                                            ->disabled(fn(Forms\Get $get) => !$get('manual')),
+
+                                        TextInput::make('child_5_12_price')
+                                            ->label('Price (Child 5-12 Years)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->prefix('₹')
+                                            ->disabled(fn(Forms\Get $get) => !$get('manual')),
+
+                                        TextInput::make('child_2_5_price')
+                                            ->label('Price (Child 2-5 Years)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->prefix('₹')
+                                            ->disabled(fn(Forms\Get $get) => !$get('manual')),
+
+                                        TextInput::make('infant_price')
+                                            ->label('Price (Infant)')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->prefix('₹')
+                                            ->disabled(fn(Forms\Get $get) => !$get('manual')),
+                                    ])
+                                    ->columns(2)
+                                    ->addActionLabel('Add Water Sports Activity'),
                             ]),
                         Tab::make('Voucher Conformation')
                             ->schema([
