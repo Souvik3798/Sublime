@@ -1017,65 +1017,57 @@
             @endif
         </div>
 
-        @if (!empty($hotelrates))
+        @if (!empty($record->rooms))
             <div class="hotels">
                 <h2>Hotel Plan</h2>
-                @foreach ($hotelrates as $index => $rate)
+                <div class="material-card">
+                    <div class="icon-wrapper">
+                        <i class="material-icons">hotel</i>
+                    </div>
+                    <div class="content">
+                        <p class="price-label">Ultimate Price Per Person:</p>
+                        <p class="price-value">₹.{{ number_format($ultimatePrice) }}/-</p>
+                    </div>
+                </div>
+
+                @php
+                    $sortedRooms = collect($record->rooms)->sortBy('days');
+                @endphp
+
+                @foreach ($sortedRooms as $room)
                     @php
-                        $hoteltype = App\Models\HotelCategory::find($index);
+                        $des = App\Models\destination::find($room['location']);
+                        $roomtype = App\Models\RoomCategory::find($room['room_type']);
+                        $hotel = App\Models\Hotel::find($room['hotel_name']);
+                        $hoteltype = App\Models\HotelCategory::find($room['hotel_type']);
                     @endphp
-                    @if ($hoteltype)
-                        <div class="hotels">
-                            <h2>{{ $hoteltype->category ?? 'Unknown Category' }} -
-                                <mark>₹.{{ number_format($rate) }}/-</mark> Per Person
-                            </h2>
-
-                            @if (!empty($record->rooms))
-                                @foreach ($record->rooms as $room)
-                                    @if ($room['hotel_type'] == $hoteltype->id)
-                                        @php
-                                            $des = App\Models\destination::find($room['location']);
-                                            $roomtype = App\Models\RoomCategory::find($room['room_type']);
-                                            $hotel = App\Models\Hotel::find($room['hotel_name']);
-                                        @endphp
-                                        <div class="hotel-block">
-                                            <h3>Day {{ $room['days'] ?? 'N/A' }}
-                                                - {{ $des->Title ?? 'Unknown Location' }}, hotel details</h3>
-                                            <div class="hotel-info">
-                                                <div class="hotel-images">
-                                                    @php
-                                                        $hotelImages = App\Models\HotelImage::where(
-                                                            'hotel_id',
-                                                            $room['hotel_name'],
-                                                        )->first();
-                                                    @endphp
-                                                    @if ($hotelImages && !empty($hotelImages->images))
-                                                        @foreach ($hotelImages->images as $image)
-                                                            <img src="{{ asset('storage/' . $image) }}" width="10px"
-                                                                alt="Hotel Image">
-                                                        @endforeach
-                                                    @else
-                                                        <p>No images available.</p>
-                                                    @endif
-                                                </div>
-                                                <div class="hotel-details">
-                                                    <br><strong>{{ strtoupper($hotel->hotelName ?? 'Unknown Hotel') }}</strong><br>
-                                                    Room Type: <strong>{{ $roomtype->category ?? 'N/A' }}</strong><br>
-                                                    Meal Plan:
-                                                    <strong>{{ strtoupper($room['meal_plan'] ?? 'N/A') }}</strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            @else
-                                <p>No room details available.</p>
-                            @endif
+                    <div class="hotel-block">
+                        <h3>Day {{ $room['days'] ?? 'N/A' }} - {{ $des->Title ?? 'Unknown Location' }}</h3>
+                        <div class="hotel-info">
+                            <div class="hotel-images">
+                                @php
+                                    $hotelImages = App\Models\HotelImage::where(
+                                        'hotel_id',
+                                        $room['hotel_name'],
+                                    )->first();
+                                @endphp
+                                @if ($hotelImages && !empty($hotelImages->images))
+                                    @foreach ($hotelImages->images as $image)
+                                        <img src="{{ asset('storage/' . $image) }}" width="10px" alt="Hotel Image">
+                                    @endforeach
+                                @else
+                                    <p>No images available.</p>
+                                @endif
+                            </div>
+                            <div class="hotel-details">
+                                <br><strong>{{ strtoupper($hotel->hotelName ?? 'Unknown Hotel') }}</strong><br>
+                                Category: <strong>{{ $hoteltype->category ?? 'N/A' }}</strong><br>
+                                Room Type: <strong>{{ $roomtype->category ?? 'N/A' }}</strong><br>
+                                Meal Plan: <strong>{{ strtoupper($room['meal_plan'] ?? 'N/A') }}</strong>
+                            </div>
                         </div>
-                    @endif
+                    </div>
                 @endforeach
-
-
             </div>
         @endif
 
@@ -1086,7 +1078,7 @@
                 </div>
                 <div class="content">
                     <p class="price-label">Per Person Price:</p>
-                    <p class="price-value">₹.{{ $margin }}/-</p>
+                    <p class="price-value">₹.{{ number_format($ultimatePrice) }}/-</p>
                 </div>
             </div>
         @endif
