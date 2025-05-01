@@ -1020,12 +1020,12 @@
         @if (!empty($record->rooms))
             <div class="hotels">
                 <h2>Hotel Plan</h2>
-                <div class="material-card">
+                <div class="material-card"></div>
                     <div class="icon-wrapper">
                         <i class="material-icons">hotel</i>
                     </div>
                     <div class="content">
-                        <p class="price-label">Price Per Person:</p>
+                        <p class="price-label">Package Price Per Person:</p>
                         <p class="price-value">₹.{{ number_format($ultimatePrice) }}/-</p>
                     </div>
                 </div>
