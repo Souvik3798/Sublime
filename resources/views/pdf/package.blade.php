@@ -1020,7 +1020,7 @@
         @if (!empty($record->rooms))
             <div class="hotels">
                 <h2>Hotel Plan</h2>
-                <div class="material-card"></div>
+                <div class="material-card">
                     <div class="icon-wrapper">
                         <i class="material-icons">hotel</i>
                     </div>
