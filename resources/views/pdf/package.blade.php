@@ -1025,7 +1025,7 @@
                         <i class="material-icons">hotel</i>
                     </div>
                     <div class="content">
-                        <p class="price-label">Ultimate Price Per Person:</p>
+                        <p class="price-label">Price Per Person:</p>
                         <p class="price-value">₹.{{ number_format($ultimatePrice) }}/-</p>
                     </div>
                 </div>
