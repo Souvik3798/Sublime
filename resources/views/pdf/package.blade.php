@@ -1022,7 +1022,7 @@
                 <h2>Hotel Plan</h2>
                 <div class="material-card">
                     <div class="icon-wrapper">
-                        <i class="material-icons">hotel</i>
+                        <i class="material-icons">apartment</i>
                     </div>
                     <div class="content">
                         <p class="price-label">Package Price Per Person:</p>
