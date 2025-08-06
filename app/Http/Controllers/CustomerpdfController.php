@@ -182,7 +182,8 @@ class CustomerpdfController extends Controller
         $cruiseData = [];
 
         if (!empty($record->cruz) && is_array($record->cruz)) {
-            $cruiseData = \App\Models\Ferry::whereIn('id', $record->cruz)->get();
+            $cruiseIds = collect($record->cruz)->flatten()->toArray(); // 👈 flatten any nested array
+            $cruiseData = \App\Models\Ferry::whereIn('id', $cruiseIds)->get();
         }
 
 
