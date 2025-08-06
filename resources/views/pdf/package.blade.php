@@ -1082,8 +1082,8 @@
                         <div class="cruise-card">
                             <div class="cruise-header">
                                 <?php
-                                    foreach ($cruise->ferry as $cruises) {
-                                        dd($cruises);
+                                    foreach ($cruise as $cruises) {
+                                        dd($cruises->ferry);
                                     }
                                     ?>
                                 <h3><i class="fas fa-ship"></i> {{ $cruise['Title'] ?? 'Cruise Name Not Available' }}</h3>
