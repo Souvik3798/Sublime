@@ -1083,7 +1083,7 @@
                             <div class="cruise-header">
                                 <?php
                                     foreach ($cruise as $cruises) {
-                                        dd($cruises['Title']);
+                                        dd($cruises);
                                     }
                                     ?>
                                 <h3><i class="fas fa-ship"></i> {{ $cruise['Title'] ?? 'Cruise Name Not Available' }}</h3>
