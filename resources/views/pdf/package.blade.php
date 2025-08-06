@@ -1081,7 +1081,7 @@
                     @foreach ($record->cruz as $cruise)
                         <div class="cruise-card">
                             <div class="cruise-header">
-                                <?php dd($cruise->ferry); ?>
+                                <?php dd($cruise->ferry['title']); ?>
                                 <h3><i class="fas fa-ship"></i> {{ $cruise['Title'] ?? 'Cruise Name Not Available' }}</h3>
                             </div>
                             <div class="cruise-info">
