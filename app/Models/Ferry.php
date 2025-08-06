@@ -20,4 +20,9 @@ class Ferry extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function custompackage(): hasmany
+    {
+        return $this->hasMany(CustomPackage::class);
+    }
 }

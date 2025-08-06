@@ -1083,7 +1083,8 @@
                             <div class="cruise-header">
                                 <?php
                                     foreach ($cruise as $cruises) {
-                                        dd($cruises->ferry);
+                                        $ferry = App\Models\Ferry::where('id', $cruises['ferry'])->first();
+                                        dd($ferry);
                                     }
                                     ?>
                                 <h3><i class="fas fa-ship"></i> {{ $cruise['Title'] ?? 'Cruise Name Not Available' }}</h3>
