@@ -1085,7 +1085,7 @@
 
                                     <?php
 
-                                        $ferry = App\Models\Ferry::where('id', $cruises['cruz'])->first();
+                                        $ferry = App\Models\Ferry::where('id', $cruise['cruz'])->first();
                                         dd($ferry);
 
                                     ?>
