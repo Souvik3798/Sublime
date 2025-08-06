@@ -185,8 +185,6 @@ class CustomerpdfController extends Controller
             $cruiseData = \App\Models\Ferry::whereIn('id', $record->cruz)->get();
         }
 
-        return view('pdf.package', compact('record', 'cruiseData'));
-
 
         // Return the view with calculated values
         return view('pdf.package', compact(['record', 'ultimatePrice','cruiseData']));
