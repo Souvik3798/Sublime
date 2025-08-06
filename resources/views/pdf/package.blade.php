@@ -575,6 +575,74 @@
         }
 
 
+        /* cruise details section */
+        .cruise-details {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cruise-details h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .cruise-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .cruise-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease;
+        }
+
+        .cruise-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .cruise-header h3 {
+            color: #2c5aa0;
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        .cruise-header h3 i {
+            color: #4CAF50;
+            margin-right: 8px;
+        }
+
+        .cruise-info p {
+            margin: 8px 0;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .cruise-pricing {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .cruise-pricing .price-item {
+            display: inline-block;
+            background: #e8f5e8;
+            padding: 5px 10px;
+            margin-right: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #2e7d32;
+        }
+
         /* addons-container */
         .addons-section {
             margin: 20px 0;
@@ -716,6 +784,7 @@
 
             .package-details,
             .hotels,
+            .cruise-details,
             .kindly-notes,
             .inclusions,
             .exclusions,
@@ -1004,6 +1073,43 @@
                 </tr>
             </table>
         </div>
+
+        @if (!empty($record->cruz))
+            <div class="cruise-details">
+                <h2>Cruise Details</h2>
+                <div class="cruise-container">
+                    @foreach ($record->cruz as $cruise)
+                        <div class="cruise-card">
+                            <div class="cruise-header">
+                                <h3><i class="fas fa-ship"></i> {{ $cruise['name'] ?? 'Cruise Name Not Available' }}</h3>
+                            </div>
+                            <div class="cruise-info">
+                                @if (!empty($cruise['description']))
+                                    <p><strong>Description:</strong> {{ $cruise['description'] }}</p>
+                                @endif
+                                @if (!empty($cruise['duration']))
+                                    <p><strong>Duration:</strong> {{ $cruise['duration'] }}</p>
+                                @endif
+                                @if (!empty($cruise['departure_time']))
+                                    <p><strong>Departure Time:</strong> {{ $cruise['departure_time'] }}</p>
+                                @endif
+                                @if (!empty($cruise['route']))
+                                    <p><strong>Route:</strong> {{ $cruise['route'] }}</p>
+                                @endif
+                                <div class="cruise-pricing">
+                                    @if (!empty($cruise['price_adult']))
+                                        <span class="price-item"><strong>Adult:</strong> ₹{{ number_format($cruise['price_adult']) }}</span>
+                                    @endif
+                                    @if (!empty($cruise['price_infant']))
+                                        <span class="price-item"><strong>Child:</strong> ₹{{ number_format($cruise['price_infant']) }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
 
         <div class="itinerary">
             <h2>Detailed Itinerary</h2>
