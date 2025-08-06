@@ -188,8 +188,8 @@ class CustomerpdfController extends Controller
                 $ferry = \App\Models\Ferry::find($id);
                 if ($ferry) {
                     $cruiseDetails[] = [
-                        'Title' => $ferry->Title,
-                        'price' => $ferry->price,
+                        'Title' => $ferry['Title'],
+                        'price' => $ferry['price'],
                     ];
                 }
             }
