@@ -1073,7 +1073,6 @@
                 </tr>
             </table>
         </div>
-
         @if (!empty($cruiseData) && $cruiseData->isNotEmpty())
             <div class="cruise-details">
                 <h2>Cruise Details</h2>
@@ -1087,20 +1086,33 @@
                                 @if (!empty($cruise->description))
                                     <p><strong>Description:</strong> {{ $cruise->description }}</p>
                                 @endif
+
                                 @if (!empty($cruise->duration))
                                     <p><strong>Duration:</strong> {{ $cruise->duration }}</p>
                                 @endif
+
                                 @if (!empty($cruise->departure_time))
                                     <p><strong>Departure Time:</strong> {{ $cruise->departure_time }}</p>
                                 @endif
+
                                 @if (!empty($cruise->route))
                                     <p><strong>Route:</strong> {{ $cruise->route }}</p>
                                 @endif
+
                                 <div class="cruise-pricing">
-                                    @if (!empty($cruise->price))
+                                    {{-- Adult Price --}}
+                                    @if (!empty($cruise->price) && is_array($cruise->price) && isset($cruise->price['adult']))
+                                        <span class="price-item"><strong>Adult:</strong> ₹{{ number_format($cruise->price['adult']) }}</span>
+                                    @elseif (!empty($cruise->price) && is_numeric($cruise->price))
                                         <span class="price-item"><strong>Adult:</strong> ₹{{ number_format($cruise->price) }}</span>
+                                    @else
+                                        <span class="price-item"><strong>Adult:</strong> Not Available</span>
                                     @endif
-                                    {{-- Add more pricing fields if available --}}
+
+                                    {{-- Child Price --}}
+                                    @if (!empty($cruise->price) && is_array($cruise->price) && isset($cruise->price['child']))
+                                        <span class="price-item"><strong>Child:</strong> ₹{{ number_format($cruise->price['child']) }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -1108,6 +1120,7 @@
                 </div>
             </div>
         @endif
+
 
 
         <div class="itinerary">
