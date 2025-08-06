@@ -1074,36 +1074,33 @@
             </table>
         </div>
 
-        @if (!empty($record->cruz))
+        @if (!empty($cruiseData) && $cruiseData->isNotEmpty())
             <div class="cruise-details">
                 <h2>Cruise Details</h2>
                 <div class="cruise-container">
-                    @foreach ($record->cruz as $cruise)
+                    @foreach ($cruiseData as $cruise)
                         <div class="cruise-card">
                             <div class="cruise-header">
-
-                                <h3><i class="fas fa-ship"></i> {{ $cruise['Title'] ?? 'Cruise Name Not Available' }}</h3>
+                                <h3><i class="fas fa-ship"></i> {{ $cruise->Title ?? 'Cruise Name Not Available' }}</h3>
                             </div>
                             <div class="cruise-info">
-                                @if (!empty($cruise['description']))
-                                    <p><strong>Description:</strong> {{ $cruise['description'] }}</p>
+                                @if (!empty($cruise->description))
+                                    <p><strong>Description:</strong> {{ $cruise->description }}</p>
                                 @endif
-                                @if (!empty($cruise['duration']))
-                                    <p><strong>Duration:</strong> {{ $cruise['duration'] }}</p>
+                                @if (!empty($cruise->duration))
+                                    <p><strong>Duration:</strong> {{ $cruise->duration }}</p>
                                 @endif
-                                @if (!empty($cruise['departure_time']))
-                                    <p><strong>Departure Time:</strong> {{ $cruise['departure_time'] }}</p>
+                                @if (!empty($cruise->departure_time))
+                                    <p><strong>Departure Time:</strong> {{ $cruise->departure_time }}</p>
                                 @endif
-                                @if (!empty($cruise['route']))
-                                    <p><strong>Route:</strong> {{ $cruise['route'] }}</p>
+                                @if (!empty($cruise->route))
+                                    <p><strong>Route:</strong> {{ $cruise->route }}</p>
                                 @endif
                                 <div class="cruise-pricing">
-                                    @if (!empty($cruise['price_adult']))
-                                        <span class="price-item"><strong>Adult:</strong> ₹{{ number_format($cruise['price_adult']) }}</span>
+                                    @if (!empty($cruise->price))
+                                        <span class="price-item"><strong>Adult:</strong> ₹{{ number_format($cruise->price) }}</span>
                                     @endif
-                                    @if (!empty($cruise['price_infant']))
-                                        <span class="price-item"><strong>Child:</strong> ₹{{ number_format($cruise['price_infant']) }}</span>
-                                    @endif
+                                    {{-- Add more pricing fields if available --}}
                                 </div>
                             </div>
                         </div>
@@ -1111,6 +1108,7 @@
                 </div>
             </div>
         @endif
+
 
         <div class="itinerary">
             <h2>Detailed Itinerary</h2>

@@ -179,7 +179,16 @@ class CustomerpdfController extends Controller
         $totalPersons = $record->customers->adults + $record->customers->childgreaterthan5;
         $ultimatePrice = ($totalHotelCost + $extras + $margin) / $totalPersons;
 
+        $cruiseData = [];
+
+        if (!empty($record->cruz) && is_array($record->cruz)) {
+            $cruiseData = \App\Models\Ferry::whereIn('id', $record->cruz)->get();
+        }
+
+        return view('pdf.package', compact('record', 'cruiseData'));
+
+
         // Return the view with calculated values
-        return view('pdf.package', compact(['record', 'ultimatePrice']));
+        return view('pdf.package', compact(['record', 'ultimatePrice','cruiseData']));
     }
 }
