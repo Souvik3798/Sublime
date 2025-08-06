@@ -73,4 +73,9 @@ class CustomPackage extends Model
     {
         return $this->belongsTo(Addon::class);
     }
+
+    public function ferry(): BelongsTo
+    {
+        return $this->belongsTo(Ferry::class);
+    }
 }
