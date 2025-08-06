@@ -179,15 +179,22 @@ class CustomerpdfController extends Controller
         $totalPersons = $record->customers->adults + $record->customers->childgreaterthan5;
         $ultimatePrice = ($totalHotelCost + $extras + $margin) / $totalPersons;
 
-        $cruiseData = [];
+        $cruiseData = collect();
 
         if (!empty($record->cruz) && is_array($record->cruz)) {
-            $cruiseIds = collect($record->cruz)->flatten()->toArray(); // 👈 flatten any nested array
-            $cruiseData = \App\Models\Ferry::whereIn('id', $cruiseIds)->get();
+            // Extract UNIQUE ferry IDs from cruise entries
+            $ferryIds = collect($record->cruz)
+                ->pluck('ferry_id')        // Get only ferry IDs
+                ->filter()                 // Remove empty values
+                ->unique()                 // Remove duplicates
+                ->values()                 // Reset array keys
+                ->toArray();
+
+            // Fetch ferries using extracted IDs
+            $cruiseData = \App\Models\Ferry::whereIn('id', $ferryIds)->get();
         }
 
-
-        // Return the view with calculated values
-        return view('pdf.package', compact(['record', 'ultimatePrice','cruiseData']));
+        // Return the view (unchanged)
+        return view('pdf.package', compact('record', 'ultimatePrice', 'cruiseData'));
     }
 }
