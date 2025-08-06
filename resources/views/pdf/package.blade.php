@@ -1081,21 +1081,15 @@
                     @foreach ($record->cruz as $cruise)
                         <div class="cruise-card">
                             <div class="cruise-header">
-                                <?php dd($cruise); ?>
+                                <?php dd($cruise->ferry->Title); ?>
                                 <h3><i class="fas fa-ship"></i> {{ $cruise['Title'] ?? 'Cruise Name Not Available' }}</h3>
                             </div>
                             <div class="cruise-info">
-                                @if (!empty($cruise['description']))
-                                    <p><strong>Description:</strong> {{ $cruise['description'] }}</p>
+                                @if (!empty($cruise['source']))
+                                    <p><strong>Route:</strong> {{ $cruise['source'] }}</p>
                                 @endif
-                                @if (!empty($cruise['duration']))
-                                    <p><strong>Duration:</strong> {{ $cruise['duration'] }}</p>
-                                @endif
-                                @if (!empty($cruise['departure_time']))
-                                    <p><strong>Departure Time:</strong> {{ $cruise['departure_time'] }}</p>
-                                @endif
-                                @if (!empty($cruise['route']))
-                                    <p><strong>Route:</strong> {{ $cruise['route'] }}</p>
+                                @if (!empty($cruise['class']))
+                                    <p><strong>Class:</strong> {{ $cruise['class'] }}</p>
                                 @endif
                                 <div class="cruise-pricing">
                                     @if (!empty($cruise['price_adult']))
