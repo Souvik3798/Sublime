@@ -1082,7 +1082,7 @@
                         <div class="cruise-card">
                             <div class="cruise-header">
                                 <?php
-                                    foreach ($cruise as $cruises) {
+                                    foreach ($cruise['ferry'] as $cruises) {
                                         dd($cruises);
                                     }
                                     ?>
