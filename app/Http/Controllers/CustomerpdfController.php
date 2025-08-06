@@ -179,7 +179,23 @@ class CustomerpdfController extends Controller
         $totalPersons = $record->customers->adults + $record->customers->childgreaterthan5;
         $ultimatePrice = ($totalHotelCost + $extras + $margin) / $totalPersons;
 
+        // Fetch ferry (cruise) details for the cruise section
+        $cruiseDetails = [];
+        if (!empty($record->cruz)) {
+            foreach ($record->cruz as $cruiseId) {
+                // If cruz is an array of IDs, use as is. If array of arrays, extract ID
+                $id = is_array($cruiseId) && isset($cruiseId['id']) ? $cruiseId['id'] : $cruiseId;
+                $ferry = \App\Models\Ferry::find($id);
+                if ($ferry) {
+                    $cruiseDetails[] = [
+                        'Title' => $ferry->Title,
+                        'price' => $ferry->price,
+                    ];
+                }
+            }
+        }
+
         // Return the view with calculated values
-        return view('pdf.package', compact(['record', 'ultimatePrice']));
+        return view('pdf.package', compact(['record', 'ultimatePrice', 'cruiseDetails']));
     }
 }
