@@ -1086,12 +1086,11 @@
                                     <?php
 
                                         $ferry = App\Models\Ferry::where('id', $cruise['cruz'])->first();
-                                        dd($ferry);
 
                                     ?>
 
 
-                                <h3><i class="fas fa-ship"></i> {{ $cruise['Title'] ?? 'Cruise Name Not Available' }}</h3>
+                                <h3><i class="fas fa-ship"></i> {{ $ferry->Title ?? 'Cruise Name Not Available' }}</h3>
                             </div>
                             <div class="cruise-info">
                                 @if (!empty($cruise['source']))
