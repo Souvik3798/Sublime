@@ -1082,13 +1082,11 @@
                         <div class="cruise-card">
                             <div class="cruise-header">
 
-
                                     <?php
 
                                         $ferry = App\Models\Ferry::where('id', $cruise['cruz'])->first();
 
                                     ?>
-
 
                                 <h3><i class="fas fa-ship"></i> {{ $ferry->Title ?? 'Cruise Name Not Available' }}</h3>
                             </div>
@@ -1099,14 +1097,6 @@
                                 @if (!empty($cruise['class']))
                                     <p><strong>Class:</strong> {{ $cruise['class'] }}</p>
                                 @endif
-                                <div class="cruise-pricing">
-                                    @if (!empty($cruise['price_adult']))
-                                        <span class="price-item"><strong>Adult:</strong> ₹{{ number_format($cruise['price_adult']) }}</span>
-                                    @endif
-                                    @if (!empty($cruise['price_infant']))
-                                        <span class="price-item"><strong>Child:</strong> ₹{{ number_format($cruise['price_infant']) }}</span>
-                                    @endif
-                                </div>
                             </div>
                         </div>
                     @endforeach
