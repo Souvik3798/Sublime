@@ -753,7 +753,7 @@
                             <p><strong>{{ strtoupper($hotel->hotelName ?? 'Unknown Hotel') }}</strong></p>
                             <p>Category: <strong>{{ $hoteltype->category ?? 'N/A' }}</strong></p>
                             <p>Room Type: <strong>{{ $roomtype->category ?? 'N/A' }}</strong></p>
-                            <p>Meal Plan: <strong>{{ strtoupper($room['meal_plan'] ?? 'N/A' }}</strong></p>
+                            <p>Meal Plan: <strong>{{ strtoupper($room['meal_plan']) ?? 'N/A' }}</strong></p>
                         </div>
                     </div>
                 </div>
