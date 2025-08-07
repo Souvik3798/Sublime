@@ -927,6 +927,35 @@
                 max-width: 100% !important;
                 height: auto !important;
                 page-break-inside: avoid !important;
+                display: block !important;
+            }
+
+            /* Hotel image specific styles for print */
+            .hotel-card img {
+                width: 100% !important;
+                height: 96px !important;
+                object-fit: cover !important;
+                border-radius: 12px !important;
+            }
+
+            /* Ensure hotel image containers work properly in print */
+            .hotel-card .rounded-xl {
+                border-radius: 12px !important;
+                overflow: hidden !important;
+            }
+
+            /* Fallback for missing images in print */
+            .hotel-card .bg-gray-200 {
+                background-color: #e5e7eb !important;
+                border: 2px dashed #9ca3af !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .hotel-card .material-icons {
+                font-size: 24px !important;
+                color: #9ca3af !important;
             }
 
             /* Prevent page breaks in critical sections */
@@ -1166,16 +1195,32 @@
                                         @endphp
                                         @if ($hotelImages && !empty($hotelImages->images))
                                             <div class="grid grid-cols-2 gap-2">
-                                                @foreach ($hotelImages->images as $image)
-                                                    <div class="bg-gray-200 rounded-xl w-full h-24 bg-cover bg-center" style="background-image: url('{{ asset('storage/' . $image) }}')"></div>
+                                                @foreach (array_slice($hotelImages->images, 0, 4) as $image)
+                                                    <div class="rounded-xl w-full h-24 overflow-hidden">
+                                                        <img src="{{ asset('storage/' . $image) }}"
+                                                             alt="Hotel Image"
+                                                             class="w-full h-full object-cover"
+                                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                        <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center" style="display: none;">
+                                                            <i class="material-icons text-gray-400">image</i>
+                                                        </div>
+                                                    </div>
                                                 @endforeach
                                             </div>
                                         @else
                                             <div class="grid grid-cols-2 gap-2">
-                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24"></div>
-                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24"></div>
-                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24"></div>
-                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24"></div>
+                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center">
+                                                    <i class="material-icons text-gray-400">image</i>
+                                                </div>
+                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center">
+                                                    <i class="material-icons text-gray-400">image</i>
+                                                </div>
+                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center">
+                                                    <i class="material-icons text-gray-400">image</i>
+                                                </div>
+                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center">
+                                                    <i class="material-icons text-gray-400">image</i>
+                                                </div>
                                             </div>
                                         @endif
                                     </div>
