@@ -1,1447 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+
 @php
     $user = auth()->check() ? App\Models\User::find(auth()->id()) : null;
 @endphp
 
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $record->name ?? 'Package Details' }}</title>
-
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2563eb',
-                        secondary: '#7c3aed',
-                        accent: '#e11d48',
-                        glass: 'rgba(255, 255, 255, 0.15)',
-                        darkGlass: 'rgba(0, 0, 0, 0.1)'
-                    },
-                    fontFamily: {
-                        poppins: ['Poppins', 'sans-serif'],
-                        playfair: ['Playfair Display', 'serif']
-                    },
-                    backdropBlur: {
-                        xs: '2px',
-                        sm: '4px',
-                        md: '8px',
-                        lg: '12px',
-                        xl: '20px',
-                    }
-                }
-            }
-        }
-    </script>
-    <style type="text/css">
+
+    <title>{{ $record->name ?? 'Package Details' }}</title>
+    <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            min-height: 100vh;
-            padding: 20px;
-            background-attachment: fixed;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        .container {
+            width: 80%;
+            margin: auto;
             overflow: hidden;
         }
 
-        .glass-header {
-            background: rgba(37, 99, 235, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #e8491d 3px solid;
+        }
+
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+
+        .main-header {
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .package-details,
+        .hotels,
+        .inclusions,
+        .exclusions,
+        .cancellation-policy,
+        .vehicles,
+        .itinerary {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .package-details table,
+        .hotels table,
+        .vehicles table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .package-details th,
+        .package-details td,
+        .hotels th,
+        .hotels td,
+        .vehicles th,
+        .vehicles td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .package-details th,
+        .hotels th,
+        .vehicles th {
+            background-color: #f2f2f2;
+        }
+
+        .package-details h2,
+        .hotels h2,
+        .inclusions h2,
+        .exclusions h2,
+        .cancellation-policy h2,
+        .vehicles h2,
+        .itinerary h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+        }
+
+        .hotels img {
+            width: 15%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .hotel-info {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .hotel-images {
+            display: flex;
+            flex: 4;
+            margin-right: 20px;
+        }
+
+        .hotel-details {
+            flex: 2;
+            padding-left: 20px;
+            border-left: 1px solid #ddd;
+        }
+
+        .hotel-block {
+            width: 100%;
+        }
+
+        .hotel-block h3 {
+            margin-top: 0;
+        }
+
+        .hotel-images img {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        /* New Itinerary Timeline Styles */
+        .itinerary {
+            position: relative;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
         }
 
         .timeline::after {
-            background: linear-gradient(to bottom, #2563eb, #7c3aed);
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: #e8491d;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        .container-timeline {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            box-sizing: border-box;
         }
 
         .container-timeline::after {
-            border: 4px solid #7c3aed;
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid #e8491d;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            left: 50%;
+        }
+
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid white;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+        }
+
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        .right::after {
+            left: -10px;
+        }
+
+        .content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .content h3 {
+            margin-top: 0;
+            color: #e8491d;
+        }
+
+        .content h4 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        /* Inclusion and exlusions */
+
+        .styled-list {
+            list-style-type: none;
+            /* Remove default bullets */
+            padding: 0;
+            margin: 0;
+        }
+
+        .styled-list li {
+            padding: 10px 0;
+            margin: 5px 0;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            padding-left: 35px;
+        }
+
+        .styled-list li:before {
+            content: "\2717";
+            color: red;
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+            line-height: 1.2em;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+        }
+
+        .exclusions .styled-list li:before {
+            content: "\2717";
+        }
+
+        .inclusions .styled-list li:before {
+            content: "\2713";
+            color: green;
+            border-color: green;
+        }
+
+        .inclusions,
+        .exclusions {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .inclusions h2,
+        .exclusions h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+            color: #e8491d;
+        }
+
+        /* calcelation and refund */
+
+        .styled-policy-list {
+            counter-reset: item;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .styled-policy-list li {
+            counter-increment: item;
+            padding: 10px;
+            margin: 5px 0;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+            padding-left: 40px;
+            /* background: #f9f9f9; */
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .styled-policy-list li:before {
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #e8491d;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .cancellation-policy {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cancellation-policy h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+            color: #e8491d;
+        }
+
+        .policy-content {
+            padding: 15px;
+            /* background-color: #f4f4f4; */
+            border-radius: 5px;
+        }
+
+        /* Terms and Conditions */
+        .terms-and-conditions {
+            background: #f0f8ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .terms-and-conditions h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .terms-content {
+            padding: 15px;
+            background-color: #e6f2ff;
+            border-radius: 5px;
+        }
+
+        .styled-terms-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .styled-terms-list li {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: #ffffff;
+            border-left: 5px solid #007bff;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .styled-terms-list li i {
+            color: #007bff;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .styled-terms-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .styled-terms-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* why choose us */
+        .why-book-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px
+        }
+
+        .why-book-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
 
         .feature-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #28a745;
+            border-radius: 30px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #28a745;
+            font-size: 1em;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .feature-item i {
+            margin-right: 10px;
+            font-size: 1.2em;
         }
 
         .feature-item:hover {
-            transform: translateY(-5px);
-            background: rgba(37, 99, 235, 0.8);
+            background-color: #28a745;
+            color: #ffffff;
         }
 
-        .price-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 100%);
+        .feature-item:hover i {
+            color: #ffffff;
         }
 
-        .hotel-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* per person price */
+
+        /* General Material Design styles */
+        .material-card {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            margin: 16px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            max-width: 500px;
         }
 
-        .hotel-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0,` 0, 0.1);
+        /* Icon styling */
+        .icon-wrapper {
+            flex-shrink: 0;
+            background-color: #f32121;
+            color: #ffffff;
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
         }
 
-        .inclusions li::before {
-            background: rgba(34, 197, 94, 0.2);
-            border-color: #22c55e;
+        .icon-wrapper i {
+            font-size: 24px;
         }
 
-        .exclusions li::before {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: #ef4444;
+        /* Content Styling */
+        .content {
+            flex-grow: 1;
         }
 
-        .print\:shadow-none {
-            box-shadow: none !important;
+        .price-label {
+            font-size: 16px;
+            color: #555555;
+            margin: 0;
+            font-weight: 600;
         }
 
-        .print\:bg-transparent {
-            background: transparent !important;
+        .price-value {
+            font-size: 20px;
+            color: #f32121;
+            margin: 4px 0 0;
+            font-weight: bold;
+        }
+
+        @media screen and (max-width: 768px) {
+            .feature-item {
+                flex-basis: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* kindly notes */
+        .kindly-notes {
+            background-color: #ffffff;
+            border-left: 5px solid #28a745;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .kindly-notes h2 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            font-size: 26px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 10px;
+        }
+
+        .kindly-content {
+            padding-left: 10px;
+        }
+
+        .styled-kindly-list {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .styled-kindly-list li {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #555;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .styled-kindly-list li::before {
+            content: "\1F4DD";
+            font-size: 22px;
+            color: #007bff;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        /* cruise details section */
+        .cruise-details {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cruise-details h2 {
+            border-bottom: 2px solid #e8491d;
+            padding-bottom: 10px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .cruise-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .cruise-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease;
+        }
+
+        .cruise-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .cruise-header h3 {
+            color: #2c5aa0;
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        .cruise-header h3 i {
+            color: #4CAF50;
+            margin-right: 8px;
+        }
+
+        .cruise-info p {
+            margin: 8px 0;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .cruise-pricing {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .cruise-pricing .price-item {
+            display: inline-block;
+            background: #e8f5e8;
+            padding: 5px 10px;
+            margin-right: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #2e7d32;
+        }
+
+        /* addons-container */
+        .addons-section {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .addon-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .addon-details {
+            flex: 1;
+        }
+
+        .addon-day {
+            color: #666;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .addon-price {
+            font-weight: bold;
+            color: #2c5282;
+            padding: 5px 10px;
+            background: #ebf4ff;
+            border-radius: 4px;
+        }
+
+        .addon-title {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+
+
+        @media screen and (max-width: 600px) {
+            .timeline::after {
+                left: 31px;
+            }
+
+            .container-timeline {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .container-timeline::before {
+                left: 60px;
+                border: medium solid white;
+                border-width: 10px 10px 10px 0;
+                border-color: transparent white transparent transparent;
+            }
+
+            .left::after,
+            .right::after {
+                left: 21px;
+            }
+
+            .right {
+                left: 0%;
+            }
         }
 
         @media print {
-            * {
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
             body {
-                background: white !important;
-                padding: 20px !important;
-                margin: 0 !important;
-                font-size: 12px !important;
-                line-height: 1.4 !important;
+                background-color: #ffffff;
+                font-size: 10pt;
+                color: #000000;
             }
 
-            .max-w-6xl {
-                max-width: none !important;
-                width: 100% !important;
+            .container {
+                width: 100%;
+                margin: 0;
+                padding: 0;
             }
 
-            .glass-card, .glass-header {
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-                background: white !important;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-                border: 1px solid #e5e7eb !important;
-                margin-bottom: 20px !important;
-                page-break-inside: avoid !important;
+            header {
+                background: #ffffff;
+                color: #000000;
+                padding-top: 30px;
+                min-height: 70px;
+                border-bottom: #e8491d 3px solid;
+
             }
 
-            .glass-header {
-                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-                color: white !important;
+            header .main-header h1 {
+                font-size: 25pt;
+                color: #000;
             }
 
-            .feature-item, .price-card {
-                background: #f8fafc !important;
-                border: 1px solid #e5e7eb !important;
+            header .main-header p {
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                font-size: 10pt;
+                color: #000000;
+            }
+
+            header .main-header img {
+                width: 50%;
+                height: auto;
+            }
+
+            .kindly-notes {
+                background-color: #ffffff !important;
+                border-left: 5px solid #28a745 !important;
+                /* Ensure border is visible in print */
+                padding: 20px 30px;
+                margin-bottom: 20px;
+                border-radius: 10px !important;
+                /* Ensure border radius is applied */
                 box-shadow: none !important;
+                /* Remove shadow in print */
             }
 
-            .hotel-card {
-                background: white !important;
-                border: 1px solid #e5e7eb !important;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-                page-break-inside: avoid !important;
+            .kindly-notes h2 {
+                color: #333 !important;
+                font-size: 22px;
+                /* Slightly reduce font size for print */
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ddd;
+                /* Lighter border for print */
+                padding-bottom: 5px;
             }
 
-            .inclusions li::before, .exclusions li::before {
-                background: white !important;
-                border: 2px solid #22c55e !important;
+            .styled-kindly-list li {
+                font-size: 16px;
+                margin-bottom: 10px;
             }
 
-            .exclusions li::before {
-                border-color: #ef4444 !important;
+            .package-details,
+            .hotels,
+            .cruise-details,
+            .kindly-notes,
+            .inclusions,
+            .exclusions,
+            .cancellation-policy,
+            .vehicles,
+            .terms-and-conditions,
+            .why-book-section,
+            .itinerary {
+                box-shadow: none;
+                margin: 10px 0;
+                page-break-inside: avoid;
+                border: 1px solid #ddd;
+                background-color: #ffffff;
             }
 
-            .text-primary {
-                color: #2563eb !important;
+            .hotel-images img,
+            .itinerary img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                page-break-inside: avoid;
             }
 
-            .text-green-600 {
-                color: #16a34a !important;
+            .vehicles table,
+            .package-details table,
+            .hotels table {
+                border-collapse: collapse;
+                width: 100%;
             }
 
-            .text-red-600 {
-                color: #dc2626 !important;
+            .vehicles th,
+            .vehicles td,
+            .package-details th,
+            .package-details td,
+            .hotels th,
+            .hotels td {
+                border: 1px solid #000;
+                padding: 4px;
+                page-break-inside: avoid;
             }
 
-            .text-accent {
-                color: #e11d48 !important;
+            .timeline,
+            .container-timeline,
+            .content,
+            .itinerary h2,
+            .package-details h2,
+            .hotels h2,
+            .inclusions h2,
+            .exclusions h2,
+            .cancellation-policy h2,
+            .vehicles h2 {
+                page-break-inside: avoid;
             }
 
-            .bg-primary {
-                background-color: #2563eb !important;
+            .hotel-info {
+                flex-wrap: nowrap;
+                page-break-inside: avoid;
             }
 
-            .bg-green-100 {
-                background-color: #dcfce7 !important;
+            .hotel-images {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                margin-right: 0;
+                page-break-inside: avoid;
             }
 
-            .bg-red-100 {
-                background-color: #fee2e2 !important;
+            .hotel-images img {
+                width: 20%;
+                margin-bottom: 10px;
             }
 
-            .bg-blue-100 {
-                background-color: #dbeafe !important;
+            .hotel-details {
+                padding-left: 0;
+                border-left: none;
+                page-break-inside: avoid;
             }
 
-            .bg-purple-100 {
-                background-color: #f3e8ff !important;
+            .hotel-block {
+                page-break-inside: avoid;
+                margin-bottom: 20px;
             }
 
-            .border-primary {
-                border-color: #2563eb !important;
+            h2 {
+                color: #000000;
+                border-bottom: 2px solid #000000;
             }
 
-            .border-green-600 {
-                border-color: #16a34a !important;
+            a {
+                text-decoration: none;
+                color: #000000;
             }
 
-            .border-red-600 {
-                border-color: #dc2626 !important;
+            @page {
+                margin: 0.7cm !important;
             }
 
-            .rounded-xl, .rounded-2xl, .rounded-lg {
-                border-radius: 8px !important;
+            @page: first {
+                margin-top: 4cm !important;
             }
 
-            .rounded-full {
-                border-radius: 9999px !important;
-            }
-
-            .p-6 {
-                padding: 20px !important;
-            }
-
-            .p-8 {
-                padding: 24px !important;
-            }
-
-            .mb-8 {
-                margin-bottom: 24px !important;
-            }
-
-            .mb-6 {
-                margin-bottom: 20px !important;
-            }
-
-            .mb-4 {
-                margin-bottom: 16px !important;
-            }
-
-            .text-4xl {
-                font-size: 28px !important;
-            }
-
-            .text-3xl {
-                font-size: 24px !important;
-            }
-
-            .text-2xl {
-                font-size: 20px !important;
-            }
-
-            .text-xl {
-                font-size: 18px !important;
-            }
-
-            .text-lg {
-                font-size: 16px !important;
-            }
-
-            .text-sm {
-                font-size: 11px !important;
-            }
-
-            .text-xs {
-                font-size: 10px !important;
-            }
-
-            .grid {
-                display: grid !important;
-            }
-
-            .md\\:grid-cols-2 {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-
-            .flex {
-                display: flex !important;
-            }
-
-            .flex-col {
-                flex-direction: column !important;
-            }
-
-            .items-center {
-                align-items: center !important;
-            }
-
-            .justify-center {
-                justify-content: center !important;
-            }
-
-            .gap-4 {
-                gap: 16px !important;
-            }
-
-            .gap-2 {
-                gap: 8px !important;
-            }
-
-            .space-y-6 > * + * {
-                margin-top: 24px !important;
-            }
-
-            .space-y-4 > * + * {
-                margin-top: 16px !important;
-            }
-
-            .space-y-3 > * + * {
-                margin-top: 12px !important;
-            }
-
-            .w-full {
-                width: 100% !important;
-            }
-
-            .h-24 {
-                height: 96px !important;
-            }
-
-            .w-24 {
-                width: 96px !important;
-            }
-
-            .object-contain {
-                object-fit: contain !important;
-            }
-
-            .overflow-hidden {
-                overflow: hidden !important;
-            }
-
-            .text-center {
-                text-align: center !important;
-            }
-
-            .font-bold {
-                font-weight: 700 !important;
-            }
-
-            .font-medium {
-                font-weight: 500 !important;
-            }
-
-            .font-playfair {
-                font-family: 'Playfair Display', serif !important;
-            }
-
-            .font-poppins {
-                font-family: 'Poppins', sans-serif !important;
-            }
-
-            .border-collapse {
-                border-collapse: collapse !important;
-            }
-
-            .divide-y > * + * {
-                border-top: 1px solid #e5e7eb !important;
-            }
-
-            .bg-gray-100\\/50 {
-                background-color: #f9fafb !important;
-            }
-
-            .hover\\:bg-gray-50\\/50:hover {
-                background-color: #f9fafb !important;
-            }
-
-            .py-3 {
-                padding-top: 12px !important;
-                padding-bottom: 12px !important;
-            }
-
-            .px-4 {
-                padding-left: 16px !important;
-                padding-right: 16px !important;
-            }
-
-            .colspan-3 {
-                grid-column: span 3 / span 3 !important;
-            }
-
-            .aspect-w-16 {
+            .container-timeline {
+                /* padding: 10px 40px !important; */
                 position: relative !important;
-                padding-bottom: 56.25% !important;
-            }
-
-            .aspect-h-9 {
-                position: absolute !important;
-                height: 100% !important;
-                width: 100% !important;
-                top: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                left: 0 !important;
-            }
-
-            .bg-gray-200 {
-                background-color: #e5e7eb !important;
-            }
-
-            .border-2 {
-                border-width: 2px !important;
-            }
-
-            .border-dashed {
-                border-style: dashed !important;
-            }
-
-            .h-24 {
-                height: 96px !important;
-            }
-
-            .text-yellow-400 {
-                color: #facc15 !important;
-            }
-
-            .text-gray-300 {
-                color: #d1d5db !important;
-            }
-
-            .text-gray-600 {
-                color: #4b5563 !important;
-            }
-
-            .text-gray-800 {
-                color: #1f2937 !important;
-            }
-
-            .text-white {
-                color: white !important;
-            }
-
-            .bg-white {
-                background-color: white !important;
-            }
-
-            .bg-white\\/30 {
-                background-color: rgba(255, 255, 255, 0.3) !important;
-            }
-
-            .bg-primary\\/10 {
-                background-color: rgba(37, 99, 235, 0.1) !important;
-            }
-
-            .bg-gradient-to-br {
-                background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)) !important;
-            }
-
-            .from-blue-50 {
-                --tw-gradient-from: #eff6ff !important;
-                --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(239, 246, 255, 0)) !important;
-            }
-
-            .to-cyan-50 {
-                --tw-gradient-to: #ecfeff !important;
-            }
-
-            .md\\:w-2\\/5 {
-                width: 40% !important;
-            }
-
-            .md\\:w-3\\/5 {
-                width: 60% !important;
-            }
-
-            .md\\:flex {
-                display: flex !important;
-            }
-
-            .md\\:pr-10 {
-                padding-right: 40px !important;
-            }
-
-            .md\\:pl-10 {
-                padding-left: 40px !important;
-            }
-
-            .md\\:text-right {
-                text-align: right !important;
-            }
-
-            .md\\:grid-cols-2 {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-
-            .md\\:flex-row {
-                flex-direction: row !important;
-            }
-
-            .md\\:mb-0 {
-                margin-bottom: 0 !important;
-            }
-
-            .md\\:text-5xl {
-                font-size: 32px !important;
-            }
-
-            .md\\:text-3xl {
-                font-size: 24px !important;
-            }
-
-            .md\\:text-base {
-                font-size: 14px !important;
-            }
-
-            .md\\:p-8 {
-                padding: 24px !important;
-            }
-
-            .md\\:grid-cols-2 {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-
-            .max-w-lg {
-                max-width: 512px !important;
-            }
-
-            .mx-auto {
-                margin-left: auto !important;
-                margin-right: auto !important;
-            }
-
-            .max-w-2xl {
-                max-width: 672px !important;
-            }
-
-            .text-3xl {
-                font-size: 24px !important;
-            }
-
-            .text-2xl {
-                font-size: 20px !important;
-            }
-
-            .text-xl {
-                font-size: 18px !important;
-            }
-
-            .text-lg {
-                font-size: 16px !important;
-            }
-
-            .text-sm {
-                font-size: 11px !important;
-            }
-
-            .text-xs {
-                font-size: 10px !important;
-            }
-
-            .p-3 {
-                padding: 12px !important;
-            }
-
-            .p-4 {
-                padding: 16px !important;
-            }
-
-            .p-5 {
-                padding: 20px !important;
-            }
-
-            .py-1 {
-                padding-top: 4px !important;
-                padding-bottom: 4px !important;
-            }
-
-            .px-4 {
-                padding-left: 16px !important;
-                padding-right: 16px !important;
-            }
-
-            .py-3 {
-                padding-top: 12px !important;
-                padding-bottom: 12px !important;
-            }
-
-            .px-4 {
-                padding-left: 16px !important;
-                padding-right: 16px !important;
-            }
-
-            .py-8 {
-                padding-top: 32px !important;
-                padding-bottom: 32px !important;
-            }
-
-            .py-4 {
-                padding-top: 16px !important;
-                padding-bottom: 16px !important;
-            }
-
-            .py-3 {
-                padding-top: 12px !important;
-                padding-bottom: 12px !important;
-            }
-
-            .px-8 {
-                padding-left: 32px !important;
-                padding-right: 32px !important;
-            }
-
-            .mt-2 {
-                margin-top: 8px !important;
-            }
-
-            .mt-3 {
-                margin-top: 12px !important;
-            }
-
-            .mt-4 {
-                margin-top: 16px !important;
-            }
-
-            .mt-6 {
-                margin-top: 24px !important;
-            }
-
-            .mt-8 {
-                margin-top: 32px !important;
-            }
-
-            .mt-10 {
-                margin-top: 40px !important;
-            }
-
-            .mb-2 {
-                margin-bottom: 8px !important;
-            }
-
-            .mb-3 {
-                margin-bottom: 12px !important;
-            }
-
-            .mb-4 {
-                margin-bottom: 16px !important;
-            }
-
-            .mb-6 {
-                margin-bottom: 24px !important;
-            }
-
-            .mb-8 {
-                margin-bottom: 32px !important;
-            }
-
-            .mb-10 {
-                margin-bottom: 40px !important;
-            }
-
-            .mb-16 {
-                margin-bottom: 64px !important;
-            }
-
-            .ml-auto {
-                margin-left: auto !important;
-            }
-
-            .mr-auto {
-                margin-right: auto !important;
-            }
-
-            .mx-auto {
-                margin-left: auto !important;
-                margin-right: auto !important;
-            }
-
-            .pt-6 {
-                padding-top: 24px !important;
-            }
-
-            .border-t {
-                border-top-width: 1px !important;
-            }
-
-            .border-gray-200\\/50 {
-                border-color: rgba(229, 231, 235, 0.5) !important;
-            }
-
-            .border-b-2 {
-                border-bottom-width: 2px !important;
-            }
-
-            .border-white\\/40 {
-                border-color: rgba(255, 255, 255, 0.4) !important;
-            }
-
-            .border-white\\/30 {
-                border-color: rgba(255, 255, 255, 0.3) !important;
-            }
-
-            .rounded-xl {
-                border-radius: 12px !important;
-            }
-
-            .rounded-lg {
-                border-radius: 8px !important;
-            }
-
-            .rounded-full {
-                border-radius: 9999px !important;
-            }
-
-            .rounded-2xl {
-                border-radius: 16px !important;
-            }
-
-            .overflow-hidden {
-                overflow: hidden !important;
-            }
-
-            .overflow-x-auto {
-                overflow-x: auto !important;
-            }
-
-            .text-left {
-                text-align: left !important;
-            }
-
-            .text-center {
-                text-align: center !important;
-            }
-
-            .text-right {
-                text-align: right !important;
-            }
-
-            .font-bold {
-                font-weight: 700 !important;
-            }
-
-            .font-medium {
-                font-weight: 500 !important;
-            }
-
-            .font-playfair {
-                font-family: 'Playfair Display', serif !important;
-            }
-
-            .font-poppins {
-                font-family: 'Poppins', sans-serif !important;
-            }
-
-            .inline-block {
-                display: inline-block !important;
-            }
-
-            .inline-flex {
-                display: inline-flex !important;
-            }
-
-            .flex {
-                display: flex !important;
-            }
-
-            .grid {
-                display: grid !important;
-            }
-
-            .hidden {
-                display: none !important;
-            }
-
-            .items-center {
-                align-items: center !important;
-            }
-
-            .items-start {
-                align-items: flex-start !important;
-            }
-
-            .justify-center {
-                justify-content: center !important;
-            }
-
-            .justify-between {
-                justify-content: space-between !important;
-            }
-
-            .flex-col {
-                flex-direction: column !important;
-            }
-
-            .flex-row {
-                flex-direction: row !important;
-            }
-
-            .flex-wrap {
-                flex-wrap: wrap !important;
-            }
-
-            .flex-shrink-0 {
-                flex-shrink: 0 !important;
-            }
-
-            .gap-2 {
-                gap: 8px !important;
-            }
-
-            .gap-4 {
-                gap: 16px !important;
-            }
-
-            .space-y-3 > * + * {
-                margin-top: 12px !important;
-            }
-
-            .space-y-4 > * + * {
-                margin-top: 16px !important;
-            }
-
-            .space-y-6 > * + * {
-                margin-top: 24px !important;
-            }
-
-            .divide-y > * + * {
-                border-top: 1px solid #e5e7eb !important;
-            }
-
-            .w-full {
-                width: 100% !important;
-            }
-
-            .w-6 {
-                width: 24px !important;
-            }
-
-            .w-8 {
-                width: 32px !important;
-            }
-
-            .w-24 {
-                width: 96px !important;
-            }
-
-            .h-6 {
-                height: 24px !important;
-            }
-
-            .h-8 {
-                height: 32px !important;
-            }
-
-            .h-24 {
-                height: 96px !important;
-            }
-
-            .object-contain {
-                object-fit: contain !important;
-            }
-
-            .bg-cover {
-                background-size: cover !important;
-            }
-
-            .bg-center {
-                background-position: center !important;
-            }
-
-            .relative {
-                position: relative !important;
-            }
-
-            .absolute {
-                position: absolute !important;
-            }
-
-            .z-10 {
-                z-index: 10 !important;
-            }
-
-            .top-2 {
-                top: 8px !important;
-            }
-
-            .left-0 {
-                left: 0 !important;
-            }
-
-            .-ml-2 {
-                margin-left: -8px !important;
-            }
-
-            .-ml-2 {
-                margin-left: -8px !important;
-            }
-
-            .w-4 {
-                width: 16px !important;
-            }
-
-            .h-4 {
-                height: 16px !important;
-            }
-
-            .border-4 {
-                border-width: 4px !important;
-            }
-
-            .border-white {
-                border-color: white !important;
-            }
-
-            .no-print-shadow {
-                box-shadow: none !important;
-            }
-
-            .print-padding {
-                padding: 8px !important;
-            }
-
-            /* Ensure images print properly */
-            img {
-                max-width: 100% !important;
-                height: auto !important;
-                page-break-inside: avoid !important;
-                display: block !important;
-            }
-
-            /* Hotel image specific styles for print */
-            .hotel-card img {
-                width: 100% !important;
-                height: 96px !important;
-                object-fit: cover !important;
-                border-radius: 12px !important;
-            }
-
-            /* Ensure hotel image containers work properly in print */
-            .hotel-card .rounded-xl {
-                border-radius: 12px !important;
-                overflow: hidden !important;
-            }
-
-            /* Fallback for missing images in print */
-            .hotel-card .bg-gray-200 {
-                background-color: #e5e7eb !important;
-                border: 2px dashed #9ca3af !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-
-            .hotel-card .material-icons {
-                font-size: 24px !important;
-                color: #9ca3af !important;
-            }
-
-            /* Prevent page breaks in critical sections */
-            .glass-header {
-                page-break-after: avoid !important;
-            }
-
-            .hotel-card {
-                page-break-inside: avoid !important;
-            }
-
-            /* Ensure table rows don't break across pages */
-            tr {
-                page-break-inside: avoid !important;
-            }
-
-            /* Ensure list items don't break across pages */
-            li {
-                page-break-inside: avoid !important;
-            }
-
-            /* Hide any elements that shouldn't print */
-            .no-print {
-                display: none !important;
-            }
-
-            /* Ensure proper spacing for print */
-            .print-spacing {
-                margin-bottom: 20px !important;
-            }
+                background-color: inherit !important;
+                width: 57% !important;
+                left: -6%;
+                /* Increase width here */
+                box-sizing: border-box !important;
+            }
+
+            .right {
+                left: 49%;
+            }
+
+
+
+        }
+
+        .addons-container {
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+
+        .addons-heading {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .addons-heading i {
+            color: #4CAF50;
+            margin-right: 0.5rem;
+        }
+
+        .addon-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease;
+        }
+
+        .addon-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .addon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .addon-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .addon-name i {
+            color: #4CAF50;
+            margin-right: 0.5rem;
+        }
+
+        .addon-day {
+            background: #edf2f7;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            color: #4a5568;
+        }
+
+        .addon-day i {
+            color: #3182ce;
+            margin-right: 0.5rem;
+        }
+
+        .addon-body {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .addon-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        .addon-location i {
+            color: #e53e3e;
+        }
+
+        .addon-price {
+            font-weight: 600;
+            color: #2c5282;
+            background: #ebf8ff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .addon-notes {
+            background: #fffaf0;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border-left: 3px solid #ed8936;
+            font-size: 0.9rem;
+            color: #744210;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .addon-notes i {
+            color: #ed8936;
+            margin-top: 0.2rem;
         }
     </style>
+
 </head>
 
-<body class="bg-gray-50">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header with glass effect -->
-        <header class="glass-header rounded-t-2xl mb-8 overflow-hidden">
-            <div class="flex flex-col items-center py-8 px-4 text-center">
-                <div class="mb-6">
-                    <div class="bg-white p-3 rounded-full inline-flex items-center justify-center shadow-lg">
-                        @if ($user && $user->logo)
-                            <img src="{{ asset('storage/' . $user->logo) }}" alt="Logo" class="h-24 w-24 object-contain">
-                        @else
-                            <img src="{{ asset('Images/default.webp') }}" alt="Logo" class="h-24 w-24 object-contain">
-                        @endif
-                    </div>
-                </div>
-
-                <h1 class="font-playfair text-4xl md:text-5xl font-bold text-white mb-3">
+<body>
+    <header>
+        <div class="container">
+            <div class="main-header">
+                @if ($user && $user->logo)
+                    <img src="{{ asset('storage/' . $user->logo) }}" alt="Logo"
+                        style="vertical-align: middle; margin-right: 10px; margin-bottom: 20px">
+                @else
+                    <img src="{{ asset('Images/default.webp') }}" alt="Logo"
+                        style="width: 400px; height: auto; vertical-align: middle; margin-right: 10px; margin-bottom: 20px">
+                @endif
+                <br>
+                <h1 style="display: inline; font-family: Georgia, 'Times New Roman', Times, serif">
                     Hello, {{ $record->customers->customer ?? 'Guest' }}
                 </h1>
-
-                <div class="flex flex-wrap justify-center gap-4 text-white text-sm md:text-base">
-                    @if($user && $user->website)
-                    <div class="flex items-center gap-2">
-                        <i class="material-icons text-sm">public</i>
-                        <span>{{ $user->website }}</span>
-                    </div>
-                    @endif
-
-                    @if($user && $user->phone)
-                    <div class="flex items-center gap-2">
-                        <i class="material-icons text-sm">phone</i>
-                        <span>+91-{{ $user->phone }}</span>
-                    </div>
-                    @endif
-
-                    @if($user && $user->email)
-                    <div class="flex items-center gap-2">
-                        <i class="material-icons text-sm">email</i>
-                        <span>{{ $user->email }}</span>
-                    </div>
-                    @endif
-                </div>
-
-                @if($user && $user->address)
-                <p class="text-white mt-4 text-sm max-w-2xl">
-                    {{ $user->address }}
-                </p>
-                @endif
+                <p>{{ $user->website ?? 'Your Website' }} | +91-{{ $user->phone ?? 'XXXXXXX' }} |
+                    {{ $user->email ?? 'support@example.com' }}</p>
+                <p style="font-size: 15px; margin-top: 20px">{{ $user->address ?? 'Your Address' }}</p>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <div class="space-y-6">
-            <!-- Package Details Card -->
-            <div class="glass-card p-6 md:p-8">
-                <h2 class="font-playfair text-2xl md:text-3xl font-bold text-primary mb-6 pb-2 border-b-2 border-primary inline-block">
-                    Package Details
-                </h2>
+    <div class="container">
+        <div class="package-details">
+            <h2>Package Details</h2>
+            <table>
+                <tr>
+                    <th>Arrival:</th>
+                    <td>{{ optional($record->customers)->dateofarrival ? Carbon\Carbon::parse($record->customers->dateofarrival)->format('d F, Y') : 'N/A' }}
+                    </td>
+                    <th>Departure:</th>
+                    <td>{{ optional($record->customers)->dateofdeparture ? Carbon\Carbon::parse($record->customers->dateofdeparture)->format('d F, Y') : 'N/A' }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Adults:</th>
+                    <td>{{ $record->customers->adults ?? 0 }}</td>
+                    <th>Children (5y-12y):</th>
+                    <td>{{ $record->customers->childgreaterthan5 ?? 0 }}</td>
+                </tr>
+                <tr>
+                    <th>Children (2y-5y):</th>
+                    <td>{{ $record->customers->childlessthan5 ?? 0 }}</td>
+                    <th>Mobile:</th>
+                    <td>{{ $record->customers->number ?? 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <th>Package Name:</th>
+                    <td colspan="3">{{ $record->name ?? 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <th>Duration:</th>
+                    <td colspan="3">{{ $record->days ?? 0 }}-Days {{ $record->nights ?? 0 }}-Nights</td>
+                </tr>
+            </table>
+        </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <tbody class="divide-y divide-gray-200">
-                            <tr class="hover:bg-gray-50/50">
-                                <th class="py-3 px-4 bg-gray-100/50 font-medium">Arrival:</th>
-                                <td class="py-3 px-4">{{ optional($record->customers)->dateofarrival ? Carbon\Carbon::parse($record->customers->dateofarrival)->format('d F, Y') : 'N/A' }}</td>
-                                <th class="py-3 px-4 bg-gray-100/50 font-medium">Departure:</th>
-                                <td class="py-3 px-4">{{ optional($record->customers)->dateofdeparture ? Carbon\Carbon::parse($record->customers->dateofdeparture)->format('d F, Y') : 'N/A' }}</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50/50">
-                                <th class="py-3 px-4 bg-gray-100/50 font-medium">Adults:</th>
-                                <td class="py-3 px-4">{{ $record->customers->adults ?? 0 }}</td>
-                                <th class="py-3 px-4 bg-gray-100/50 font-medium">Children (5y-12y):</th>
-                                <td class="py-3 px-4">{{ $record->customers->childgreaterthan5 ?? 0 }}</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50/50">
-                                <th class="py-3 px-4 bg-gray-100/50 font-medium">Children (2y-5y):</th>
-                                <td class="py-3 px-4">{{ $record->customers->childlessthan5 ?? 0 }}</td>
-                                <th class="py-3 px-4 bg-gray-100/50 font-medium">Mobile:</th>
-                                <td class="py-3 px-4">{{ $record->customers->number ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50/50">
-                                <th class="py-3 px-4 bg-gray-100/50 font-medium">Package Name:</th>
-                                <td class="py-3 px-4 font-medium" colspan="3">{{ $record->name ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50/50">
-                                <th class="py-3 px-4 bg-gray-100/50 font-medium">Duration:</th>
-                                <td class="py-3 px-4 font-medium text-accent" colspan="3">{{ $record->days ?? 0 }}-Days {{ $record->nights ?? 0 }}-Nights</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            @if (!empty($record->cruz))
-            <!-- Cruise Details -->
-            <div class="glass-card p-6 md:p-8">
-                <h2 class="font-playfair text-2xl md:text-3xl font-bold text-primary mb-6 pb-2 border-b-2 border-primary inline-block">
-                    Cruise Details
-                </h2>
-
-                <div class="grid md:grid-cols-2 gap-4 mt-6">
+        @if (!empty($record->cruz))
+            <div class="cruise-details">
+                <h2>Cruise Details</h2>
+                <div class="cruise-container">
                     @foreach ($record->cruz as $cruise)
-                        @php
-                            $ferry = App\Models\Ferry::where('id', $cruise['cruz'])->first();
-                        @endphp
-                        <div class="hotel-card bg-white/30 rounded-xl p-5 border border-white/40">
-                            <div class="flex items-start gap-4">
-                                <div class="bg-primary/10 p-3 rounded-lg">
-                                    <i class="material-icons text-primary text-3xl">directions_boat</i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg text-gray-800">{{ $ferry->Title ?? 'Cruise Name Not Available' }}</h3>
-                                    <div class="mt-2 space-y-1 text-sm">
-                                        @if (!empty($cruise['source']))
-                                            <p class="flex items-center gap-2"><i class="material-icons text-sm text-gray-600">place</i> <span>Route: {{ $cruise['source'] }}</span></p>
-                                        @endif
-                                        @if (!empty($cruise['class']))
-                                            <p class="flex items-center gap-2"><i class="material-icons text-sm text-gray-600">star</i> <span>Class: {{ $cruise['class'] }}</span></p>
-                                        @endif
-                                    </div>
-                                </div>
+                        <div class="cruise-card">
+                            <div class="cruise-header">
+
+                                    <?php
+
+                                        $ferry = App\Models\Ferry::where('id', $cruise['cruz'])->first();
+
+                                    ?>
+
+                                <h3><i class="fas fa-ship"></i> {{ $ferry->Title ?? 'Cruise Name Not Available' }}</h3>
+                            </div>
+                            <div class="cruise-info">
+                                @if (!empty($cruise['source']))
+                                    <p><strong>Route:</strong> {{ $cruise['source'] }}</p>
+                                @endif
+                                @if (!empty($cruise['class']))
+                                    <p><strong>Class:</strong> {{ $cruise['class'] }}</p>
+                                @endif
                             </div>
                         </div>
                     @endforeach
                 </div>
             </div>
+        @endif
+
+        <div class="itinerary">
+            <h2>Detailed Itinerary</h2>
+            @if (!empty($record->itinerary))
+                @foreach ($record->itinerary as $itinerary)
+                    <h3 style="color: red"><strong> Day {{ $itinerary['days'] ?? 'N/A' }} </strong></h3>
+                    {!! $itinerary['longdescription'] ?? 'No details available.' !!} <br /><br />
+                @endforeach
+            @else
+                <p>No itinerary details available.</p>
             @endif
+        </div>
 
-            <!-- Itinerary -->
-            <div class="glass-card p-6 md:p-8">
-                <h2 class="font-playfair text-2xl md:text-3xl font-bold text-primary mb-6 pb-2 border-b-2 border-primary inline-block">
-                    Detailed Itinerary
-                </h2>
-
-                <div class="mt-8">
-                    @if (!empty($record->itinerary))
-                        @foreach ($record->itinerary as $itinerary)
-                            <div class="mb-10 relative">
-                                <div class="flex flex-col md:flex-row mb-16">
-                                    <div class="md:w-1/2 md:pr-10 md:text-right mb-4 md:mb-0">
-                                        <div class="inline-block bg-primary text-white py-1 px-4 rounded-full font-bold">Day {{ $itinerary['days'] ?? 'N/A' }}</div>
-                                        <h3 class="text-xl font-bold mt-2 text-gray-800">{{ $itinerary['title'] ?? 'Day ' . $itinerary['days'] }}</h3>
-                                    </div>
-                                    <div class="md:w-1/2 md:pl-10 relative">
-                                        <div class="absolute left-0 top-2 -ml-2 w-4 h-4 bg-primary rounded-full border-4 border-white z-10"></div>
-                                        <div class="glass-card p-5">
-                                            {!! $itinerary['longdescription'] ?? 'No details available.' !!}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <p class="text-center py-8">No itinerary details available.</p>
-                    @endif
-                </div>
-            </div>
-
-            @if (!empty($record->rooms))
-            <!-- Hotel Plan -->
-            <div class="glass-card p-6 md:p-8">
-                <h2 class="font-playfair text-2xl md:text-3xl font-bold text-primary mb-6 pb-2 border-b-2 border-primary inline-block">
-                    Hotel Plan
-                </h2>
-
-                <!-- Price Card -->
-                <div class="price-card rounded-xl p-5 mb-8 max-w-lg mx-auto border border-white/40">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-primary/10 p-3 rounded-lg">
-                            <i class="material-icons text-primary text-3xl">apartment</i>
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-600">Package Price Per Person</p>
-                            <p class="text-2xl font-bold text-primary">₹.{{ number_format($ultimatePrice) }}/-</p>
-                        </div>
+        @if (!empty($record->rooms))
+            <div class="hotels">
+                <h2>Hotel Plan</h2>
+                <div class="material-card">
+                    <div class="icon-wrapper">
+                        <i class="material-icons">apartment</i>
+                    </div>
+                    <div class="content">
+                        <p class="price-label">Package Price Per Person:</p>
+                        <p class="price-value">₹.{{ number_format($ultimatePrice) }}/-</p>
                     </div>
                 </div>
 
-                <!-- Hotels -->
-                <div class="space-y-6">
-                    @php
-                        $sortedRooms = collect($record->rooms)->sortBy('days');
-                    @endphp
-
-                    @foreach ($sortedRooms as $room)
-                        @php
-                            $des = App\Models\destination::find($room['location']);
-                            $roomtype = App\Models\RoomCategory::find($room['room_type']);
-                            $hotel = App\Models\Hotel::find($room['hotel_name']);
-                            $hoteltype = App\Models\HotelCategory::find($room['hotel_type']);
-                        @endphp
-
-                        <div class="hotel-card bg-white/30 rounded-xl overflow-hidden">
-                            <div class="md:flex">
-                                <div class="md:w-2/5 p-4 bg-gradient-to-br from-blue-50 to-cyan-50">
-                                    <h3 class="font-bold text-lg text-gray-800 mb-2">Day {{ $room['days'] ?? 'N/A' }} - {{ $des->Title ?? 'Unknown Location' }}</h3>
-                                    <div class="flex flex-wrap gap-2 mb-4">
-                                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">{{ $hoteltype->category ?? 'N/A' }}</span>
-                                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">{{ $roomtype->category ?? 'N/A' }}</span>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">{{ strtoupper($room['meal_plan'] ?? 'N/A') }}</span>
-                                    </div>
-                                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
-                                        @php
-                                            $hotelImages = App\Models\HotelImage::where('hotel_id', $room['hotel_name'])->first();
-                                        @endphp
-                                        @if ($hotelImages && !empty($hotelImages->images))
-                                            <div class="grid grid-cols-2 gap-2">
-                                                @foreach (array_slice($hotelImages->images, 0, 4) as $image)
-                                                    <div class="rounded-xl w-full h-24 overflow-hidden">
-                                                        <img src="{{ asset('storage/' . $image) }}"
-                                                             alt="Hotel Image"
-                                                             class="w-full h-full object-cover"
-                                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                                        <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center" style="display: none;">
-                                                            <i class="material-icons text-gray-400">image</i>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        @else
-                                            <div class="grid grid-cols-2 gap-2">
-                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center">
-                                                    <i class="material-icons text-gray-400">image</i>
-                                                </div>
-                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center">
-                                                    <i class="material-icons text-gray-400">image</i>
-                                                </div>
-                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center">
-                                                    <i class="material-icons text-gray-400">image</i>
-                                                </div>
-                                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-full h-24 flex items-center justify-center">
-                                                    <i class="material-icons text-gray-400">image</i>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="md:w-3/5 p-5">
-                                    <h3 class="font-playfair text-xl font-bold text-gray-800 mb-2">{{ strtoupper($hotel->hotelName ?? 'Unknown Hotel') }}</h3>
-                                    @if($hotel && $hotel->address)
-                                    <div class="flex items-center gap-2 text-gray-600 mb-3">
-                                        <i class="material-icons text-sm">place</i>
-                                        <p>{{ $hotel->address }}</p>
-                                    </div>
-                                    @endif
-                                    <div class="text-gray-600 mb-4">
-                                        <p><strong>Category:</strong> {{ $hoteltype->category ?? 'N/A' }}</p>
-                                        <p><strong>Room Type:</strong> {{ $roomtype->category ?? 'N/A' }}</p>
-                                        <p><strong>Meal Plan:</strong> {{ strtoupper($room['meal_plan'] ?? 'N/A') }}</p>
-                                    </div>
-                                    @if($hotel && $hotel->rating)
-                                    <div class="flex items-center gap-2 text-sm">
-                                        @for ($i = 0; $i < 5; $i++)
-                                            <i class="material-icons {{ $i < $hotel->rating ? 'text-yellow-400' : 'text-gray-300' }}">star</i>
-                                        @endfor
-                                        <span class="text-gray-600">{{ $hotel->rating }} ({{ $hotel->reviews ?? 0 }} reviews)</span>
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            @if (empty($record->rooms))
-            <!-- Price Card -->
-            <div class="glass-card p-6 md:p-8">
-                <div class="price-card rounded-xl p-5 max-w-lg mx-auto border border-white/40">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-primary/10 p-3 rounded-lg">
-                            <i class="material-icons text-primary text-3xl">info_outline</i>
-                        </div>
-                        <div>
-                            <p class="font-medium text-gray-600">Per Person Price</p>
-                            <p class="text-2xl font-bold text-primary">₹.{{ number_format($ultimatePrice) }}/-</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
-
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Inclusions -->
-                <div class="glass-card p-6">
-                    <h2 class="font-playfair text-2xl font-bold text-green-600 mb-4 pb-2 border-b-2 border-green-600 inline-block">
-                        Package Includes
-                    </h2>
-                    @if (!empty($record->inclusions))
-                        <ul class="mt-4 space-y-3">
-                            @foreach ($record->inclusions as $inclusion)
-                                <li class="inclusions flex items-start gap-3">
-                                    <div class="flex-shrink-0 w-6 h-6 rounded-full border-2 border-green-500 flex items-center justify-center mt-1">
-                                        <i class="material-icons text-green-500 text-sm">check</i>
-                                    </div>
-                                    <span>{{ ucwords($inclusion) }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p class="text-center py-4">No inclusions available.</p>
-                    @endif
-                </div>
-
-                <!-- Exclusions -->
-                <div class="glass-card p-6">
-                    <h2 class="font-playfair text-2xl font-bold text-red-600 mb-4 pb-2 border-b-2 border-red-600 inline-block">
-                        Package Excludes
-                    </h2>
-                    @if (!empty($record->exclusions))
-                        <ul class="mt-4 space-y-3">
-                            @foreach ($record->exclusions as $exclusion)
-                                <li class="exclusions flex items-start gap-3">
-                                    <div class="flex-shrink-0 w-6 h-6 rounded-full border-2 border-red-500 flex items-center justify-center mt-1">
-                                        <i class="material-icons text-red-500 text-sm">close</i>
-                                    </div>
-                                    <span>{{ ucwords($exclusion) }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p class="text-center py-4">No exclusions available.</p>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Policies -->
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Cancellation Policy -->
-                <div class="glass-card p-6">
-                    <h2 class="font-playfair text-2xl font-bold text-primary mb-4 pb-2 border-b-2 border-primary inline-block">
-                        Refund & Cancellation Policy
-                    </h2>
-                    @php
-                        $refunds = App\Models\Refund::where('user_id', auth()->id())->get();
-                    @endphp
-                    @if ($refunds->isNotEmpty())
-                        <div class="mt-4 space-y-4">
-                            @foreach ($refunds as $index => $refund)
-                                <div class="flex items-start gap-4">
-                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center mt-1">
-                                        {{ $index + 1 }}
-                                    </div>
-                                    <div>
-                                        <p class="font-medium">{{ $refund->point }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="text-center py-4">No refund policies available.</p>
-                    @endif
-                </div>
-
-                <!-- Terms & Conditions -->
-                <div class="glass-card p-6">
-                    <h2 class="font-playfair text-2xl font-bold text-primary mb-4 pb-2 border-b-2 border-primary inline-block">
-                        Terms & Conditions
-                    </h2>
-                    @php
-                        $terms = App\Models\Termsandconditions::where('user_id', auth()->id())->get();
-                    @endphp
-                    @if ($terms->isNotEmpty())
-                        <ul class="mt-4 space-y-3">
-                            @foreach ($terms as $term)
-                                <li class="flex items-start gap-3">
-                                    <i class="material-icons text-primary mt-1">check_circle</i>
-                                    <span>{{ $term['point'] }}</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p class="text-center py-4">No terms available.</p>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Kindly Notes -->
-            <div class="glass-card p-6">
-                <h2 class="font-playfair text-2xl font-bold text-primary mb-4 pb-2 border-b-2 border-primary inline-block">
-                    Kindly Note
-                </h2>
                 @php
-                    $kns = App\Models\Kindlynote::where('user_id', auth()->id())->get();
+                    $sortedRooms = collect($record->rooms)->sortBy('days');
                 @endphp
-                @if ($kns->isNotEmpty())
-                    <ul class="mt-4 space-y-3">
-                        @foreach ($kns as $kn)
-                            <li class="flex items-start gap-3">
-                                <i class="material-icons text-accent mt-1">info</i>
-                                <span>{{ $kn['point'] }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                @else
-                    <p class="text-center py-4">No notes available.</p>
-                @endif
+
+                @foreach ($sortedRooms as $room)
+                    @php
+                        $des = App\Models\destination::find($room['location']);
+                        $roomtype = App\Models\RoomCategory::find($room['room_type']);
+                        $hotel = App\Models\Hotel::find($room['hotel_name']);
+                        $hoteltype = App\Models\HotelCategory::find($room['hotel_type']);
+                    @endphp
+                    <div class="hotel-block">
+                        <h3>Day {{ $room['days'] ?? 'N/A' }} - {{ $des->Title ?? 'Unknown Location' }}</h3>
+                        <div class="hotel-info">
+                            <div class="hotel-images">
+                                @php
+                                    $hotelImages = App\Models\HotelImage::where(
+                                        'hotel_id',
+                                        $room['hotel_name'],
+                                    )->first();
+                                @endphp
+                                @if ($hotelImages && !empty($hotelImages->images))
+                                    @foreach ($hotelImages->images as $image)
+                                        <img src="{{ asset('storage/' . $image) }}" width="10px" alt="Hotel Image">
+                                    @endforeach
+                                @else
+                                    <p>No images available.</p>
+                                @endif
+                            </div>
+                            <div class="hotel-details">
+                                <br><strong>{{ strtoupper($hotel->hotelName ?? 'Unknown Hotel') }}</strong><br>
+                                Category: <strong>{{ $hoteltype->category ?? 'N/A' }}</strong><br>
+                                Room Type: <strong>{{ $roomtype->category ?? 'N/A' }}</strong><br>
+                                Meal Plan: <strong>{{ strtoupper($room['meal_plan'] ?? 'N/A') }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
+        @endif
 
-            <!-- Why Book With Us -->
-            <div class="glass-card p-6 md:p-8 text-center">
-                <h2 class="font-playfair text-2xl md:text-3xl font-bold text-primary mb-8">
-                    Why Book With {{ $user['name'] ?? 'Us' }}?
-                </h2>
-
-                <div class="flex flex-wrap justify-center gap-4">
-                    <div class="feature-item rounded-full px-5 py-3 flex items-center gap-2">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>8+ Years of Experience</span>
-                    </div>
-                    <div class="feature-item rounded-full px-5 py-3 flex items-center gap-2">
-                        <i class="fas fa-star"></i>
-                        <span>750+ 5* Reviews on Google</span>
-                    </div>
-                    <div class="feature-item rounded-full px-5 py-3 flex items-center gap-2">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Govt. Approved and Registered</span>
-                    </div>
-                    <div class="feature-item rounded-full px-5 py-3 flex items-center gap-2">
-                        <i class="fas fa-ban"></i>
-                        <span>No Hidden Fees</span>
-                    </div>
-                    <div class="feature-item rounded-full px-5 py-3 flex items-center gap-2">
-                        <i class="fas fa-exchange-alt"></i>
-                        <span>Easy Refunds & Rescheduling</span>
-                    </div>
-                    <div class="feature-item rounded-full px-5 py-3 flex items-center gap-2">
-                        <i class="fas fa-hotel"></i>
-                        <span>Vetted Hotels & Resorts</span>
-                    </div>
-                    <div class="feature-item rounded-full px-5 py-3 flex items-center gap-2">
-                        <i class="fas fa-calendar"></i>
-                        <span>Since 2002</span>
-                    </div>
+        @if (empty($record->rooms))
+            <div class="extras-margin material-card">
+                <div class="icon-wrapper">
+                    <i class="material-icons">info_outline</i>
                 </div>
+                <div class="content">
+                    <p class="price-label">Per Person Price:</p>
+                    <p class="price-value">₹.{{ number_format($ultimatePrice) }}/-</p>
+                </div>
+            </div>
+        @endif
 
-                <div class="mt-10 pt-6 border-t border-gray-200/50">
-                    <h3 class="font-bold text-lg text-gray-700 mb-4">Ready to Book Your Adventure?</h3>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        @if($user && $user->phone)
-                        <a href="tel:+91-{{ $user->phone }}" class="bg-primary hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full flex items-center gap-2 transition-all">
-                            <i class="material-icons">phone</i> Call Now: +91-{{ $user->phone }}
-                        </a>
-                        @endif
-                        @if($user && $user->email)
-                        <a href="mailto:{{ $user->email }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full flex items-center gap-2 transition-all">
-                            <i class="material-icons">email</i> Email Us
-                        </a>
-                        @endif
-                    </div>
+
+        <div class="inclusions">
+            <h2>Package Includes</h2>
+            @if (!empty($record->inclusions))
+                <ul class="styled-list">
+                    @foreach ($record->inclusions as $inclusion)
+                        <li>{{ ucwords($inclusion) }}</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No inclusions available.</p>
+            @endif
+        </div>
+
+        <div class="exclusions">
+            <h2>Package Excludes</h2>
+            @if (!empty($record->exclusions))
+                <ul class="styled-list">
+                    @foreach ($record->exclusions as $exclusion)
+                        <li>{{ ucwords($exclusion) }}</li>
+                    @endforeach
+                </ul>
+            @else
+                <p>No exclusions available.</p>
+            @endif
+        </div>
+
+        <div class="cancellation-policy">
+            <h2>Refund and Cancellation Policy</h2>
+            @php
+                $refunds = App\Models\Refund::where('user_id', auth()->id())->get();
+            @endphp
+            @if ($refunds->isNotEmpty())
+                <div class="policy-content">
+                    <ol class="styled-policy-list">
+                        @foreach ($refunds as $refund)
+                            <li>{{ $refund->point }}</li>
+                        @endforeach
+                    </ol>
+                </div>
+            @else
+                <p>No refund policies available.</p>
+            @endif
+        </div>
+
+        <div class="terms-and-conditions">
+            <h2>Terms and Conditions</h2>
+            @php
+                $terms = App\Models\Termsandconditions::where('user_id', auth()->id())->get();
+            @endphp
+            <div class="terms-content">
+                <ol class="styled-terms-list">
+                    @foreach ($terms as $term)
+                        <li>{{ $term['point'] }}</li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+
+        <div class="kindly-notes">
+            <h2>Kindly Note</h2>
+            @php
+                $kns = App\Models\Kindlynote::where('user_id', auth()->id())->get();
+            @endphp
+            <div class="kindly-content">
+                <ol class="styled-kindly-list">
+                    @foreach ($kns as $kn)
+                        <li>{{ $kn['point'] }}</li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+
+
+        <div class="why-book-section">
+            <h3>Why Book with {{ $user['name'] }} ?</h3>
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>8+ Years of Experience</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-star"></i>
+                    <span>750+ 5* Reviews on Google</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Govt. Approved and Registered</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-ban"></i>
+                    <span>No Hidden Fees</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Easy Refunds & Rescheduling</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-hotel"></i>
+                    <span>Vetted Hotels & Resorts</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>Since 2002</span>
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>
