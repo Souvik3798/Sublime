@@ -344,54 +344,74 @@ class CustomPackageResource extends Resource
                                                                 }
                                                             }),
 
+                                                        \Filament\Forms\Components\Toggle::make('seasonal_rate')
+                                                            ->label('Use Seasonal Rates?')
+                                                            ->default(false)
+                                                            ->helperText('Enable to use seasonal rates for this room.')
+                                                            ->reactive()
+                                                            ->afterStateUpdated(function ($state, \Filament\Forms\Set $set) {
+                                                                $set('meal_plan', null);
+                                                                $set('price', null);
+                                                            }),
                                                         Select::make('meal_plan')
                                                             ->label('Meal Plan')
+                                                            ->required()
                                                             ->live()
+                                                            ->reactive()
                                                             ->options(function (callable $get) {
                                                                 $roomtype = $get('room_type');
+                                                                $seasonal = $get('seasonal_rate');
                                                                 if ($roomtype) {
                                                                     $roomtype = RoomCategory::find($roomtype);
                                                                     if ($roomtype) {
-                                                                        return [
-                                                                            'cp' => 'CP - ₹.' . $roomtype->cp . '/-',
-                                                                            'map' => 'MAP - ₹.' . $roomtype->map . '/-',
-                                                                            'ap' => 'AP - ₹.' . $roomtype->ap . '/-',
-                                                                        ];
+                                                                        if ($seasonal) {
+                                                                            return [
+                                                                                'cp' => 'CP - ₹.' . $roomtype->cp_seasonal . '/-',
+                                                                                'map' => 'MAP - ₹.' . $roomtype->map_seasonal . '/-',
+                                                                                'ap' => 'AP - ₹.' . $roomtype->ap_seasonal . '/-',
+                                                                            ];
+                                                                        } else {
+                                                                            return [
+                                                                                'cp' => 'CP - ₹.' . $roomtype->cp . '/-',
+                                                                                'map' => 'MAP - ₹.' . $roomtype->map . '/-',
+                                                                                'ap' => 'AP - ₹.' . $roomtype->ap . '/-',
+                                                                            ];
+                                                                        }
                                                                     }
                                                                 }
-                                                                return []; // Return an empty array if no hotel is selected
+                                                                return [];
                                                             })
-                                                            ->required()
                                                             ->afterStateUpdated(function (string $operation, $state, Forms\Set $set, $get) {
                                                                 if ($operation === 'create' || $operation === 'edit') {
                                                                     $roomtype = $get('room_type');
+                                                                    $seasonal = $get('seasonal_rate');
                                                                     $mealPlan = $state;
                                                                     $price = 0;
-
                                                                     if ($roomtype) {
                                                                         $roomtype = RoomCategory::find($roomtype);
                                                                         if ($roomtype) {
-                                                                            switch ($mealPlan) {
-                                                                                case 'cp':
-                                                                                    $price = $roomtype->cp;
-                                                                                    break;
-                                                                                case 'map':
-                                                                                    $price = $roomtype->map;
-                                                                                    break;
-                                                                                case 'ap':
-                                                                                    $price = $roomtype->ap;
-                                                                                    break;
+                                                                            if ($seasonal) {
+                                                                                switch ($mealPlan) {
+                                                                                    case 'cp': $price = $roomtype->cp_seasonal; break;
+                                                                                    case 'map': $price = $roomtype->map_seasonal; break;
+                                                                                    case 'ap': $price = $roomtype->ap_seasonal; break;
+                                                                                }
+                                                                            } else {
+                                                                                switch ($mealPlan) {
+                                                                                    case 'cp': $price = $roomtype->cp; break;
+                                                                                    case 'map': $price = $roomtype->map; break;
+                                                                                    case 'ap': $price = $roomtype->ap; break;
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
-
-                                                                    $set('price', $price); // Set the price field
+                                                                    $set('price', $price);
                                                                 }
                                                             }),
                                                         TextInput::make('price')
                                                             ->label('Cost')
-                                                            ->numeric()
                                                             ->required()
+                                                            ->numeric()
                                                             ->live()
                                                             ->prefix('₹')
                                                             ->suffix('/-'),

@@ -49,6 +49,17 @@ class RoomCategoryResource extends Resource
                 Forms\Components\TextInput::make('ap')
                     ->label('AP (Price)')
                     ->required(),
+
+                Forms\Components\Section::make('Seasonal Rates')
+                    ->schema([
+                        Forms\Components\TextInput::make('cp_seasonal')
+                            ->label('CP (Seasonal Price)'),
+                        Forms\Components\TextInput::make('map_seasonal')
+                            ->label('MAP (Seasonal Price)'),
+                        Forms\Components\TextInput::make('ap_seasonal')
+                            ->label('AP (Seasonal Price)'),
+                    ]),
+
                 Hidden::make('user_id')
                     ->default(auth()->id())
             ]);
